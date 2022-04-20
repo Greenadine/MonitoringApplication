@@ -95,7 +95,7 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "%s (ID: %d)\n- Availability: %.2f\n- Price: %.2f", name, id, availability, price);
+        return String.format(Locale.US, "%s (ID: %d)\n- IP: %s\n- Subnet: %s\n- Availability: %.2f\n- Price: %.2f", name, id, ip, subnet, availability, price);
     }
 
     @Override

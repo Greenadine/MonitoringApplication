@@ -4,9 +4,7 @@ import java.awt.*;
 
 public final class Fonts {
 
-    private static final String FONT_FAMILY = "Open Sans";
-
-    public static final Font TITLE = new Font(FONT_FAMILY, Font.BOLD, 20);
-    public static final Font DEFAULT = new Font(FONT_FAMILY, Font.PLAIN, 14);
-    public static final Font BIG = new Font(FONT_FAMILY, Font.PLAIN, 16);
+    public static final Font DEFAULT = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
+    public static final Font BIG = DEFAULT.deriveFont(14f);
+    public static final Font TITLE = DEFAULT.deriveFont(20f);
 }

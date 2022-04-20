@@ -12,14 +12,12 @@ public class SidemenuPanel extends JPanel {
 
     private final MainFrame mainFrame;
 
-    public final static int PANEL_WIDTH = 350;
-    private final int panelHeight = MainFrame.FRAME_HEIGHT;
+    public final static int PANEL_WIDTH = 200;
 
     public SidemenuPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
         // Create and configure panel
-        Utils.setSizeAll(this, new Dimension(PANEL_WIDTH, panelHeight));
         this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.DARK_GRAY));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

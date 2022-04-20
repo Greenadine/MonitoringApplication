@@ -1,7 +1,5 @@
 package com.nerdygadgets.application.model.component;
 
-import com.sun.istack.internal.Nullable;
-
 public class Firewall extends NetworkComponent {
 
     private static long nextId = 0;
@@ -11,7 +9,7 @@ public class Firewall extends NetworkComponent {
     }
 
     @Override
-    public boolean equals(@Nullable Object o) {
+    public boolean equals(Object o) {
         return o instanceof Firewall && id == ((Firewall) o).id;
     }
 

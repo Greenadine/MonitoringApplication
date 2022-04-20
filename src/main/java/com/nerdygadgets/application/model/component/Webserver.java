@@ -1,7 +1,5 @@
 package com.nerdygadgets.application.model.component;
 
-import com.sun.istack.internal.Nullable;
-
 public class Webserver extends NetworkComponent {
 
     private static long nextId = 0;
@@ -11,7 +9,7 @@ public class Webserver extends NetworkComponent {
     }
 
     @Override
-    public boolean equals(@Nullable Object o) {
+    public boolean equals(Object o) {
         return o instanceof Webserver && id == ((Webserver) o).id;
     }
 

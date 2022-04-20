@@ -3,6 +3,7 @@ package com.nerdygadgets.application.app.panel;
 import com.nerdygadgets.application.app.frame.MainFrame;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,102 +11,78 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class HomePanel extends JPanel {
 
     private final MainFrame mainFrame;
 
-    private final int panelWidth = MainFrame.BODY_WIDTH;
-    private final int panelHeight = MainFrame.FRAME_HEIGHT;
-
-    public HomePanel(MainFrame mainFrame) {
+    public HomePanel(@NotNull MainFrame mainFrame) {
         this.mainFrame = mainFrame;
+        this.setBorder(new EmptyBorder(10, 25, 10, 25));
 
         // Configure panel
-        Utils.setSizeMinMax(this, new Dimension(panelWidth, panelHeight));
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        this.setLayout(layout);
 
-        // Create and add title label
-        JLabel titleLabel = new JLabel("No Network Selected", JLabel.CENTER);
-        titleLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        titleLabel.setFont(Fonts.TITLE);
-        titleLabel.setBorder(new EmptyBorder(40, 0, 40, 0));
-        this.add(titleLabel);
+        // Populate panel
+        addButton("Create New Configuration", this::actionCreateNetworkConfiguration);
+        addSpacer(10);
 
-        JPanel selectionPanel = new JPanel();
-        selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.X_AXIS));
+        addButton("Open Network Configuration", this::actionOpenNetworkConfiguration);
+        addSpacer(20);
 
-        // Create "open recent" panel
-        JPanel openRecentPanel = newPanel();
+        this.add(new JSeparator()); // Add separator
+        addSpacer(20);
 
-        JLabel openRecentLabel = newLabel("Open Recent");
-        openRecentPanel.add(openRecentLabel);
-        selectionPanel.add(openRecentPanel);
+        addButton("Network Monitor", this::actionOpenNetworkMonitor);
+        addSpacer(10);
 
-        // Create "open network" panel
-        JPanel openNetworkPanel = newPanel();
-
-        JLabel openNetworkLabel = newLabel("Open Configuration from File");
-        openNetworkPanel.add(openNetworkLabel);
-
-        JButton openNetworkButton = newButton("Open file...", this::actionOpenNetwork);
-        openNetworkPanel.add(openNetworkButton);
-
-        selectionPanel.add(openNetworkPanel);
-
-        // Create "create network" panel
-        JPanel createNetworkPanel = newPanel();
-
-        JLabel createNetworkLabel = newLabel("Create Network Configuration");
-        createNetworkPanel.add(createNetworkLabel);
-
-        JButton createNetworkButton = newButton("Create New Configuration", this::actionCreateNetwork);
-        createNetworkPanel.add(createNetworkButton);
-
-        selectionPanel.add(createNetworkPanel);
-
-        this.add(selectionPanel);
+        addButton("Availability Calculator", this::actionOpenAvailabilityCalculator);
     }
 
-    private JPanel newPanel() {
-        JPanel panel = new JPanel();
-        Utils.setSizeAll(panel, new Dimension((int) Math.floor(panelWidth / 3.04), panelHeight - 150)); // For some reason breaks when given anything below 3.04
+    /* Utility methods */
 
-        return panel;
-    }
-
-    private JLabel newLabel(String text) {
-        JLabel label = new JLabel(text, JLabel.CENTER);
-        label.setFont(Fonts.DEFAULT);
-        label.setBorder(new EmptyBorder(0, 0, 10, 0));
-        return label;
-    }
-
-    private JButton newButton(String text, ActionListener actionListener) {
+    private void addButton(@NotNull String text, @NotNull ActionListener listener) {
         JButton button = new JButton(text);
-        Utils.setSizeAll(button, new Dimension(200, 25));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.addActionListener(actionListener);
-
-        return button;
+        button.setFont(Fonts.DEFAULT);
+        Utils.setSizeAll(button, new Dimension(350, 50));
+        button.addActionListener(listener);
+        this.add(button);
     }
 
-    /* Button actions */
+    private void addSpacer(int height) {
+        this.add(Box.createVerticalStrut(height));
+    }
 
-    private void actionOpenNetwork(ActionEvent event) {
+    /* Action methods */
+
+    private void actionOpenNetworkMonitor(ActionEvent event) {
+        // TODO
+    }
+
+    private void actionOpenAvailabilityCalculator(ActionEvent event) {
+        // TODO
+    }
+
+    private void actionCreateNetworkConfiguration(ActionEvent event) {
+        mainFrame.openCreateNetworkConfigurationPanel();
+    }
+
+    private void actionOpenNetworkConfiguration(ActionEvent event) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Open a network configuration file");
-        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Network Configuration Files (.csv)", "csv");
+        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Network Configuration Files (.json)", "json");
         chooser.addChoosableFileFilter(extensionFilter);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (chooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
-            System.out.println(chooser.getSelectedFile().getName());
-        }
-    }
+            File selected = chooser.getSelectedFile();
 
-    private void actionCreateNetwork(ActionEvent event) {
-        mainFrame.openCreateNetworkConfigurationPanel();
+            System.out.println(selected.getName());
+            // TODO functionality
+        }
     }
 }
