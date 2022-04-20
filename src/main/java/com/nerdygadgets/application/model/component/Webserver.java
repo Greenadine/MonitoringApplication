@@ -1,5 +1,10 @@
 package com.nerdygadgets.application.model.component;
 
+/**
+ * A {@code Webserver} is a {@link NetworkComponent} that can be added and/or removed from a {@link com.nerdygadgets.application.model.NetworkConfiguration}.
+ *
+ * @author Kevin Zuman
+ */
 public class Webserver extends NetworkComponent {
 
     private static long nextId = 0;

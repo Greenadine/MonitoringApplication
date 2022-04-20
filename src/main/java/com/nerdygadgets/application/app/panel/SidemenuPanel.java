@@ -1,7 +1,7 @@
 package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.app.frame.MainFrame;
-import com.nerdygadgets.application.util.Utils;
+import com.nerdygadgets.application.util.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +44,7 @@ public class SidemenuPanel extends JPanel {
 
     private JButton newButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
-        Utils.setSizeAll(button, new Dimension(PANEL_WIDTH, 40));
+        SwingUtils.setSizeAll(button, new Dimension(PANEL_WIDTH, 40));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addActionListener(listener);
 
