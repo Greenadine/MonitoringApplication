@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
         this.setTitle("NerdyGadgets Network Application");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
+        this.setIconImage(new ImageIcon("src\\main\\resources\\icon.png").getImage());
 
         /* Create panels */
 
