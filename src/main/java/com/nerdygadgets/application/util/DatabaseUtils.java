@@ -19,7 +19,7 @@ public final class DatabaseUtils {
         Properties databaseProperties = new Properties();
 
         try {
-            databaseProperties.load(new FileInputStream(new File("database.properties")));
+            databaseProperties.load(new FileInputStream("database.properties"));
         } catch (IOException e) {
             System.out.println("ERROR: Failed to load 'database.properties'.");
             e.printStackTrace();
