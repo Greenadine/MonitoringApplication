@@ -1,11 +1,13 @@
 package com.nerdygadgets.application;
 
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
-import com.nerdygadgets.application.app.frame.MainFrame;
+import com.nerdygadgets.application.app.ApplicationFrame;
 
 import javax.swing.*;
 
 public class Main {
+
+    private static ApplicationFrame applicationFrame;
 
     public static void main(String[] args) {
         // Attempt to set application theme
@@ -16,6 +18,6 @@ public class Main {
             ex.printStackTrace();
         }
 
-        new MainFrame();
+        applicationFrame = new ApplicationFrame();
     }
 }
