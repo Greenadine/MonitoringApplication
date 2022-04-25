@@ -4,7 +4,6 @@ import com.nerdygadgets.application.model.component.NetworkComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 
 /**
