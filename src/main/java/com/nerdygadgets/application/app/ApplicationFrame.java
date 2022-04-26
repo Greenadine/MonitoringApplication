@@ -6,6 +6,7 @@ import com.nerdygadgets.application.app.screen.NetworkMonitorScreen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class ApplicationFrame extends JFrame {
 
@@ -15,7 +16,8 @@ public class ApplicationFrame extends JFrame {
     private final CreateNetworkConfigurationScreen createNetworkConfigurationScreen;
     private final NetworkMonitorScreen networkMonitorScreen;
 
-    public ApplicationFrame() {
+    public ApplicationFrame() throws IOException
+    {
         /* Configure frame */
         this.setTitle("NerdyGadgets Network Application");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

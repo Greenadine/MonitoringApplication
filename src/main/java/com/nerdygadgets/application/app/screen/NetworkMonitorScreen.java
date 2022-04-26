@@ -11,6 +11,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
     private JPanel sidebar;
@@ -19,7 +25,10 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     private JLabel networkUptimeValue;
     private JLabel networkCpuUsageValue;
 
-    public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) {
+    public String cpu;
+
+    public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException
+    {
         super(applicationFrame);
 
         // Configure screen
@@ -57,7 +66,8 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         header.add(titleLabel);
     }
 
-    private void createSidebar() {
+    private void createSidebar() throws IOException
+    {
         sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(Colors.BACKGROUND);
@@ -65,9 +75,11 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
         addNetworkInformation();
         addStorageInformation();
+        //findCPUUsage();
     }
 
-    private void addNetworkInformation() {
+    private void addNetworkInformation() throws IOException
+    {
         // Create panel
         JPanel networkPanel = new JPanel();
         networkPanel.setLayout(new BoxLayout(networkPanel, BoxLayout.Y_AXIS));
@@ -112,6 +124,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         networkCpuUsageValue = new JLabel("0%");
         networkCpuUsageValue.setFont(Fonts.PARAGRAPH);
         networkInformationPanel.add(networkCpuUsageValue);
+        findCPUUsage();
     }
 
     private void addStorageInformation() {
@@ -133,6 +146,23 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         storageInformationPanel.setForeground(Colors.BACKGROUND_ACCENT);
         storagePanel.add(storageInformationPanel);
     }
+
+    private void findCPUUsage() throws IOException
+    {
+        NetworkMonitorWMIC n1 = new NetworkMonitorWMIC();
+        ArrayList<String>test;
+        test = n1.getOutput();
+        for (String a : test) {
+            System.out.println(a);
+
+    }
+
+
+    }
+
+
+
+
 
     /* Button Actions */
 

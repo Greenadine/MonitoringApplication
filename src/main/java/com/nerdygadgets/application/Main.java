@@ -5,6 +5,7 @@ import com.nerdygadgets.application.app.ApplicationFrame;
 import com.nerdygadgets.application.data.NetworkComponents;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
 
@@ -12,7 +13,8 @@ public class Main {
 
     private static ApplicationFrame applicationFrame;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException
+    {
         // Attempt to set application theme
         try {
             UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
