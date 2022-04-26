@@ -24,7 +24,7 @@ public class NetworkMonitorWMIC
         BufferedReader stdout = new BufferedReader(new InputStreamReader(
                 powerShellProcess.getInputStream()));
         while ((line = stdout.readLine()) != null) {
-            System.out.println(line);
+            //System.out.println(line);
             output.add(line);
 
         }

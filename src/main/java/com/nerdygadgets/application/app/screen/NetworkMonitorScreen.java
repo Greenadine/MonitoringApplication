@@ -26,6 +26,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     private JLabel networkCpuUsageValue;
 
     public String cpu;
+    private ArrayList<String>test;
 
     public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException
     {
@@ -121,7 +122,8 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         networkCpuUsageLabel.setFont(Fonts.PARAGRAPH);
         networkInformationPanel.add(networkCpuUsageLabel);
 
-        networkCpuUsageValue = new JLabel("0%");
+        networkCpuUsageValue = new JLabel();
+        networkCpuUsageValue.setText("test cpu");
         networkCpuUsageValue.setFont(Fonts.PARAGRAPH);
         networkInformationPanel.add(networkCpuUsageValue);
         findCPUUsage();
@@ -150,7 +152,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     private void findCPUUsage() throws IOException
     {
         NetworkMonitorWMIC n1 = new NetworkMonitorWMIC();
-        ArrayList<String>test;
+
         test = n1.getOutput();
         for (String a : test) {
             System.out.println(a);
