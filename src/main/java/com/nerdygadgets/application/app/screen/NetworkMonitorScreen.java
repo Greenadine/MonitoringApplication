@@ -83,7 +83,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         // Create content panel
         JPanel networkInformationPanel = new JPanel();
         networkInformationPanel.setLayout(new GridLayout(3, 2));
-        networkInformationPanel.setBackground(Colors.BACKGROUND);
+        networkInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
         networkPanel.add(networkInformationPanel);
 
         // Add network status
@@ -122,15 +122,15 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         sidebar.add(storagePanel);
 
         // Add header
-        JLabel storageTitleLabel = new JLabel("Storage");
-        storageTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
+        JLabel storageTitleLabel = new JLabel("Storage", SwingConstants.LEFT);
+        storageTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         storageTitleLabel.setFont(Fonts.TITLE);
         storagePanel.add(storageTitleLabel);
 
         // Create content panel
         JPanel storageInformationPanel = new JPanel();
         storageInformationPanel.setLayout(new GridLayout(3, 2));
-        storageInformationPanel.setForeground(Colors.BACKGROUND);
+        storageInformationPanel.setForeground(Colors.BACKGROUND_ACCENT);
         storagePanel.add(storageInformationPanel);
     }
 
