@@ -14,12 +14,20 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
-    implementation 'org.swinglabs:swingx:1.6.1'
+    implementation 'org.swinglabs:swingx:1.6.1' // Extra Swing components
 
+    // JSON library
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+
+    // Utility libraries
+    implementation 'commons-io:commons-io:2.7'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.jetbrains:annotations:23.0.0'
+
+    // UI theme
     implementation 'com.formdev:flatlaf:1.6.5'
     implementation 'com.formdev:flatlaf-intellij-themes:1.6.5'
-
-    implementation 'org.jetbrains:annotations:23.0.0'
 }
 
 test {

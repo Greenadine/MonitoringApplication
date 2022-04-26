@@ -16,13 +16,11 @@ public class HomeScreen extends AbstractApplicationScreen {
     public HomeScreen(@NotNull ApplicationFrame applicationFrame) {
         super(applicationFrame);
 
+        // Configure screen
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(new EmptyBorder(10, 25, 25, 25));
 
-        // Configure panel
-        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        this.setLayout(layout);
-
-        // Populate panel
+        // Populate screen
         JLabel titleLabel = new JLabel("NerdyGadgets Network Application");
         titleLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
         titleLabel.setFont(Fonts.TITLE);

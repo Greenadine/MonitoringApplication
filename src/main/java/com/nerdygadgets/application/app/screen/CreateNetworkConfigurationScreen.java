@@ -9,6 +9,7 @@ import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
+import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.table.LabelProperties;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         super(applicationFrame);
         this.applicationFrame = applicationFrame;
 
-        // Configure main panel
+        // Configure screen
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -53,13 +54,14 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      * Creates and populates the header {@link JPanel}.
      */
     private void createHeader() {
+        // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
         header.setBackground(Colors.BACKGROUND);
-        SwingUtils.setSize(header, new Dimension(1250, 50));
+        header.setPreferredSize(new Dimension(1250, 50));
         this.add(header, BorderLayout.PAGE_START);
 
-        /* Populate header panel */
+        /* Populate panel */
 
         // Add home button
         JButton homeButton = SwingUtils.createButton("Home", new ImageIcon("assets\\icons\\home.png"), this::actionReturnToHome);
@@ -83,6 +85,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      */
     private void createSidebar() {
         sidebar = new JPanel();
+        sidebar.setPreferredSize(new Dimension(250, 500));
         sidebar.setBorder(new MatteBorder(0, 0, 0, 3, Colors.BACKGROUND_ACCENT));
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         this.add(sidebar, BorderLayout.LINE_START);
@@ -100,16 +103,26 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     private void createWebserversList() {
         // Create new collapsible pane
         webserversListPane = new JXCollapsiblePane();
+        webserversListPane.setCollapsed(true);
         webserversListPane.setLayout(new BoxLayout(webserversListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
         webserversListToggleButton = SwingUtils.createButton("Webservers", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleWebserversList);
         webserversListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
-        sidebar.add(webserversListToggleButton);
-        sidebar.add(webserversListPane);
+        //sidebar.add(webserversListToggleButton);
+        //sidebar.add(webserversListPane);
+
+        // Wrapper panel
+        JPanel wrapperPanel = new JPanel();
+        wrapperPanel.add(webserversListToggleButton);
+        wrapperPanel.add(webserversListPane);
+        sidebar.add(wrapperPanel);
 
         /* Add contents */
         // TODO populate pane with all webserver options
+
+        JLabel testLabel = new JLabel("Test");
+        webserversListPane.add(testLabel);
     }
 
     /**
@@ -118,16 +131,26 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     private void createDatabasesList() {
         // Create new collapsible pane
         databasesListPane = new JXCollapsiblePane();
+        databasesListPane.setCollapsed(true);
         databasesListPane.setLayout(new BoxLayout(databasesListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
         databasesListToggleButton = SwingUtils.createButton("Databases", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleDatabasesList);
         databasesListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
-        sidebar.add(databasesListToggleButton);
-        sidebar.add(databasesListPane);
+        //sidebar.add(databasesListToggleButton);
+        //sidebar.add(databasesListPane);
+
+        // Wrapper panel
+        JPanel wrapperPanel = new JPanel();
+        wrapperPanel.add(databasesListToggleButton);
+        wrapperPanel.add(databasesListPane);
+        sidebar.add(wrapperPanel);
 
         /* Add contents */
         // TODO populate pane with all databases options
+
+        JLabel testLabel = new JLabel("Test");
+        databasesListPane.add(testLabel);
     }
 
     /**
@@ -136,16 +159,26 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     private void createMiscList() {
         // Create new collapsible pane
         miscListPane = new JXCollapsiblePane();
+        miscListPane.setCollapsed(true);
         miscListPane.setLayout(new BoxLayout(miscListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
         miscListToggleButton = SwingUtils.createButton("Misc.", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleMiscList);
         miscListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
-        sidebar.add(miscListToggleButton);
-        sidebar.add(miscListPane);
+        //sidebar.add(miscListToggleButton);
+        //sidebar.add(miscListPane);
+
+        // Wrapper panel
+        JPanel wrapperPanel = new JPanel();
+        wrapperPanel.add(miscListToggleButton);
+        wrapperPanel.add(miscListPane);
+        sidebar.add(wrapperPanel);
 
         /* Add contents */
         // TODO populate pane with all databases options
+
+        JLabel testLabel = new JLabel("Test");
+        miscListPane.add(testLabel);
     }
 
     /* Button Actions */

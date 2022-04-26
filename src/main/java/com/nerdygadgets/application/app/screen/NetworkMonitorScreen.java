@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -23,7 +22,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) {
         super(applicationFrame);
 
-        // Configure main panel
+        // Configure screen
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -32,14 +31,14 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     }
 
     private void createHeader() {
+        // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
-        header.setBorder(new MatteBorder(0, 0, 3, 0, Colors.BACKGROUND_ACCENT));
         header.setBackground(Colors.BACKGROUND);
-        SwingUtils.setSize(header, new Dimension(1000, 50));
+        header.setPreferredSize(new Dimension(1000, 50));
         this.add(header, BorderLayout.PAGE_START);
 
-        /* Populate header panel */
+        /* Populate panel */
 
         // Add home button
         JButton homeButton = SwingUtils.createButton("Home", new ImageIcon("assets\\icons\\home.png"), this::actionReturnToHome);

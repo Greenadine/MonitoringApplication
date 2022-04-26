@@ -22,11 +22,17 @@ public class NetworkConfiguration {
     private final NetworkComponentList<Webserver> webservers;
 
     public NetworkConfiguration(@NotNull final String name, @NotNull final String ip, @NotNull final String subnet) {
+        this(name, ip, subnet, null, new NetworkComponentList<>(), new NetworkComponentList<>());
+    }
+
+    public NetworkConfiguration(@NotNull final String name, @NotNull final String ip, @NotNull final String subnet, @Nullable final Firewall firewall,
+                                @NotNull final NetworkComponentList<Database> databases, @NotNull final NetworkComponentList<Webserver> webservers) {
         this.name = name;
         this.ip = ip;
         this.subnet = subnet;
-        this.databases = new NetworkComponentList<>();
-        this.webservers = new NetworkComponentList<>();
+        this.firewall = firewall;
+        this.databases = databases;
+        this.webservers = webservers;
     }
 
     /**

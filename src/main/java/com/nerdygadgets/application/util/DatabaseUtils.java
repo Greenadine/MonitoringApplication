@@ -2,7 +2,6 @@ package com.nerdygadgets.application.util;
 
 import com.nerdygadgets.application.exception.DatabaseException;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;

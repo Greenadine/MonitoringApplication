@@ -10,6 +10,19 @@ import java.awt.event.ActionListener;
 public final class SwingUtils {
 
     /**
+     * Sets the size of the given {@link JComponent}.
+     *
+     * @param target The {@code JComponent}.
+     * @param width The width in pixels.
+     * @param height The height in pixels.
+     */
+    public static void setSize(@NotNull final JComponent target, final int width, final int height) {
+        final Dimension dimension = new Dimension(width, height);
+        target.setPreferredSize(dimension);
+        target.setMaximumSize(dimension);
+    }
+
+    /**
      * Adds a button to the given target {@link JComponent}.
      *
      * @param target The target {@code JComponent}.
@@ -36,7 +49,7 @@ public final class SwingUtils {
      */
     public static JButton createButton(@Nullable final String text, @Nullable final Icon icon, final int width, final int height, @NotNull final ActionListener actionListener) {
         JButton button = createButton(text, icon, actionListener);
-        setSize(button, new Dimension(width, height));
+        setSize(button, width, height);
         return button;
     }
 
@@ -71,10 +84,5 @@ public final class SwingUtils {
 
     public static void addVerticalSpacer(@NotNull final JComponent target, final int height) {
         target.add(Box.createVerticalStrut(height));
-    }
-
-    public static void setSize(@NotNull final JComponent component, @NotNull final Dimension dimension) {
-        component.setPreferredSize(dimension);
-        component.setMaximumSize(dimension);
     }
 }

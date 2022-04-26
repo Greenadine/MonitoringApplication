@@ -2,10 +2,13 @@ package com.nerdygadgets.application;
 
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 import com.nerdygadgets.application.app.ApplicationFrame;
+import com.nerdygadgets.application.data.NetworkComponents;
 
 import javax.swing.*;
 
 public class Main {
+
+    private static NetworkComponents networkComponents;
 
     private static ApplicationFrame applicationFrame;
 
@@ -18,6 +21,11 @@ public class Main {
             ex.printStackTrace();
         }
 
+        networkComponents = new NetworkComponents();
         applicationFrame = new ApplicationFrame();
+    }
+
+    public static NetworkComponents getNetworkComponents() {
+        return networkComponents;
     }
 }
