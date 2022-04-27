@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class NetworkMonitorScreen extends AbstractApplicationScreen {
@@ -43,6 +43,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
+        header.setBorder(new MatteBorder(0, 0, 5, 0, Colors.BACKGROUND_ACCENT));
         header.setBackground(Colors.BACKGROUND);
         header.setPreferredSize(new Dimension(1250, 50));
         this.add(header, BorderLayout.PAGE_START);
@@ -69,6 +70,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     private void createSidebar() throws IOException {
         sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBorder(new MatteBorder(0, 3, 3, 3, Colors.BACKGROUND_ACCENT));
         sidebar.setBackground(Colors.BACKGROUND);
         this.add(sidebar, BorderLayout.LINE_START);
 
@@ -96,7 +98,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         // Create content panel
         JPanel networkInformationPanel = new JPanel();
         networkInformationPanel.setLayout(new GridLayout(2, 2));
-        networkInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
+        networkInformationPanel.setBackground(Colors.TABLE_CONTENT);
         networkPanel.add(networkInformationPanel);
 
         // Add system uptime
@@ -172,7 +174,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         storageHeaderPanel.setBackground(Colors.BACKGROUND);
         storagePanel.add(storageHeaderPanel);
 
-        JLabel storageTitleLabel = new JLabel("Storage");
+        JLabel storageTitleLabel = new JLabel("Disks");
         storageTitleLabel.setFont(Fonts.TITLE);
         storageHeaderPanel.add(storageTitleLabel);
 

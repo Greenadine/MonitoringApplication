@@ -57,6 +57,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
+        header.setBorder(new MatteBorder(0, 0, 5, 0, Colors.BACKGROUND_ACCENT));
         header.setBackground(Colors.BACKGROUND);
         header.setPreferredSize(new Dimension(1250, 50));
         this.add(header, BorderLayout.PAGE_START);

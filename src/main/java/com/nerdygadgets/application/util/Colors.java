@@ -9,5 +9,5 @@ public final class Colors {
     public final static Color ACCENT = Color.decode("#3572A0");
 
     public final static Color TABLE_HEADER = Color.decode("#2E343A");
-    public final static Color TABLE_CONTENT = Color.decode("#282D33");
+    public final static Color TABLE_CONTENT = Color.decode("#23272D");
 }
