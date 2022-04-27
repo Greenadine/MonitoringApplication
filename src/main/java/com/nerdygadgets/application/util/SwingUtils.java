@@ -85,4 +85,8 @@ public final class SwingUtils {
     public static void addVerticalSpacer(@NotNull final JComponent target, final int height) {
         target.add(Box.createVerticalStrut(height));
     }
+
+    public static GridBagConstraints createGridBagConstraints(final int locX, final int locY, final int colWidth, final int rowHeight) {
+        return new GridBagConstraints(locX, locY, colWidth, rowHeight, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+    }
 }

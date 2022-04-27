@@ -11,11 +11,13 @@ import com.nerdygadgets.application.util.SwingUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 /**
  * A {@link JPanel} for creating new {@link NetworkConfiguration}s.
@@ -36,7 +38,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     private JButton databasesListToggleButton;
     private JButton miscListToggleButton;
 
-    public CreateNetworkConfigurationScreen(@NotNull final ApplicationFrame applicationFrame) {
+    public CreateNetworkConfigurationScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException {
         super(applicationFrame);
         this.applicationFrame = applicationFrame;
 
@@ -51,7 +53,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     /**
      * Creates and populates the header {@link JPanel}.
      */
-    private void createHeader() {
+    private void createHeader() throws IOException {
         // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
@@ -62,7 +64,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         /* Populate panel */
 
         // Add home button
-        JButton homeButton = SwingUtils.createButton("Home", new ImageIcon("assets\\icons\\home.png"), this::actionReturnToHome);
+        JButton homeButton = SwingUtils.createButton("Home", new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/assets/icons/home.png"))), this::actionReturnToHome);
         homeButton.setBackground(Colors.ACCENT);
         homeButton.setForeground(Color.WHITE);
         homeButton.setIconTextGap(15);

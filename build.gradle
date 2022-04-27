@@ -24,6 +24,7 @@ dependencies {
     // Utility libraries
     implementation 'commons-io:commons-io:2.7'
     implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.jetbrains:annotations:23.0.0'
 
     // UI theme

@@ -1,5 +1,7 @@
 package com.nerdygadgets.application.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,11 @@ public class NetworkMonitoringResult {
                 }
                 case 1: {
                     // Last bootup time
+                    try {
+                        this.lastBootUpTime = new SimpleDateFormat("yyyyMMddhhmmss").parse(line.split("\\.")[0]).toInstant();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
                     // TODO find a way to convert last boot up time to Instant (format example: '20220426172411.500000+120')
                     break;
                 }
