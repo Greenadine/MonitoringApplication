@@ -38,8 +38,8 @@ public class NetworkMonitoringResult {
                     String[] strArr = line.split("\\s+"); // Split string on whitespace(s)
 
                     String diskName = strArr[1].trim();
-                    float diskTotalSpace = Long.parseLong(strArr[2]) / 1000000000f;
-                    float diskFreeSpace = Long.parseLong(strArr[0]) / 1000000000f;
+                    float diskTotalSpace = Long.parseLong(strArr[2]) / 1073741824f;
+                    float diskFreeSpace = Long.parseLong(strArr[0]) / 1073741824f;
 
                     diskResults.add(new DiskResult(diskName, diskTotalSpace, diskFreeSpace));
                     break;

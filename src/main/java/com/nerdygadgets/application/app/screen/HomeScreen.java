@@ -96,4 +96,9 @@ public class HomeScreen extends AbstractApplicationScreen {
     public void preOpen() {
         // Nothing
     }
+
+    @Override
+    public void postClose() {
+        // Nothing
+    }
 }

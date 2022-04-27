@@ -16,12 +16,14 @@ public final class NetworkMonitoring {
         ArrayList<String> result = new ArrayList<>();
 
         System.out.println("----- PS Out -----");
+        int i = 0;
         while ((line = psOut.readLine()) != null) {
             if (line.trim().isEmpty()) {
                 continue;
             }
             result.add(line);
-            System.out.println(line);
+            System.out.println(i + ": " + line);
+            i++;
         }
         System.out.println("------------------");
 

@@ -221,12 +221,15 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         }
     }
 
-    /**
-     * Method to be executed prior to every time this panel will be displayed.
-     */
+    @Override
     public void preOpen() {
         webserversListPane.setCollapsed(false);
         databasesListPane.setCollapsed(false);
         miscListPane.setCollapsed(false);
+    }
+
+    @Override
+    public void postClose() {
+        // Nothing
     }
 }

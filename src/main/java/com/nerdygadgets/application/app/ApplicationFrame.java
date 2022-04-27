@@ -1,13 +1,16 @@
 package com.nerdygadgets.application.app;
 
+import com.nerdygadgets.application.app.screen.AbstractApplicationScreen;
 import com.nerdygadgets.application.app.screen.CreateNetworkConfigurationScreen;
 import com.nerdygadgets.application.app.screen.HomeScreen;
 import com.nerdygadgets.application.app.screen.NetworkMonitorScreen;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Optional;
 
 public class ApplicationFrame extends JFrame {
 
@@ -16,6 +19,8 @@ public class ApplicationFrame extends JFrame {
     private final HomeScreen homeScreen;
     private final CreateNetworkConfigurationScreen createNetworkConfigurationScreen;
     private final NetworkMonitorScreen networkMonitorScreen;
+
+    private AbstractApplicationScreen currentScreen;
 
     public ApplicationFrame() throws IOException {
         /* Configure frame */
@@ -54,6 +59,24 @@ public class ApplicationFrame extends JFrame {
 
     public HomeScreen getHomeScreen() {
         return homeScreen;
+    }
+
+    /**
+     * Gets the currently opened {@link AbstractApplicationScreen}.
+     *
+     * @return The currently opened {@code AbstractApplicationScreen}.
+     */
+    public Optional<AbstractApplicationScreen> getCurrentScreen() {
+        return Optional.ofNullable(currentScreen);
+    }
+
+    /**
+     * Sets he currently opened {@link {@code AbstractApplicationScreen}}.
+     *
+     * @param applicationScreen The {@code AbstractApplicationScreen}.
+     */
+    public void setCurrentScreen(@NotNull final AbstractApplicationScreen applicationScreen) {
+        this.currentScreen = applicationScreen;
     }
 
     public CreateNetworkConfigurationScreen getCreateNetworkConfigurationScreen() {

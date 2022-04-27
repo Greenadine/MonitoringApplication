@@ -23,8 +23,12 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
     private ArrayList<String> test;
 
+    private MonitorUpdater updater;
+
     public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException {
         super(applicationFrame);
+
+        this.updater = new MonitorUpdater();
 
         // Configure screen
         this.setLayout(new BorderLayout());
@@ -39,7 +43,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
         header.setBackground(Colors.BACKGROUND);
-        header.setPreferredSize(new Dimension(1000, 50));
+        header.setPreferredSize(new Dimension(1250, 50));
         this.add(header, BorderLayout.PAGE_START);
 
         /* Populate panel */
@@ -57,7 +61,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         // Add title label
         JLabel titleLabel = new JLabel("Network Monitor");
         titleLabel.setFont(Fonts.TITLE);
-        titleLabel.setBorder(new EmptyBorder(5, 5, 5, 400)); // TODO center label properly (without this)
+        titleLabel.setBorder(new EmptyBorder(5, 5, 5, 500)); // TODO center label properly (without this)
         header.add(titleLabel);
     }
 
@@ -103,8 +107,6 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         networkCpuUsageValue = new JLabel("0%", SwingConstants.RIGHT);
         networkCpuUsageValue.setFont(Fonts.PARAGRAPH_BIG);
         networkInformationPanel.add(networkCpuUsageValue);
-
-        Tasker.scheduleTask(new MonitorUpdater(), 0, 100);
 
         // TODO this currently displays information about current system, not a remote server
 
@@ -168,9 +170,10 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
         JLabel diskTotalSpaceHeaderLabel = new JLabel("Total Space", SwingConstants.RIGHT);
         diskTotalSpaceHeaderLabel.setFont(Fonts.PARAGRAPH);
+        diskTotalSpaceHeaderLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
         storageInformationPanel.add(diskTotalSpaceHeaderLabel);
 
-        JLabel diskSpaceInUseHeaderLabel = new JLabel("In Use", SwingConstants.RIGHT);
+        JLabel diskSpaceInUseHeaderLabel = new JLabel("Free Space", SwingConstants.RIGHT);
         diskSpaceInUseHeaderLabel.setFont(Fonts.PARAGRAPH);
         storageInformationPanel.add(diskSpaceInUseHeaderLabel);
 
@@ -185,6 +188,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
             storageInformationPanel.add(diskNameLabel);
 
             JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", diskResult.getTotalSpace()), SwingConstants.RIGHT);
+            diskTotalSpaceLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
             diskTotalSpaceLabel.setFont(Fonts.PARAGRAPH);
             storageInformationPanel.add(diskTotalSpaceLabel);
 
@@ -192,7 +196,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
             diskSpaceInUseLabel.setFont(Fonts.PARAGRAPH);
             storageInformationPanel.add(diskSpaceInUseLabel);
 
-            JLabel diskSpaceUsedLabel = new JLabel(String.format("%.2f%%", (diskResult.getFreeSpace() / diskResult.getTotalSpace()) * 100), SwingConstants.RIGHT);
+            JLabel diskSpaceUsedLabel = new JLabel(String.format("%.2f%%", 100 - (diskResult.getFreeSpace() / diskResult.getTotalSpace()) * 100), SwingConstants.RIGHT);
             diskSpaceUsedLabel.setFont(Fonts.PARAGRAPH);
             storageInformationPanel.add(diskSpaceUsedLabel);
         }
@@ -211,7 +215,13 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
     @Override
     public void preOpen() {
-        // TODO
+        updater =new MonitorUpdater();
+        Tasker.scheduleTask(updater, 0, 1000);
+    }
+
+    @Override
+    public void postClose() {
+        updater.cancel();
     }
 
     private class MonitorUpdater extends TimerTask {

@@ -23,12 +23,14 @@ public abstract class AbstractApplicationScreen extends JPanel {
      */
     public void open() {
         applicationFrame.setVisible(false);
+        applicationFrame.getCurrentScreen().ifPresent(AbstractApplicationScreen::postClose); // Perform post close of previous screen
         preOpen();
         applicationFrame.getContentPanel().removeAll(); // Remove all current contents
         applicationFrame.getContentPanel().add(this);
         applicationFrame.getContentPanel().repaint();
         applicationFrame.pack(); // Resize frame to fit content
         applicationFrame.centerFrame();
+        applicationFrame.setCurrentScreen(this); // Set this screen as current
         applicationFrame.setVisible(true);
     }
 
@@ -36,4 +38,9 @@ public abstract class AbstractApplicationScreen extends JPanel {
      * Method called before the panel is opened.
      */
     public abstract void preOpen();
+
+    /**
+     * Method called after a panel was closed.
+     */
+    public abstract void postClose();
 }
