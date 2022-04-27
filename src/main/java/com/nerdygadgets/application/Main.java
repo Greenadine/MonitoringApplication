@@ -14,18 +14,17 @@ public class Main {
 
     private static ApplicationFrame applicationFrame;
 
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) {
+        networkComponents = new NetworkComponents();
+
         // Attempt to set application theme
         try {
             UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
+            applicationFrame = new ApplicationFrame();
         } catch (Exception ex) {
-            System.out.println("Failed to set application theme to dark.");
+            System.out.println("An error occurred when opening the application.");
             ex.printStackTrace();
         }
-
-        networkComponents = new NetworkComponents();
-        applicationFrame = new ApplicationFrame();
     }
 
     public static NetworkComponents getNetworkComponents() {

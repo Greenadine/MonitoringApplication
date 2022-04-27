@@ -101,6 +101,8 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         // Create new collapsible pane
         webserversListPane = new JXCollapsiblePane();
         webserversListPane.setLayout(new BoxLayout(webserversListPane.getContentPane(), BoxLayout.Y_AXIS));
+        webserversListPane.setBorder(new EmptyBorder(5, 10, 5, 10));
+        webserversListPane.setAlignmentX(LEFT_ALIGNMENT);
 
         // Create and add toggle button for collapsible pane
         webserversListToggleButton = SwingUtils.createButton("Webservers", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleWebserversList);
@@ -122,6 +124,8 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         // Create new collapsible pane
         databasesListPane = new JXCollapsiblePane();
         databasesListPane.setLayout(new BoxLayout(databasesListPane.getContentPane(), BoxLayout.Y_AXIS));
+        databasesListPane.setBorder(new EmptyBorder(5, 10, 5, 10));
+        databasesListPane.setAlignmentX(LEFT_ALIGNMENT);
 
         // Create and add toggle button for collapsible pane
         databasesListToggleButton = SwingUtils.createButton("Databases", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleDatabasesList);
@@ -132,8 +136,10 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         /* Add contents */
         // TODO populate pane with all databases options
 
-        JLabel testLabel = new JLabel("Test");
-        databasesListPane.add(testLabel);
+        for (int i = 0; i < 5; i++) {
+            JLabel testLabel = new JLabel("Test " + (i + 1));
+            databasesListPane.add(testLabel);
+        }
     }
 
     /**
@@ -143,6 +149,8 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         // Create new collapsible pane
         miscListPane = new JXCollapsiblePane();
         miscListPane.setLayout(new BoxLayout(miscListPane.getContentPane(), BoxLayout.Y_AXIS));
+        miscListPane.setBorder(new EmptyBorder(5, 10, 5, 10));
+        miscListPane.setAlignmentX(LEFT_ALIGNMENT);
 
         // Create and add toggle button for collapsible pane
         miscListToggleButton = SwingUtils.createButton("Misc.", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleMiscList);

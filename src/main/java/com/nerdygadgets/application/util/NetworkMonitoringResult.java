@@ -17,24 +17,24 @@ public class NetworkMonitoringResult {
             String line = output.get(i).trim();
 
             switch (i) {
-                // These lines do not contain data, and can be skipped
                 case 0:
                 case 2:
                 case 4: {
+                    // These lines do not contain data, and can be skipped
                     continue;
                 }
-                // Last bootup time
                 case 1: {
+                    // Last bootup time
                     // TODO find a way to convert last boot up time to Instant (format example: '20220426172411.500000+120')
                     break;
                 }
-                // CPU load
                 case 3: {
+                    // CPU load
                     this.cpuLoad = Integer.parseInt(line);
                     break;
                 }
-                // All other lines, which contain data about every disk in the system
                 default: {
+                    // All other lines, which contain data about every disk in the system
                     String[] strArr = line.split("\\s+"); // Split string on whitespace(s)
 
                     String diskName = strArr[1].trim();

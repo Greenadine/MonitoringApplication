@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
@@ -80,25 +79,29 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         sidebar.add(networkPanel);
 
         // Add header
-        JLabel networkTitleLabel = new JLabel("System", SwingConstants.CENTER);
-        networkPanel.setAlignmentX(CENTER_ALIGNMENT);
-        networkPanel.setAlignmentY(CENTER_ALIGNMENT);
+        JPanel networkHeaderPanel = new JPanel();
+        networkHeaderPanel.setLayout(new FlowLayout());
+        networkHeaderPanel.setBackground(Colors.BACKGROUND);
+        networkPanel.add(networkHeaderPanel);
+
+        JLabel networkTitleLabel = new JLabel("System");
         networkTitleLabel.setFont(Fonts.TITLE);
-        networkPanel.add(networkTitleLabel);
+        networkHeaderPanel.add(networkTitleLabel);
 
         // Create content panel
         JPanel networkInformationPanel = new JPanel();
         networkInformationPanel.setLayout(new GridLayout(1, 2));
+        networkInformationPanel.setBorder(new EmptyBorder(2, 5, 2, 5));
         networkInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
         networkPanel.add(networkInformationPanel);
 
         // Add CPU load
         JLabel networkCpuUsageLabel = new JLabel("CPU Usage");
-        networkCpuUsageLabel.setFont(Fonts.PARAGRAPH);
+        networkCpuUsageLabel.setFont(Fonts.PARAGRAPH_BIG);
         networkInformationPanel.add(networkCpuUsageLabel);
 
         networkCpuUsageValue = new JLabel("0%", SwingConstants.RIGHT);
-        networkCpuUsageValue.setFont(Fonts.PARAGRAPH);
+        networkCpuUsageValue.setFont(Fonts.PARAGRAPH_BIG);
         networkInformationPanel.add(networkCpuUsageValue);
 
         Tasker.scheduleTask(new MonitorUpdater(), 0, 100);
@@ -141,16 +144,21 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         sidebar.add(storagePanel);
 
         // Add header
-        JLabel storageTitleLabel = new JLabel("Storage", SwingConstants.CENTER);
-        storageTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        JPanel storageHeaderPanel = new JPanel();
+        storageHeaderPanel.setLayout(new FlowLayout());
+        storageHeaderPanel.setBackground(Colors.BACKGROUND);
+        storagePanel.add(storageHeaderPanel);
+
+        JLabel storageTitleLabel = new JLabel("Storage");
         storageTitleLabel.setFont(Fonts.TITLE);
-        storagePanel.add(storageTitleLabel);
+        storageHeaderPanel.add(storageTitleLabel);
 
         NetworkMonitoringResult monitoringResult = NetworkMonitoring.getResult();
 
         // Create content panel
         JPanel storageInformationPanel = new JPanel();
-        storageInformationPanel.setLayout(new GridLayout(monitoringResult.getDisks().size() + 1, 3));
+        storageInformationPanel.setLayout(new GridLayout(monitoringResult.getDisks().size() + 1, 4));
+        storageInformationPanel.setBorder(new EmptyBorder(2, 5, 2, 5));
         storageInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
         storagePanel.add(storageInformationPanel);
 
@@ -162,9 +170,14 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         diskTotalSpaceHeaderLabel.setFont(Fonts.PARAGRAPH);
         storageInformationPanel.add(diskTotalSpaceHeaderLabel);
 
+        JLabel diskSpaceInUseHeaderLabel = new JLabel("In Use", SwingConstants.RIGHT);
+        diskSpaceInUseHeaderLabel.setFont(Fonts.PARAGRAPH);
+        storageInformationPanel.add(diskSpaceInUseHeaderLabel);
+
         JLabel diskSpaceUsedHeaderLabel = new JLabel("% Used", SwingConstants.RIGHT);
         diskSpaceUsedHeaderLabel.setFont(Fonts.PARAGRAPH);
         storageInformationPanel.add(diskSpaceUsedHeaderLabel);
+
 
         for (NetworkMonitoringResult.DiskResult diskResult : monitoringResult.getDisks()) {
             JLabel diskNameLabel = new JLabel(diskResult.getName());
@@ -174,6 +187,10 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
             JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", diskResult.getTotalSpace()), SwingConstants.RIGHT);
             diskTotalSpaceLabel.setFont(Fonts.PARAGRAPH);
             storageInformationPanel.add(diskTotalSpaceLabel);
+
+            JLabel diskSpaceInUseLabel = new JLabel(String.format("%.2f GB", diskResult.getFreeSpace()), SwingConstants.RIGHT);
+            diskSpaceInUseLabel.setFont(Fonts.PARAGRAPH);
+            storageInformationPanel.add(diskSpaceInUseLabel);
 
             JLabel diskSpaceUsedLabel = new JLabel(String.format("%.2f%%", (diskResult.getFreeSpace() / diskResult.getTotalSpace()) * 100), SwingConstants.RIGHT);
             diskSpaceUsedLabel.setFont(Fonts.PARAGRAPH);
