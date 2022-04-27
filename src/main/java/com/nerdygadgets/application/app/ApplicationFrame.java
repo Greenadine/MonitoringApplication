@@ -4,6 +4,7 @@ import com.nerdygadgets.application.app.screen.CreateNetworkConfigurationScreen;
 import com.nerdygadgets.application.app.screen.HomeScreen;
 import com.nerdygadgets.application.app.screen.NetworkMonitorScreen;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -16,12 +17,11 @@ public class ApplicationFrame extends JFrame {
     private final CreateNetworkConfigurationScreen createNetworkConfigurationScreen;
     private final NetworkMonitorScreen networkMonitorScreen;
 
-    public ApplicationFrame() throws IOException
-    {
+    public ApplicationFrame() throws IOException {
         /* Configure frame */
         this.setTitle("NerdyGadgets Network Application");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setIconImage(new ImageIcon("assets\\icons\\app.png").getImage());
+        this.setIconImage(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/assets/icons/app.png"))).getImage());
         this.setResizable(false);
 
         /* Create panels */

@@ -9,8 +9,6 @@ import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
-import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.table.LabelProperties;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -105,7 +103,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         webserversListPane.setLayout(new BoxLayout(webserversListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
-        webserversListToggleButton = SwingUtils.createButton("Webservers", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleWebserversList);
+        webserversListToggleButton = SwingUtils.createButton("Webservers", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleWebserversList);
         webserversListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
         sidebar.add(webserversListToggleButton);
         sidebar.add(webserversListPane);
@@ -126,7 +124,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         databasesListPane.setLayout(new BoxLayout(databasesListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
-        databasesListToggleButton = SwingUtils.createButton("Databases", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleDatabasesList);
+        databasesListToggleButton = SwingUtils.createButton("Databases", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleDatabasesList);
         databasesListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
         sidebar.add(databasesListToggleButton);
         sidebar.add(databasesListPane);
@@ -147,7 +145,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         miscListPane.setLayout(new BoxLayout(miscListPane.getContentPane(), BoxLayout.Y_AXIS));
 
         // Create and add toggle button for collapsible pane
-        miscListToggleButton = SwingUtils.createButton("Misc.", new ImageIcon("assets\\icons\\arrow-up.png"), 250, 40, this::actionToggleMiscList);
+        miscListToggleButton = SwingUtils.createButton("Misc.", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleMiscList);
         miscListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
         sidebar.add(miscListToggleButton);
         sidebar.add(miscListPane);
@@ -176,13 +174,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      * @param event The {@link ActionEvent}.
      */
     private void actionToggleWebserversList(ActionEvent event) {
-        webserversListPane.setCollapsed(!webserversListPane.isCollapsed()); // Toggle collapsed
-
-        if (webserversListPane.isCollapsed()) {
-            webserversListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-down.png"));
-        } else {
-            webserversListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-up.png"));
-        }
+        togglePane(webserversListPane, webserversListToggleButton);
     }
 
     /**
@@ -191,13 +183,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      * @param event The {@link ActionEvent}.
      */
     private void actionToggleDatabasesList(ActionEvent event) {
-        databasesListPane.setCollapsed(!databasesListPane.isCollapsed()); // Toggle collapsed
-
-        if (databasesListPane.isCollapsed()) {
-            databasesListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-down.png"));
-        } else {
-            databasesListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-up.png"));
-        }
+        togglePane(databasesListPane, databasesListToggleButton);
     }
 
     /**
@@ -206,12 +192,24 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      * @param event The {@link ActionEvent}.
      */
     private void actionToggleMiscList(ActionEvent event) {
-        miscListPane.setCollapsed(!miscListPane.isCollapsed()); // Toggle collapsed
+        togglePane(miscListPane, miscListToggleButton);
+    }
 
-        if (miscListPane.isCollapsed()) {
-            miscListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-down.png"));
+    /* Utility methods */
+
+    /**
+     * Toggles the given {@link JXCollapsiblePane}, as well as updates the pane's toggle {@link JButton}.
+     *
+     * @param collapsiblePane The {@code JXCollapsiblePane}.
+     * @param toggleButton The {@code JButton} that toggles the {@code JXCollapsiblePane}.
+     */
+    private void togglePane(@NotNull final JXCollapsiblePane collapsiblePane, @NotNull final JButton toggleButton) {
+        collapsiblePane.setCollapsed(!collapsiblePane.isCollapsed()); // Toggle collapsed
+
+        if (collapsiblePane.isCollapsed()) {
+            toggleButton.setIcon(new ImageIcon(getClass().getResource("/assets/icons/arrow-down.png")));
         } else {
-            miscListToggleButton.setIcon(new ImageIcon("assets\\icons\\arrow-up.png"));
+            toggleButton.setIcon(new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")));
         }
     }
 

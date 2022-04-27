@@ -1,21 +1,18 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.ApplicationFrame;
-import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Fonts;
-import com.nerdygadgets.application.util.SwingUtils;
+import com.nerdygadgets.application.util.*;
 import org.jetbrains.annotations.NotNull;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
@@ -25,11 +22,9 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     private JLabel networkUptimeValue;
     private JLabel networkCpuUsageValue;
 
-    public String cpu;
-    private ArrayList<String>test;
+    private ArrayList<String> test;
 
-    public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException
-    {
+    public NetworkMonitorScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException {
         super(applicationFrame);
 
         // Configure screen
@@ -40,7 +35,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         createSidebar();
     }
 
-    private void createHeader() {
+    private void createHeader() throws IOException {
         // Create and configure panel
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
@@ -51,7 +46,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         /* Populate panel */
 
         // Add home button
-        JButton homeButton = SwingUtils.createButton("Home", new ImageIcon("assets\\icons\\home.png"), this::actionReturnToHome);
+        JButton homeButton = SwingUtils.createButton("Home", new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/assets/icons/home.png"))), this::actionReturnToHome);
         homeButton.setBackground(Colors.ACCENT);
         homeButton.setForeground(Color.WHITE);
         homeButton.setIconTextGap(15);
@@ -67,8 +62,7 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         header.add(titleLabel);
     }
 
-    private void createSidebar() throws IOException
-    {
+    private void createSidebar() throws IOException {
         sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(Colors.BACKGROUND);
@@ -76,11 +70,9 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
 
         addNetworkInformation();
         addStorageInformation();
-        //findCPUUsage();
     }
 
-    private void addNetworkInformation() throws IOException
-    {
+    private void addNetworkInformation() {
         // Create panel
         JPanel networkPanel = new JPanel();
         networkPanel.setLayout(new BoxLayout(networkPanel, BoxLayout.Y_AXIS));
@@ -88,18 +80,32 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         sidebar.add(networkPanel);
 
         // Add header
-        JLabel networkTitleLabel = new JLabel("Network");
-        networkTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
+        JLabel networkTitleLabel = new JLabel("System", SwingConstants.CENTER);
+        networkPanel.setAlignmentX(CENTER_ALIGNMENT);
+        networkPanel.setAlignmentY(CENTER_ALIGNMENT);
         networkTitleLabel.setFont(Fonts.TITLE);
         networkPanel.add(networkTitleLabel);
 
         // Create content panel
         JPanel networkInformationPanel = new JPanel();
-        networkInformationPanel.setLayout(new GridLayout(3, 2));
+        networkInformationPanel.setLayout(new GridLayout(1, 2));
         networkInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
         networkPanel.add(networkInformationPanel);
 
-        // Add network status
+        // Add CPU load
+        JLabel networkCpuUsageLabel = new JLabel("CPU Usage");
+        networkCpuUsageLabel.setFont(Fonts.PARAGRAPH);
+        networkInformationPanel.add(networkCpuUsageLabel);
+
+        networkCpuUsageValue = new JLabel("0%", SwingConstants.RIGHT);
+        networkCpuUsageValue.setFont(Fonts.PARAGRAPH);
+        networkInformationPanel.add(networkCpuUsageValue);
+
+        Tasker.scheduleTask(new MonitorUpdater(), 0, 100);
+
+        // TODO this currently displays information about current system, not a remote server
+
+        /*// Add network status
         JLabel networkStatusLabel = new JLabel("Status");
         networkStatusLabel.setFont(Fonts.PARAGRAPH);
         networkInformationPanel.add(networkStatusLabel);
@@ -122,14 +128,12 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         networkCpuUsageLabel.setFont(Fonts.PARAGRAPH);
         networkInformationPanel.add(networkCpuUsageLabel);
 
-        networkCpuUsageValue = new JLabel();
-        networkCpuUsageValue.setText("test cpu");
+        networkCpuUsageValue = new JLabel("0%");
         networkCpuUsageValue.setFont(Fonts.PARAGRAPH);
-        networkInformationPanel.add(networkCpuUsageValue);
-        findCPUUsage();
+        networkInformationPanel.add(networkCpuUsageValue);*/
     }
 
-    private void addStorageInformation() {
+    private void addStorageInformation() throws IOException {
         // Create panel
         JPanel storagePanel = new JPanel();
         storagePanel.setLayout(new BoxLayout(storagePanel, BoxLayout.Y_AXIS));
@@ -137,34 +141,45 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
         sidebar.add(storagePanel);
 
         // Add header
-        JLabel storageTitleLabel = new JLabel("Storage", SwingConstants.LEFT);
+        JLabel storageTitleLabel = new JLabel("Storage", SwingConstants.CENTER);
         storageTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         storageTitleLabel.setFont(Fonts.TITLE);
         storagePanel.add(storageTitleLabel);
 
+        NetworkMonitoringResult monitoringResult = NetworkMonitoring.getResult();
+
         // Create content panel
         JPanel storageInformationPanel = new JPanel();
-        storageInformationPanel.setLayout(new GridLayout(3, 2));
-        storageInformationPanel.setForeground(Colors.BACKGROUND_ACCENT);
+        storageInformationPanel.setLayout(new GridLayout(monitoringResult.getDisks().size() + 1, 3));
+        storageInformationPanel.setBackground(Colors.BACKGROUND_ACCENT);
         storagePanel.add(storageInformationPanel);
+
+        JLabel diskNameHeaderLabel = new JLabel("Name");
+        diskNameHeaderLabel.setFont(Fonts.PARAGRAPH);
+        storageInformationPanel.add(diskNameHeaderLabel);
+
+        JLabel diskTotalSpaceHeaderLabel = new JLabel("Total Space", SwingConstants.RIGHT);
+        diskTotalSpaceHeaderLabel.setFont(Fonts.PARAGRAPH);
+        storageInformationPanel.add(diskTotalSpaceHeaderLabel);
+
+        JLabel diskSpaceUsedHeaderLabel = new JLabel("% Used", SwingConstants.RIGHT);
+        diskSpaceUsedHeaderLabel.setFont(Fonts.PARAGRAPH);
+        storageInformationPanel.add(diskSpaceUsedHeaderLabel);
+
+        for (NetworkMonitoringResult.DiskResult diskResult : monitoringResult.getDisks()) {
+            JLabel diskNameLabel = new JLabel(diskResult.getName());
+            diskNameLabel.setFont(Fonts.PARAGRAPH);
+            storageInformationPanel.add(diskNameLabel);
+
+            JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", diskResult.getTotalSpace()), SwingConstants.RIGHT);
+            diskTotalSpaceLabel.setFont(Fonts.PARAGRAPH);
+            storageInformationPanel.add(diskTotalSpaceLabel);
+
+            JLabel diskSpaceUsedLabel = new JLabel(String.format("%.2f%%", (diskResult.getFreeSpace() / diskResult.getTotalSpace()) * 100), SwingConstants.RIGHT);
+            diskSpaceUsedLabel.setFont(Fonts.PARAGRAPH);
+            storageInformationPanel.add(diskSpaceUsedLabel);
+        }
     }
-
-    private void findCPUUsage() throws IOException
-    {
-        NetworkMonitorWMIC n1 = new NetworkMonitorWMIC();
-
-        test = n1.getOutput();
-        for (String a : test) {
-            System.out.println(a);
-
-    }
-
-
-    }
-
-
-
-
 
     /* Button Actions */
 
@@ -180,5 +195,17 @@ public class NetworkMonitorScreen extends AbstractApplicationScreen {
     @Override
     public void preOpen() {
         // TODO
+    }
+
+    private class MonitorUpdater extends TimerTask {
+
+        @Override
+        public void run() {
+            try {
+                NetworkMonitoringResult result = NetworkMonitoring.getResult();
+
+                networkCpuUsageValue.setText(result.getCpuLoad() + "%");
+            } catch (IOException ignored) { }
+        }
     }
 }
