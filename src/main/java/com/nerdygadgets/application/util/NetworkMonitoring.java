@@ -15,12 +15,28 @@ public final class NetworkMonitoring {
 
         ArrayList<String> result = new ArrayList<>();
 
+        System.out.println("----- PS Out -----");
         while ((line = psOut.readLine()) != null) {
             if (line.trim().isEmpty()) {
                 continue;
             }
             result.add(line);
+            System.out.println(line);
         }
+        System.out.println("------------------");
+
+        BufferedReader psErr = new BufferedReader(new InputStreamReader(psProcess.getErrorStream()));
+
+        System.out.println("----- PS Error -----");
+        while ((line = psErr.readLine()) != null) {
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
+            System.out.println(line);
+        }
+        System.out.println("--------------------");
+
         return new NetworkMonitoringResult(result);
     }
 }
