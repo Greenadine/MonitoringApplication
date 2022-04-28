@@ -1,6 +1,6 @@
 package com.nerdygadgets.application.app.screen;
 
-import com.nerdygadgets.application.app.ApplicationFrame;
+import com.nerdygadgets.application.app.ApplicationWindow;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
@@ -11,10 +11,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-public class HomeScreen extends AbstractApplicationScreen {
+public class HomeScreen extends ApplicationScreen {
 
-    public HomeScreen(@NotNull ApplicationFrame applicationFrame) {
-        super(applicationFrame);
+    public HomeScreen(@NotNull ApplicationWindow applicationWindow) {
+        super(applicationWindow);
 
         // Configure screen
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -23,7 +23,7 @@ public class HomeScreen extends AbstractApplicationScreen {
         // Populate screen
         JLabel titleLabel = new JLabel("NerdyGadgets Network Application");
         titleLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
-        titleLabel.setFont(Fonts.TITLE);
+        titleLabel.setFont(Fonts.MAIN_TITLE);
         this.add(titleLabel);
         SwingUtils.addVerticalSpacer(this, 15);
 
@@ -37,9 +37,6 @@ public class HomeScreen extends AbstractApplicationScreen {
         SwingUtils.addVerticalSpacer(this, 20);
 
         SwingUtils.addButton(this, "Network Monitor",  null, 350, 50, this::actionOpenNetworkMonitor);
-        SwingUtils.addVerticalSpacer(this, 10);
-
-        SwingUtils.addButton(this, "Availability Calculator",  null, 350, 50, this::actionOpenAvailabilityCalculator);
     }
 
     /* Action listeners */
@@ -50,7 +47,7 @@ public class HomeScreen extends AbstractApplicationScreen {
      * @param event The {@link ActionEvent}.
      */
     private void actionCreateNetworkConfiguration(ActionEvent event) {
-        applicationFrame.getCreateNetworkConfigurationScreen().open();
+        window.getCreateNetworkConfigurationScreen().open();
     }
 
     /**
@@ -66,11 +63,11 @@ public class HomeScreen extends AbstractApplicationScreen {
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        if (chooser.showOpenDialog(applicationFrame) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
             File selected = chooser.getSelectedFile();
 
             System.out.println(selected.getName());
-            // TODO functionality
+            // TODO open network configuration functionality
         }
     }
 
@@ -80,25 +77,16 @@ public class HomeScreen extends AbstractApplicationScreen {
      * @param event The {@link ActionEvent}.
      */
     private void actionOpenNetworkMonitor(ActionEvent event) {
-        applicationFrame.getNetworkMonitorScreen().open();
-    }
-
-    /**
-     * The {@link java.awt.event.ActionListener} for when the "Availability Calculator" button is clicked.
-     *
-     * @param event The {@link ActionEvent}.
-     */
-    private void actionOpenAvailabilityCalculator(ActionEvent event) {
-        // TODO
+        window.getNetworkMonitorScreen().open();
     }
 
     @Override
-    public void preOpen() {
+    public void onOpenImpl() {
         // Nothing
     }
 
     @Override
-    public void postClose() {
+    public void onCloseImpl() {
         // Nothing
     }
 }

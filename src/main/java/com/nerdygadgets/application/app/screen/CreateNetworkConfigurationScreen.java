@@ -1,10 +1,12 @@
 package com.nerdygadgets.application.app.screen;
 
-import com.nerdygadgets.application.app.ApplicationFrame;
+import com.nerdygadgets.application.app.ApplicationWindow;
+import com.nerdygadgets.application.app.panel.ScreenHeader;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.util.ApplicationActions;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
@@ -24,9 +26,9 @@ import java.io.IOException;
  *
  * @author Kevin Zuman
  */
-public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen {
+public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
-    private final ApplicationFrame applicationFrame; // Main window
+    private final ApplicationWindow applicationWindow; // Main window
 
     private JPanel sidebar;
 
@@ -38,47 +40,17 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     private JButton databasesListToggleButton;
     private JButton miscListToggleButton;
 
-    public CreateNetworkConfigurationScreen(@NotNull final ApplicationFrame applicationFrame) throws IOException {
-        super(applicationFrame);
-        this.applicationFrame = applicationFrame;
+    public CreateNetworkConfigurationScreen(@NotNull final ApplicationWindow applicationWindow) {
+        super(applicationWindow);
+        this.applicationWindow = applicationWindow;
 
         // Configure screen
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        createHeader(); // Create and populate header panel
+        // Add panels
+        this.add(new ScreenHeader(this, "New Network Configuration", 1250, 50), BorderLayout.PAGE_START);
         createSidebar(); // Create and populate sidebar panel
-    }
-
-    /**
-     * Creates and populates the header {@link JPanel}.
-     */
-    private void createHeader() throws IOException {
-        // Create and configure panel
-        JPanel header = new JPanel();
-        header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
-        header.setBorder(new MatteBorder(0, 0, 5, 0, Colors.BACKGROUND_ACCENT));
-        header.setBackground(Colors.BACKGROUND);
-        header.setPreferredSize(new Dimension(1250, 50));
-        this.add(header, BorderLayout.PAGE_START);
-
-        /* Populate panel */
-
-        // Add home button
-        JButton homeButton = SwingUtils.createButton("Home", new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/assets/icons/home.png"))), this::actionReturnToHome);
-        homeButton.setBackground(Colors.ACCENT);
-        homeButton.setForeground(Color.WHITE);
-        homeButton.setIconTextGap(15);
-        homeButton.setBorder(new EmptyBorder(15, 10, 15, 10));
-        header.add(homeButton);
-
-        SwingUtils.addVerticalSeparator(header);  // Add separator
-
-        // Add title label
-        JLabel titleLabel = new JLabel("Create Network Configuration");
-        titleLabel.setFont(Fonts.TITLE);
-        titleLabel.setBorder(new EmptyBorder(5, 5, 5, 450)); // TODO center label properly (without this)
-        header.add(titleLabel);
     }
 
     /**
@@ -86,7 +58,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      */
     private void createSidebar() {
         sidebar = new JPanel();
-        sidebar.setBorder(new MatteBorder(0, 0, 0, 3, Colors.BACKGROUND_ACCENT));
+        sidebar.setBorder(new MatteBorder(0, 0, 0, 3, Colors.MAIN_BACKGROUND_ACCENT));
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         this.add(sidebar, BorderLayout.LINE_START);
 
@@ -156,7 +128,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
         miscListPane.setAlignmentX(LEFT_ALIGNMENT);
 
         // Create and add toggle button for collapsible pane
-        miscListToggleButton = SwingUtils.createButton("Misc.", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleMiscList);
+        miscListToggleButton = SwingUtils.createButton("Miscellaneous", new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")), 250, 40, this::actionToggleMiscList);
         miscListToggleButton.setHorizontalAlignment(SwingConstants.LEFT);
         sidebar.add(miscListToggleButton);
         sidebar.add(miscListPane);
@@ -176,7 +148,7 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
      * @param event The {@link ActionEvent}.
      */
     private void actionReturnToHome(ActionEvent event) {
-        applicationFrame.getHomeScreen().open();
+        applicationWindow.getHomeScreen().open();
     }
 
     /**
@@ -225,14 +197,25 @@ public class CreateNetworkConfigurationScreen extends AbstractApplicationScreen 
     }
 
     @Override
-    public void preOpen() {
+    public void onOpenImpl() {
+        // Temporarily disable animations to avoid having to wait for the animation to finish
+        webserversListPane.setAnimated(false);
+        databasesListPane.setAnimated(false);
+        miscListPane.setAnimated(false);
+
+        // (Re)expand all lists
         webserversListPane.setCollapsed(false);
         databasesListPane.setCollapsed(false);
         miscListPane.setCollapsed(false);
+
+        // Re-enable animations
+        webserversListPane.setAnimated(true);
+        databasesListPane.setAnimated(true);
+        miscListPane.setAnimated(true);
     }
 
     @Override
-    public void postClose() {
+    public void onCloseImpl() {
         // Nothing
     }
 }

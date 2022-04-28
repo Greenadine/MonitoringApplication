@@ -4,12 +4,26 @@ import java.awt.*;
 
 public final class Fonts {
 
-    public static final Font DEFAULT = new Font(Font.DIALOG, Font.PLAIN, 14);
-    public static final Font TITLE = DEFAULT.deriveFont(20f);
+    private static final Font DEFAULT = new Font(Font.DIALOG, Font.PLAIN, 12);
 
-    public static final Font SIDEBAR_HEADER = DEFAULT.deriveFont(Font.BOLD, 16f);
-    public static final Font SIDEBAR_CONTENT = DEFAULT.deriveFont(16f);
+    /* Main fonts  */
+    public static final Font MAIN_TITLE = DEFAULT.deriveFont(20f);
+    public static final Font MAIN_BUTTON = DEFAULT.deriveFont(14f);
 
-    public static final Font TABLE_HEADER = DEFAULT.deriveFont(Font.BOLD, 14f);
-    public static final Font TABLE_CONTENT = DEFAULT.deriveFont(14f);
+    public static final Font MAIN_HEADER_TITLE = DEFAULT.deriveFont(Font.BOLD, 20f);
+
+    public static final Font MAIN_SIDEBAR_TITLE = DEFAULT.deriveFont(Font.BOLD, 16f);
+    public static final Font MAIN_SIDEBAR_PARAGRAPH = DEFAULT.deriveFont(16f);
+
+    public static final Font MAIN_TABLE_TITLE = DEFAULT.deriveFont(Font.BOLD, 14f);
+    public static final Font MAIN_TABLE_PARAGRAPH = DEFAULT.deriveFont(14f);
+
+    /* System monitor fonts */
+    public static final Font MONITOR_TITLE = DEFAULT.deriveFont(Font.BOLD, 18f);
+    public static final Font MONITOR_SUBTITLE = DEFAULT.deriveFont(Font.BOLD, 16f);
+    public static final Font MONITOR_LABEL = DEFAULT.deriveFont(14f);
+    public static final Font MONITOR_LABEL_BOLD = MONITOR_LABEL.deriveFont(Font.BOLD);
+
+    public static final Font MONITOR_TABLE_HEADER = DEFAULT.deriveFont(Font.BOLD, 14f);
+    public static final Font MONITOR_TABLE_CONTENT = DEFAULT.deriveFont(14f);
 }

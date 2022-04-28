@@ -4,10 +4,23 @@ import java.awt.*;
 
 public final class Colors {
 
-    public final static Color BACKGROUND = Color.decode("#3D424B");
-    public final static Color BACKGROUND_ACCENT = Color.decode("#282D33");
-    public final static Color ACCENT = Color.decode("#3572A0");
+    /* Main application colors */
+    public static final Color MAIN_ACCENT = Color.decode("#3572A0");
+    public static final Color MAIN_BACKGROUND = Color.decode("#3D424B");
+    public static final Color MAIN_BACKGROUND_ACCENT = Color.decode("#282D33");
+    public static final Color MAIN_TABLE_HEADER = Color.decode("#2E343A");
+    public static final Color MAIN_TABLE_CONTENT = Color.decode("#23272D");
 
-    public final static Color TABLE_HEADER = Color.decode("#2E343A");
-    public final static Color TABLE_CONTENT = Color.decode("#23272D");
+    public static final Color MAIN_HEADER = MAIN_BACKGROUND;
+    public static final Color MAIN_HEADER_ACCENT = MAIN_BACKGROUND_ACCENT;
+
+    /* Monitoring panel colors */
+    public static final Color MONITOR_BACKGROUND = MAIN_BACKGROUND;
+    public static final Color MONITOR_BACKGROUND_ACCENT = MAIN_BACKGROUND_ACCENT;
+
+    public static final Color MONITOR_VALUE_LABEL = Color.decode("#2E343A");
+    public static final Color MONITOR_VALUE_CONTENT = Color.decode("#23272D");
+
+    public static final Color MONITOR_TABLE_HEADER = MONITOR_VALUE_LABEL;
+    public static final Color MONITOR_TABLE_CONTENT = MONITOR_VALUE_CONTENT;
 }

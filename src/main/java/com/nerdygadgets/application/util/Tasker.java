@@ -17,7 +17,7 @@ public final class Tasker {
      * @param interval The interval in seconds.
      */
     public static void scheduleTask(@NotNull final TimerTask task, long delay, long interval) {
-        timer.scheduleAtFixedRate(task, delay, interval);
+        timer.scheduleAtFixedRate(task, delay, interval * 1000);
     }
 
     public static void cancelTask() {

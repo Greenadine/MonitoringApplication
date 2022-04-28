@@ -1,9 +1,7 @@
 package com.nerdygadgets.application.app;
 
-import com.nerdygadgets.application.app.screen.AbstractApplicationScreen;
-import com.nerdygadgets.application.app.screen.CreateNetworkConfigurationScreen;
-import com.nerdygadgets.application.app.screen.HomeScreen;
-import com.nerdygadgets.application.app.screen.NetworkMonitorScreen;
+import com.nerdygadgets.application.Main;
+import com.nerdygadgets.application.app.screen.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -11,18 +9,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.TimerTask;
 
-public class ApplicationFrame extends JFrame {
+public class ApplicationWindow extends JFrame {
 
     private final JPanel contentPanel;
 
     private final HomeScreen homeScreen;
     private final CreateNetworkConfigurationScreen createNetworkConfigurationScreen;
+    //private final NetworkMonitorScreen networkMonitorScreen;
     private final NetworkMonitorScreen networkMonitorScreen;
 
-    private AbstractApplicationScreen currentScreen;
+    private ApplicationScreen currentScreen;
 
-    public ApplicationFrame() throws IOException {
+    public ApplicationWindow() throws IOException {
         /* Configure frame */
         this.setTitle("NerdyGadgets Network Application");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -62,11 +62,11 @@ public class ApplicationFrame extends JFrame {
     }
 
     /**
-     * Gets the currently opened {@link AbstractApplicationScreen}.
+     * Gets the currently opened {@link ApplicationScreen}.
      *
      * @return The currently opened {@code AbstractApplicationScreen}.
      */
-    public Optional<AbstractApplicationScreen> getCurrentScreen() {
+    public Optional<ApplicationScreen> getCurrentScreen() {
         return Optional.ofNullable(currentScreen);
     }
 
@@ -75,7 +75,7 @@ public class ApplicationFrame extends JFrame {
      *
      * @param applicationScreen The {@code AbstractApplicationScreen}.
      */
-    public void setCurrentScreen(@NotNull final AbstractApplicationScreen applicationScreen) {
+    public void setCurrentScreen(@NotNull final ApplicationScreen applicationScreen) {
         this.currentScreen = applicationScreen;
     }
 

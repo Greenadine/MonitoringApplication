@@ -1,9 +1,12 @@
 package com.nerdygadgets.application.util;
 
+import com.nerdygadgets.application.Main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -65,13 +68,22 @@ public final class SwingUtils {
     public static JButton createButton(@Nullable final String text, @Nullable final Icon icon, @NotNull final ActionListener actionListener) {
         JButton button = new JButton(text, icon);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setFont(Fonts.DEFAULT);
+        button.setFont(Fonts.MAIN_BUTTON);
         button.addActionListener(actionListener);
         return button;
     }
 
     public static void addHorizontalSeparator(@NotNull final JComponent target) {
         target.add(new JSeparator(SwingConstants.HORIZONTAL));
+    }
+
+    public static void addVerticalSpacer(@NotNull final JComponent target, final int height, @NotNull final Color color) {
+        addVerticalSpacer(target, height);
+        JPanel spacer = new JPanel();
+        spacer.add(new JLabel());
+        spacer.setBackground(color);
+        spacer.setPreferredSize(new Dimension(target.getWidth(), height));
+        target.add(spacer);
     }
 
     public static void addVerticalSeparator(@NotNull final JComponent target) {
@@ -86,7 +98,11 @@ public final class SwingUtils {
         target.add(Box.createVerticalStrut(height));
     }
 
-    public static GridBagConstraints createGridBagConstraints(final int locX, final int locY, final int colWidth, final int rowHeight) {
-        return new GridBagConstraints(locX, locY, colWidth, rowHeight, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+    public static void setButtonIcon(@NotNull final JButton button, @NotNull final String resourcePath) {
+        try {
+            button.setIcon(new ImageIcon(ImageIO.read(Main.class.getResourceAsStream("/assets/icons/home.png"))));
+        } catch (Exception ex) {
+            Logger.error(ex, "Failed to set button icon.");
+        }
     }
 }

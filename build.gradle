@@ -38,6 +38,19 @@ jar {
     }
 }
 
+shadowJar {
+    relocate 'com.fasterxml.jackson', 'com.nerdygadgets.shaded.jackson'
+    relocate 'com.formdev.flatlaf', 'com.nerdygadgets.shaded.flatlaf'
+    relocate 'com.google', 'com.nerdygadgets.shaded.google'
+    relocate 'com.jhlabs', 'com.nerdygadgets.shaded.jhlabs'
+    relocate 'javax.annotation', 'com.nerdygadgets.shaded.javax.annotations'
+    relocate 'org.apache.commons', 'com.nerdygadgets.shaded.apachecommons'
+    relocate 'org.checkerframework', 'com.nerdygadgets.shaded.checkerframework'
+    relocate 'org.intellij', 'com.nerdygadgets.shaded.intellij'
+    relocate 'org.jdesktop', 'com.nerdygadgets.shaded.jdesktop'
+    relocate 'org.jetbrains', 'com.nerdygadgets.shaded.jetbrains'
+}
+
 test {
     useJUnitPlatform()
 }
