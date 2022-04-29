@@ -17,9 +17,9 @@ import java.awt.*;
  *
  * @author Kevin Zuman
  */
-public class ScreenHeader extends ApplicationPanel {
+public class ScreenHeaderPanel extends ApplicationPanel {
 
-    public ScreenHeader(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height) {
+    public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height) {
         super(screen);
 
         // Configure panel

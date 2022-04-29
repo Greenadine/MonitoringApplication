@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 
-public class NetworkMonitor {
+public class SystemMonitoring {
 
     @SuppressWarnings("ConstantConditions")
     public static Instant getSystemLastBootUpTime() {

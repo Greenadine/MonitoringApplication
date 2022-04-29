@@ -17,18 +17,17 @@ import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.TimerTask;
 
-public class SystemMonitor extends ApplicationPanel {
+public class SystemMonitorPanel extends ApplicationPanel {
 
     private JLabel systemUptimeValue;
-    private JLabel systemCpuUsageValue;
-
+    private LineGraphPanel cpuUsageGraphPanel;
     private JPanel disksTableContentPanel;
 
     private UptimeUpdater uptimeUpdater;
     private CpuUsageUpdater cpuUsageUpdater;
     private DisksUpdater disksUpdater;
 
-    public SystemMonitor(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
+    public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
         super(applicationScreen);
 
         // Configure panel
@@ -47,6 +46,7 @@ public class SystemMonitor extends ApplicationPanel {
         systemNameLabelPanel.add(systemNameLabel);
 
         addSystemStatus();
+        addCpuUsageGraph();
         addStorageDisksInformation();
     }
 
@@ -80,18 +80,22 @@ public class SystemMonitor extends ApplicationPanel {
         systemUptimeValue.setBackground(Colors.MONITOR_VALUE_CONTENT);
         systemUptimeValue.setAlignmentX(RIGHT_ALIGNMENT);
         valuesPanel.add(systemUptimeValue);
+    }
 
-        // Add CPU usage
+    private void addCpuUsageGraph() {
+        // Add header
+        JPanel cpuUsageHeaderPanel = new JPanel();
+        cpuUsageHeaderPanel.setLayout(new FlowLayout());
+        cpuUsageHeaderPanel.setBackground(Colors.MONITOR_BACKGROUND);
+        this.add(cpuUsageHeaderPanel);
 
-        JLabel systemCpuUsageLabel = new JLabel("CPU Usage");
-        systemCpuUsageLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
-        labelsPanel.add(systemCpuUsageLabel);
+        JLabel cpuUsageHeaderLabel = new JLabel("CPU Load");
+        cpuUsageHeaderLabel.setFont(Fonts.MONITOR_SUBTITLE);
+        cpuUsageHeaderPanel.add(cpuUsageHeaderLabel);
 
-        systemCpuUsageValue = new JLabel("Loading...", SwingConstants.RIGHT);
-        systemCpuUsageValue.setFont(Fonts.MONITOR_LABEL);
-        systemCpuUsageValue.setBackground(Colors.MONITOR_VALUE_CONTENT);
-        systemCpuUsageValue.setAlignmentX(RIGHT_ALIGNMENT);
-        valuesPanel.add(systemCpuUsageValue);
+        // Add graph
+        cpuUsageGraphPanel = (LineGraphPanel) this.add(new LineGraphPanel(screen, 250, 250, 20));
+
     }
 
     private void addStorageDisksInformation() {
@@ -171,7 +175,8 @@ public class SystemMonitor extends ApplicationPanel {
 
         // Clear values
         systemUptimeValue.setText("Loading...");
-        systemCpuUsageValue.setText("Loading...");
+
+        cpuUsageGraphPanel.resetScores(); // Reset graph scores
 
         // Clear disks table
         emptyDisksTable();
@@ -189,8 +194,7 @@ public class SystemMonitor extends ApplicationPanel {
 
         @Override
         public void run() {
-            // Set CPU load
-            systemCpuUsageValue.setText(NetworkMonitor.getCpuLoad() + "%");
+            cpuUsageGraphPanel.appendScore(SystemMonitoring.getCpuLoad());
         }
     }
 
@@ -199,7 +203,7 @@ public class SystemMonitor extends ApplicationPanel {
         @Override
         public void run() {
             // Set uptime
-            Duration duration = Duration.between(NetworkMonitor.getSystemLastBootUpTime(), Instant.now());
+            Duration duration = Duration.between(SystemMonitoring.getSystemLastBootUpTime(), Instant.now());
             systemUptimeValue.setText(formatDuration(duration));
         }
 
@@ -248,10 +252,10 @@ public class SystemMonitor extends ApplicationPanel {
             disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
             addComponent(disksTableContentPanel);
 
-            ArrayList<NetworkMonitor.DiskResult> disks = NetworkMonitor.getDisks();
+            ArrayList<SystemMonitoring.DiskResult> disks = SystemMonitoring.getDisks();
             ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
 
-            for (NetworkMonitor.DiskResult disk : disks) {
+            for (SystemMonitoring.DiskResult disk : disks) {
                 // Add disk name
                 JLabel diskNameLabel = new JLabel(disk.getName());
                 diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);

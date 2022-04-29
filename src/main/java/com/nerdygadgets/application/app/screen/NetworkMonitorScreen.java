@@ -1,8 +1,8 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.ApplicationWindow;
-import com.nerdygadgets.application.app.panel.ScreenHeader;
-import com.nerdygadgets.application.app.panel.monitor.SystemMonitor;
+import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
+import com.nerdygadgets.application.app.panel.monitor.SystemMonitorPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         this.setLayout(new BorderLayout());
 
         // Create and add panels
-        this.add(new ScreenHeader(this, "Network Monitor", 1250, 50), BorderLayout.PAGE_START);
+        this.add(new ScreenHeaderPanel(this, "Network Monitor", 1250, 50), BorderLayout.PAGE_START);
 
         addMonitorPanels();
     }
@@ -29,7 +29,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         this.add(monitorPanels, BorderLayout.CENTER);
 
         // Populate panel
-        monitorPanels.add(new SystemMonitor(this, "This System"));
+        monitorPanels.add(new SystemMonitorPanel(this, "This System"));
     }
 
     @Override

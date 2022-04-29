@@ -1,25 +1,21 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.ApplicationWindow;
-import com.nerdygadgets.application.app.panel.ScreenHeader;
+import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
-import com.nerdygadgets.application.util.ApplicationActions;
 import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 /**
  * A {@link JPanel} for creating new {@link NetworkConfiguration}s.
@@ -49,7 +45,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Add panels
-        this.add(new ScreenHeader(this, "New Network Configuration", 1250, 50), BorderLayout.PAGE_START);
+        this.add(new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50), BorderLayout.PAGE_START);
         createSidebar(); // Create and populate sidebar panel
     }
 
