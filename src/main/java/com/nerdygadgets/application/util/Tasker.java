@@ -16,11 +16,8 @@ public final class Tasker {
      * @param delay The delay before executing the task a first time.
      * @param interval The interval in seconds.
      */
-    public static void scheduleTask(@NotNull final TimerTask task, long delay, long interval) {
+    public static <T extends TimerTask> T scheduleTask(@NotNull final T task, long delay, long interval) {
         timer.scheduleAtFixedRate(task, delay, interval * 1000);
-    }
-
-    public static void cancelTask() {
-        timer.purge();
+        return task;
     }
 }

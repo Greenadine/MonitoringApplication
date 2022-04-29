@@ -5,7 +5,7 @@ package com.nerdygadgets.application.exception;
  *
  * @author Kevin Zuman
  */
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
 
     private final Throwable parent;
 

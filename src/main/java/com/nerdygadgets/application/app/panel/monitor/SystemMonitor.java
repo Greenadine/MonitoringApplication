@@ -19,8 +19,6 @@ import java.util.TimerTask;
 
 public class SystemMonitor extends ApplicationPanel {
 
-    private final String systemName;
-
     private JLabel systemUptimeValue;
     private JLabel systemCpuUsageValue;
 
@@ -32,9 +30,6 @@ public class SystemMonitor extends ApplicationPanel {
 
     public SystemMonitor(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
         super(applicationScreen);
-
-        // Set parameters
-        this.systemName = systemName;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -157,25 +152,11 @@ public class SystemMonitor extends ApplicationPanel {
         disksTableContentPanel.add(loadingLabel);
     }
 
-    private void prepareDisksTable() {
-        this.remove(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
-
-        disksTableContentPanel = new JPanel();
-        disksTableContentPanel.setLayout(new GridLayout(1, 4));
-        disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
-        disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
-        this.add(disksTableContentPanel);
-    }
-
     @Override
     public void onDisplay() {
-        uptimeUpdater = new UptimeUpdater();
-        cpuUsageUpdater = new CpuUsageUpdater();
-        disksUpdater = new DisksUpdater();
-
-        Tasker.scheduleTask(uptimeUpdater, 0, 60); // 1-minute intervals
-        Tasker.scheduleTask(cpuUsageUpdater, 0, 1); // 1-second intervals
-        Tasker.scheduleTask(disksUpdater, 0, 300); // 5-minute intervals
+        uptimeUpdater = Tasker.scheduleTask(new UptimeUpdater(), 0, 60); // 1-minute intervals
+        cpuUsageUpdater = Tasker.scheduleTask(new CpuUsageUpdater(), 0, 1); // 1-second intervals
+        disksUpdater = Tasker.scheduleTask(new DisksUpdater(), 0, 300); // 5-minute intervals
     }
 
     @Override
@@ -194,6 +175,14 @@ public class SystemMonitor extends ApplicationPanel {
 
         // Clear disks table
         emptyDisksTable();
+    }
+
+    protected void addComponent(Component component) {
+        this.add(component);
+    }
+
+    protected void removeComponent(Component component) {
+        this.remove(component);
     }
 
     private class CpuUsageUpdater extends TimerTask {
@@ -251,7 +240,13 @@ public class SystemMonitor extends ApplicationPanel {
 
         @Override
         public void run() {
-            prepareDisksTable();
+            removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
+
+            disksTableContentPanel = new JPanel();
+            disksTableContentPanel.setLayout(new GridLayout(1, 4));
+            disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
+            disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
+            addComponent(disksTableContentPanel);
 
             ArrayList<NetworkMonitor.DiskResult> disks = NetworkMonitor.getDisks();
             ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
