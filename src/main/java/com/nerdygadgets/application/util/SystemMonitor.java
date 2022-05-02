@@ -13,8 +13,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Optional;
 
-public class SystemMonitoring {
+public class SystemMonitor {
 
     @SuppressWarnings("ConstantConditions")
     public static Instant getSystemLastBootUpTime() {
@@ -47,7 +48,7 @@ public class SystemMonitoring {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static Integer getCpuLoad() {
+    public static Optional<Integer> getCpuLoad() {
         Integer cpuLoad = null;
 
         try {
@@ -74,7 +75,7 @@ public class SystemMonitoring {
             Logger.error(ex, "Failed to retrieve CPU load.");
         }
 
-        return cpuLoad;
+        return Optional.ofNullable(cpuLoad);
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -58,9 +58,7 @@ public abstract class ApplicationScreen extends JPanel {
      * Method called before the panel is opened.
      */
     public void onOpen() {
-        for (ApplicationPanel panel : panels) {
-            panel.onDisplay();
-        }
+        panels.forEach(ApplicationPanel::onDisplay);
         onOpenImpl();
     }
 
@@ -73,9 +71,7 @@ public abstract class ApplicationScreen extends JPanel {
      * Method called after a panel was closed.
      */
     public void onClose() {
-        for (ApplicationPanel panel : panels) {
-            panel.onHide();
-        }
+        panels.forEach(ApplicationPanel::onHide);
         onCloseImpl();
     }
 

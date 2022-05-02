@@ -27,6 +27,10 @@ public class SystemMonitorPanel extends ApplicationPanel {
     private CpuUsageUpdater cpuUsageUpdater;
     private DisksUpdater disksUpdater;
 
+    private int uptimeUpdateInterval = 60; // 1-minute interval by default
+    private int cpuUsageUpdateInterval = 1; // 1-second interval by default
+    private int disksUpdateInterval = 300; // 5-minute interval by default
+
     public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
         super(applicationScreen);
 
@@ -82,22 +86,6 @@ public class SystemMonitorPanel extends ApplicationPanel {
         valuesPanel.add(systemUptimeValue);
     }
 
-    private void addCpuUsageGraph() {
-        // Add header
-        JPanel cpuUsageHeaderPanel = new JPanel();
-        cpuUsageHeaderPanel.setLayout(new FlowLayout());
-        cpuUsageHeaderPanel.setBackground(Colors.MONITOR_BACKGROUND);
-        this.add(cpuUsageHeaderPanel);
-
-        JLabel cpuUsageHeaderLabel = new JLabel("CPU Load");
-        cpuUsageHeaderLabel.setFont(Fonts.MONITOR_SUBTITLE);
-        cpuUsageHeaderPanel.add(cpuUsageHeaderLabel);
-
-        // Add graph
-        cpuUsageGraphPanel = (LineGraphPanel) this.add(new LineGraphPanel(screen, 250, 250, 20));
-
-    }
-
     private void addStorageDisksInformation() {
         // Add header
         JPanel disksHeaderPanel = new JPanel();
@@ -105,7 +93,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         disksHeaderPanel.setBackground(Colors.MONITOR_BACKGROUND);
         this.add(disksHeaderPanel);
 
-        JLabel disksHeaderLabel = new JLabel("Disks Information");
+        JLabel disksHeaderLabel = new JLabel("Storage Disks");
         disksHeaderLabel.setFont(Fonts.MONITOR_SUBTITLE);
         disksHeaderPanel.add(disksHeaderLabel);
 
@@ -137,11 +125,34 @@ public class SystemMonitorPanel extends ApplicationPanel {
         diskSpaceInUseHeaderLabel.setFont(Fonts.MONITOR_TABLE_HEADER);
         disksTableHeaderPanel.add(diskSpaceInUseHeaderLabel);
 
-        /* --- Create and populate table content panel --- */
-        emptyDisksTable();
+        /* --- Add disks table panel  --- */
+        addEmptyDisksTable();
     }
 
-    private void emptyDisksTable() {
+    private void addCpuUsageGraph() {
+        // Add header
+        JPanel cpuUsageHeaderPanel = new JPanel();
+        cpuUsageHeaderPanel.setLayout(new FlowLayout());
+        cpuUsageHeaderPanel.setBackground(Colors.MONITOR_BACKGROUND);
+        this.add(cpuUsageHeaderPanel);
+
+        JLabel cpuUsageHeaderLabel = new JLabel("CPU Load");
+        cpuUsageHeaderLabel.setFont(Fonts.MONITOR_SUBTITLE);
+        cpuUsageHeaderPanel.add(cpuUsageHeaderLabel);
+
+        // Add graph
+        cpuUsageGraphPanel = (LineGraphPanel) this.add(new LineGraphPanel(screen, 250, 175));
+        cpuUsageGraphPanel.setMinValue(0);
+        cpuUsageGraphPanel.setMaxValue(100);
+        cpuUsageGraphPanel.setMaxPoints(20);
+        cpuUsageGraphPanel.setYAxisDivisions(5);
+        cpuUsageGraphPanel.setDisplayXAxis(false); // Only draw the Y-axis
+        cpuUsageGraphPanel.setYAxisUnit("%");
+        cpuUsageGraphPanel.setResetOnHide(true); // Set all values to 0 upon hiding (closing) the panel
+        cpuUsageGraphPanel.appendValue(0);
+    }
+
+    private void addEmptyDisksTable() {
         if (disksTableContentPanel != null) {
             disksTableContentPanel.removeAll();
         } else {
@@ -156,11 +167,57 @@ public class SystemMonitorPanel extends ApplicationPanel {
         disksTableContentPanel.add(loadingLabel);
     }
 
+    private void scheduleUpdaters() {
+        uptimeUpdater = Tasker.scheduleTask(new UptimeUpdater(), 0, uptimeUpdateInterval);
+        cpuUsageUpdater = Tasker.scheduleTask(new CpuUsageUpdater(), 0, cpuUsageUpdateInterval);
+        disksUpdater = Tasker.scheduleTask(new DisksUpdater(), 0, disksUpdateInterval);
+    }
+
+    /**
+     * Sets the interval in seconds in between updating the system uptime.
+     * <p>Default: {@code 60}.
+     *
+     * @param uptimeUpdateInterval The interval in seconds.
+     */
+    public void setUptimeUpdateInterval(final int uptimeUpdateInterval) {
+        final int oldValue = this.uptimeUpdateInterval;
+        this.uptimeUpdateInterval = uptimeUpdateInterval;
+        if (uptimeUpdateInterval != oldValue) {
+            uptimeUpdater = Tasker.scheduleTask(new UptimeUpdater(), 0, uptimeUpdateInterval); // Re-schedule task to accommodate change in interval
+        }
+    }
+
+    /**
+     * Sets the interval in seconds in between updating the CPU usage.
+     * <p>Default: {@code 1}.
+     *
+     * @param cpuUsageUpdateInterval The interval in seconds.
+     */
+    public void setCpuUsageUpdateInterval(final int cpuUsageUpdateInterval) {
+        final int oldValue = this.cpuUsageUpdateInterval;
+        this.cpuUsageUpdateInterval = cpuUsageUpdateInterval;
+        if (cpuUsageUpdateInterval != oldValue) {
+            cpuUsageUpdater = Tasker.scheduleTask(new CpuUsageUpdater(), 0, cpuUsageUpdateInterval); // Re-schedule task to accommodate change in interval
+        }
+    }
+
+    /**
+     * Sets the interval in seconds in between updating the disks information.
+     * <p>Default: {@code 300}.
+     *
+     * @param disksUpdateInterval The interval in seconds.
+     */
+    public void setDisksUpdateInterval(final int disksUpdateInterval) {
+        final int oldValue = this.disksUpdateInterval;
+        this.disksUpdateInterval = disksUpdateInterval;
+        if (disksUpdateInterval != oldValue) {
+            disksUpdater = Tasker.scheduleTask(new DisksUpdater(), 0, disksUpdateInterval); // Re-schedule task to accommodate change in interval
+        }
+    }
+
     @Override
     public void onDisplay() {
-        uptimeUpdater = Tasker.scheduleTask(new UptimeUpdater(), 0, 60); // 1-minute intervals
-        cpuUsageUpdater = Tasker.scheduleTask(new CpuUsageUpdater(), 0, 1); // 1-second intervals
-        disksUpdater = Tasker.scheduleTask(new DisksUpdater(), 0, 300); // 5-minute intervals
+        scheduleUpdaters();
     }
 
     @Override
@@ -176,10 +233,8 @@ public class SystemMonitorPanel extends ApplicationPanel {
         // Clear values
         systemUptimeValue.setText("Loading...");
 
-        cpuUsageGraphPanel.resetScores(); // Reset graph scores
-
         // Clear disks table
-        emptyDisksTable();
+        addEmptyDisksTable();
     }
 
     protected void addComponent(Component component) {
@@ -194,7 +249,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            cpuUsageGraphPanel.appendScore(SystemMonitoring.getCpuLoad());
+            SystemMonitor.getCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
         }
     }
 
@@ -203,7 +258,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         @Override
         public void run() {
             // Set uptime
-            Duration duration = Duration.between(SystemMonitoring.getSystemLastBootUpTime(), Instant.now());
+            Duration duration = Duration.between(SystemMonitor.getSystemLastBootUpTime(), Instant.now());
             systemUptimeValue.setText(formatDuration(duration));
         }
 
@@ -233,29 +288,37 @@ public class SystemMonitorPanel extends ApplicationPanel {
             }
 
             String result = joiner.toString();
-            result = StringUtils.replaceOnce(result, "1 minutes", "1 minute");
-            result = StringUtils.replaceOnce(result, "1 hours", "1 hour");
-            result = StringUtils.replaceOnce(result, "1 days", "1 day");
+            result = StringUtils.replaceOnce(result, " 1 minutes", " 1 minute");
+            result = StringUtils.replaceOnce(result, " 1 hours", " 1 hour");
+            result = StringUtils.replaceOnce(result, " 1 days", " 1 day");
             return result;
         }
     }
 
     private class DisksUpdater extends TimerTask {
 
+        private boolean firstRun = true;
+
         @Override
         public void run() {
-            removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
+            ArrayList<SystemMonitor.DiskResult> disks = SystemMonitor.getDisks();
 
-            disksTableContentPanel = new JPanel();
-            disksTableContentPanel.setLayout(new GridLayout(1, 4));
-            disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
-            disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
-            addComponent(disksTableContentPanel);
+            if (firstRun) {
+                removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
 
-            ArrayList<SystemMonitoring.DiskResult> disks = SystemMonitoring.getDisks();
-            ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
+                disksTableContentPanel = new JPanel();
+                disksTableContentPanel.setLayout(new GridLayout(1, 4));
+                disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
+                disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
+                addComponent(disksTableContentPanel);
+                firstRun = false;
 
-            for (SystemMonitoring.DiskResult disk : disks) {
+                ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
+            } else {
+                disksTableContentPanel.removeAll();
+            }
+
+            for (SystemMonitor.DiskResult disk : disks) {
                 // Add disk name
                 JLabel diskNameLabel = new JLabel(disk.getName());
                 diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);

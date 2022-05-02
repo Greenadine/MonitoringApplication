@@ -19,7 +19,7 @@ public class Firewall extends NetworkComponent {
         super(id, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\firewall.png")));
     }
 
-    public Firewall(final String name, final double availability, final double price, final String ip, final String subnet) throws IOException {
+    public Firewall(@NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {
         this(getNextId(), name, availability, price, ip, subnet);
     }
 

@@ -19,7 +19,7 @@ public class Database extends NetworkComponent {
         super(id, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\database.png")));
     }
 
-    public Database(final String name, final double availability, final double price, final String ip, final String subnet) throws IOException {
+    public Database(@NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {
         this(getNextId(), name, availability, price, ip, subnet);
     }
 

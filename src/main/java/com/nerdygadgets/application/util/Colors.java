@@ -23,4 +23,12 @@ public final class Colors {
 
     public static final Color MONITOR_TABLE_HEADER = MONITOR_VALUE_LABEL;
     public static final Color MONITOR_TABLE_CONTENT = MONITOR_VALUE_CONTENT;
+
+    /* Graph default colors */
+    public static final Color GRAPH_LINE = MAIN_ACCENT;
+    public static final Color GRAPH_POINT = MAIN_ACCENT;
+    public static final Color GRAPH_GRID = MAIN_BACKGROUND;
+    public static final Color GRAPH_X_AXIS = Color.WHITE;
+    public static final Color GRAPH_Y_AXIS = Color.WHITE;
+    public static final Color GRAPH_BACKGROUND = MAIN_BACKGROUND_ACCENT;
 }
