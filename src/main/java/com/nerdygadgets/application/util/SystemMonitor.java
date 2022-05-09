@@ -62,6 +62,8 @@ public class SystemMonitor {
             while ((line = psOut.readLine()) != null) {
                 line = line.trim();
 
+                System.out.println(line);
+
                 if (line.isEmpty()) {
                     continue;
                 }

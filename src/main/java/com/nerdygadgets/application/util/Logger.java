@@ -26,7 +26,7 @@ public final class Logger {
     }
 
     public static void error(@NotNull final Throwable thrown, @NotNull final String message) {
-        System.out.println("ERROR:" + message);
+        System.out.println("ERROR: " + message);
         thrown.printStackTrace();
     }
 
