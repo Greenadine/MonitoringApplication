@@ -1,12 +1,13 @@
-package com.nerdygadgets.application.app.panel.monitor;
+package com.nerdygadgets.application.app.component;
 
-import com.nerdygadgets.application.app.panel.ApplicationPanel;
-import com.nerdygadgets.application.app.screen.ApplicationScreen;
-import com.nerdygadgets.application.exception.DisplayPanelException;
+import com.nerdygadgets.application.app.model.PanelComponent;
+import com.nerdygadgets.application.app.model.ApplicationPanel;
+import com.nerdygadgets.application.exception.DisplayComponentException;
 import com.nerdygadgets.application.util.Colors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -14,11 +15,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A customizable {@link javax.swing.JPanel} for displaying a simple line graph.
+ * A customizable {@link JComponent} for displaying a simple line graph.
  *
  * @author Kevin Zuman
  */
-public class LineGraphPanel extends ApplicationPanel {
+public class LineGraphComponent extends PanelComponent {
 
     private List<Double> values; // Values to be displayed in the graph
 
@@ -30,7 +31,7 @@ public class LineGraphPanel extends ApplicationPanel {
     private int maxPoints = 10; // Maximum points (values) to be displayed on the grid (maximum amount of points on the x-axis)
     private Integer minValue; // Minimum value displayed on the Y-axis of the grid, set to lowest value when null
     private Integer maxValue; // Maximum value displayed on the Y-axis of the grid, set to highest value when null
-    private int pointRadius = 4;
+    private int pointDiameter = 3;
     private int lineWidth = 4;
     private int padding = 25; // Padding between the panel borders and the actual graph itself
     private int labelPadding = 25; // Padding between the grid labels and division lines of the grid
@@ -47,11 +48,10 @@ public class LineGraphPanel extends ApplicationPanel {
     private Color yAxisColor = Colors.GRAPH_Y_AXIS;
     private Color gridBackgroundColor = Colors.GRAPH_BACKGROUND;
 
-    public LineGraphPanel(@NotNull final ApplicationScreen applicationScreen, final int width, final int height) {
-        super(applicationScreen);
+    public LineGraphComponent(@NotNull final ApplicationPanel parentPanel, final int width, final int height) {
+        super(parentPanel);
         this.values = new ArrayList<>(maxPoints);
         this.setPreferredSize(new Dimension(width, height)); // Set panel size
-
         this.appendValue(0); // Append initial value to instantly draw grid and axes
     }
 
@@ -59,7 +59,7 @@ public class LineGraphPanel extends ApplicationPanel {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         if (!(graphics instanceof Graphics2D)) {
-            throw new DisplayPanelException("Graphics is not Graphics2D, unable to render graph.");
+            throw new DisplayComponentException("Graphics is not Graphics2D, unable to render graph.");
         }
 
         final Graphics2D g2d = (Graphics2D) graphics;
@@ -133,12 +133,12 @@ public class LineGraphPanel extends ApplicationPanel {
                     }
 
                     final int y1 = height - padding - labelPadding;
-                    final int y2 = y1 - pointRadius;
+                    final int y2 = y1 - pointDiameter;
 
                     if ((i % (((length / 20)) + 1)) == 0) {
                         // Draw grid line
                         g2d.setColor(gridColor);
-                        g2d.drawLine(x, height - padding - labelPadding - 1 - pointRadius, x, padding);
+                        g2d.drawLine(x, height - padding - labelPadding - 1 - pointDiameter, x, padding);
 
                         // Draw axis hatch mark label
                         g2d.setColor(xAxisColor);
@@ -171,7 +171,7 @@ public class LineGraphPanel extends ApplicationPanel {
 
             for (int i = 0; i < yAxisDivisions + 1; i++) {
                 final int x1 = padding + labelPadding;
-                final int x2 = pointRadius + padding + labelPadding;
+                final int x2 = pointDiameter + padding + labelPadding;
 
                 final int y;
                 if (displayXAxis) {
@@ -183,7 +183,7 @@ public class LineGraphPanel extends ApplicationPanel {
                 if (values.size() > 0) {
                     // Draw grid line
                     g2d.setColor(gridColor);
-                    g2d.drawLine(padding + labelPadding + 1 + pointRadius, y, width - padding, y);
+                    g2d.drawLine(padding + labelPadding + 1 + pointDiameter, y, width - padding, y);
 
                     // Draw axis hatch mark label
                     g2d.setColor(yAxisColor);
@@ -207,17 +207,23 @@ public class LineGraphPanel extends ApplicationPanel {
         if (drawPoints) {
             g2d.setColor(pointColor);
 
-            for (Point graphPoint : graphPoints) {
-                final int x = graphPoint.x - pointRadius / 2;
-                final int y = graphPoint.y - pointRadius / 2;
+            for (int i = 0; i < graphPoints.size(); i++) {
+                if (i == 0) {
+                    continue; // Do not draw a dot on the point that's on the Y-axis line (X = 0)
+                }
 
-                final Ellipse2D.Double circle = new Ellipse2D.Double(x, y, pointRadius, pointRadius);
+                Point graphPoint = graphPoints.get(i);
+                final int x = graphPoint.x - pointDiameter / 2;
+                final int y = graphPoint.y - pointDiameter / 2;
+
+                final Ellipse2D.Double circle = new Ellipse2D.Double(x, y, pointDiameter, pointDiameter);
                 g2d.fill(circle);
             }
         }
 
         // Draw lines between all points
         g2d.setColor(lineColor);
+
         for (int i = 0; i < graphPoints.size() - 1; i++) {
             final int x1 = graphPoints.get(i).x;
             final int y1 = graphPoints.get(i).y;
@@ -334,12 +340,12 @@ public class LineGraphPanel extends ApplicationPanel {
      * Sets the size of the points drawn for each value in the graph.
      * <p>Default: {@code 4}.
      *
-     * @param pointRadius The size of the point for each value.
+     * @param pointDiameter The size of the point for each value.
      */
-    public void setPointRadius(final int pointRadius) {
-        final int oldValue = this.pointRadius;
-        this.pointRadius = pointRadius;
-        if (pointRadius != oldValue) {
+    public void setPointDiameter(final int pointDiameter) {
+        final int oldValue = this.pointDiameter;
+        this.pointDiameter = pointDiameter;
+        if (pointDiameter != oldValue) {
             repaint();
         }
     }
@@ -563,7 +569,7 @@ public class LineGraphPanel extends ApplicationPanel {
     }
 
     @Override
-    public void onDisplay() {
+    public void onShow() {
         // Do nothing
     }
 

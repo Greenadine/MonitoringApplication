@@ -9,12 +9,12 @@ public class DatabaseException extends RuntimeException {
 
     private final Throwable parent;
 
-    public DatabaseException(String message) {
-        this(message, null);
+    public DatabaseException(final String message) {
+        this(null, message);
     }
 
-    public DatabaseException(String message, Throwable parent) {
-        super(message);
+    public DatabaseException(final Throwable parent, final String message, Object... replacements) {
+        super(String.format(message, replacements));
         this.parent = parent;
     }
 

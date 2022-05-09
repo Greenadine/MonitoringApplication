@@ -14,7 +14,7 @@ public final class ApplicationUtils {
      * @param message The message.
      */
     public static void showPopupInfoMessage(@NotNull final String title, @NotNull final String message) {
-        JOptionPane.showMessageDialog(Main.getApplicationFrame(), message, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(Main.mainWindow, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -24,6 +24,6 @@ public final class ApplicationUtils {
      * @param message The message.
      */
     public static void showPopupErrorMessage(@NotNull final String title, @NotNull final String message) {
-        JOptionPane.showMessageDialog(Main.getApplicationFrame(), message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(Main.mainWindow, message, title, JOptionPane.ERROR_MESSAGE);
     }
 }

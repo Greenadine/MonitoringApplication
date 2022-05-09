@@ -1,12 +1,13 @@
 package com.nerdygadgets.application.model.component;
 
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Locale;
 
 /**
- * Super class for all components present in a {@link com.nerdygadgets.application.model.NetworkConfiguration}.
+ * Super class for all components present in a {@link NetworkConfiguration}.
  *
  * @author Kevin Zuman
  */

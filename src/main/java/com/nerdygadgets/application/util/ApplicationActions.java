@@ -18,6 +18,6 @@ public final class ApplicationActions {
      * @param event The {@link ActionEvent}.
      */
     public static void openHome(ActionEvent event) {
-        Main.getApplicationFrame().getHomeScreen().open();
+        Main.mainWindow.openScreen("home");
     }
 }

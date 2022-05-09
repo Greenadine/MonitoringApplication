@@ -1,6 +1,7 @@
 package com.nerdygadgets.application.app.panel;
 
-import com.nerdygadgets.application.app.screen.ApplicationScreen;
+import com.nerdygadgets.application.app.model.ApplicationPanel;
+import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.util.ApplicationActions;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
@@ -11,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * A {@link JPanel} that is commonly used in screens throughout the application as a header, with a {@link JButton} for returning to the home screen.
@@ -19,7 +21,7 @@ import java.awt.*;
  */
 public class ScreenHeaderPanel extends ApplicationPanel {
 
-    public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height) {
+    public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height, final ActionListener returnAction) {
         super(screen);
 
         // Configure panel
@@ -28,41 +30,38 @@ public class ScreenHeaderPanel extends ApplicationPanel {
         this.setBorder(new MatteBorder(0, 0, 5, 0, Colors.MAIN_HEADER_ACCENT));
         this.setPreferredSize(new Dimension(width, height));
 
-        createHomeButton(); // Create and add home button
-        SwingUtils.addVerticalSeparator(this);  // Add separator
+        createReturnButton(returnAction); // Create and add return button
+        SwingUtils.addVerticalSeparator(this); // Add separator
         createTitle(screenName, width);
     }
 
-    private void createHomeButton() {
-        JButton homeButton = new JButton("Home");
-        homeButton.addActionListener(ApplicationActions::openHome);
-        SwingUtils.setButtonIcon(homeButton, "/assets/icons/home.png");
-        homeButton.setBackground(Colors.MAIN_ACCENT);
-        homeButton.setForeground(Color.WHITE);
-        homeButton.setFont(Fonts.MAIN_BUTTON);
-        homeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        homeButton.setIconTextGap(15);
-        homeButton.setBorder(new EmptyBorder(15, 10, 15, 10));
-        this.add(homeButton);
+    private void createReturnButton(ActionListener returnAction) {
+        JButton returnButton = new JButton("Return", SwingUtils.getIconFromResource("return.png"));
+        returnButton.addActionListener(returnAction);
+        returnButton.setBackground(Colors.MAIN_ACCENT);
+        returnButton.setForeground(Color.WHITE);
+        returnButton.setFont(Fonts.MAIN_BUTTON);
+        returnButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        returnButton.setIconTextGap(10);
+        returnButton.setBorder(new EmptyBorder(15, 10, 15, 15));
+        this.add(returnButton);
     }
 
     private void createTitle(@NotNull final String screenName, final int width) {
-        int i = width / 2 - 6 * screenName.length();
-
         JLabel titleLabel = new JLabel(screenName);
         titleLabel.setFont(Fonts.MAIN_HEADER_TITLE);
         titleLabel.setAlignmentX(LEFT_ALIGNMENT);
-        titleLabel.setBorder(new EmptyBorder(5,5, 5, i));
+        titleLabel.setBorder(new EmptyBorder(5,5, 5, width / 2 - 6 * screenName.length()));
         this.add(titleLabel);
     }
 
     @Override
-    public void onDisplay() {
+    public void onShowImpl() {
         // Do nothing
     }
 
     @Override
-    public void onHide() {
+    public void onHideImpl() {
         // Do nothing
     }
 }

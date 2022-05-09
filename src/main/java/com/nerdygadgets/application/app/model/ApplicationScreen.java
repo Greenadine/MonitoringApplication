@@ -1,7 +1,5 @@
-package com.nerdygadgets.application.app.screen;
+package com.nerdygadgets.application.app.model;
 
-import com.nerdygadgets.application.app.ApplicationWindow;
-import com.nerdygadgets.application.app.panel.ApplicationPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -34,38 +32,17 @@ public abstract class ApplicationScreen extends JPanel {
      *
      * @param applicationPanel The {@code ApplicationPanel}.
      */
-    public void addApplicationPanel(ApplicationPanel applicationPanel) {
+    void addApplicationPanel(ApplicationPanel applicationPanel) {
         panels.add(applicationPanel);
-    }
-
-    /**
-     * Method called when opening and displaying the panel.
-     */
-    public void open() {
-        window.setVisible(false);
-        window.getCurrentScreen().ifPresent(ApplicationScreen::onClose); // Perform 'on close' of previous screen
-        onOpen();
-        window.getContentPanel().removeAll(); // Remove all current contents
-        window.getContentPanel().add(this);
-        window.getContentPanel().repaint();
-        window.pack(); // Resize frame to fit content
-        window.centerFrame();
-        window.setCurrentScreen(this); // Set this screen as current
-        window.setVisible(true);
     }
 
     /**
      * Method called before the panel is opened.
      */
     public void onOpen() {
-        panels.forEach(ApplicationPanel::onDisplay);
+        panels.forEach(ApplicationPanel::onShow);
         onOpenImpl();
     }
-
-    /**
-     * Implemented method called before the panel is opened.
-     */
-    protected abstract void onOpenImpl();
 
     /**
      * Method called after a panel was closed.
@@ -74,6 +51,11 @@ public abstract class ApplicationScreen extends JPanel {
         panels.forEach(ApplicationPanel::onHide);
         onCloseImpl();
     }
+
+    /**
+     * Implemented method called before the panel is opened.
+     */
+    protected abstract void onOpenImpl();
 
     /**
      * Implemented method called after a panel was closed.

@@ -1,5 +1,6 @@
 package com.nerdygadgets.application.model.component;
 
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -7,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * A {@code Database} is a {@link NetworkComponent} that can be added and/or removed from a {@link com.nerdygadgets.application.model.NetworkConfiguration}.
+ * A {@code Database} is a {@link NetworkComponent} that can be added and/or removed from a {@link NetworkConfiguration}.
  *
  * @author Kevin Zuman
  */

@@ -1,7 +1,8 @@
 package com.nerdygadgets.application.app.screen;
 
-import com.nerdygadgets.application.app.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
+import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.NetworkComponent;
@@ -24,8 +25,6 @@ import java.awt.event.ActionEvent;
  */
 public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
-    private final ApplicationWindow applicationWindow; // Main window
-
     private JPanel sidebar;
 
     private JXCollapsiblePane webserversListPane;
@@ -36,16 +35,15 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
     private JButton databasesListToggleButton;
     private JButton miscListToggleButton;
 
-    public CreateNetworkConfigurationScreen(@NotNull final ApplicationWindow applicationWindow) {
-        super(applicationWindow);
-        this.applicationWindow = applicationWindow;
+    public CreateNetworkConfigurationScreen(@NotNull final ApplicationWindow window) {
+        super(window);
 
         // Configure screen
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        // Add panels
-        this.add(new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50), BorderLayout.PAGE_START);
+        // Populate screen
+        this.add(new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50, this::actionReturn), BorderLayout.PAGE_START);
         createSidebar(); // Create and populate sidebar panel
     }
 
@@ -138,13 +136,8 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
     /* Button Actions */
 
-    /**
-     * The {@link Action} that is performed when the "Return to home" button is pressed.
-     *
-     * @param event The {@link ActionEvent}.
-     */
-    private void actionReturnToHome(ActionEvent event) {
-        applicationWindow.getHomeScreen().open();
+    private void actionReturn(ActionEvent event) {
+        window.openScreen("network-configurations");
     }
 
     /**

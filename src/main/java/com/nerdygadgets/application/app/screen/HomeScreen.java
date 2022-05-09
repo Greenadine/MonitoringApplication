@@ -1,74 +1,69 @@
 package com.nerdygadgets.application.app.screen;
 
-import com.nerdygadgets.application.app.ApplicationWindow;
+import com.nerdygadgets.application.Main;
+import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
-import java.io.File;
 
 public class HomeScreen extends ApplicationScreen {
 
-    public HomeScreen(@NotNull ApplicationWindow applicationWindow) {
-        super(applicationWindow);
+    public HomeScreen(@NotNull final ApplicationWindow window) {
+        super(window);
 
         // Configure screen
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(new EmptyBorder(10, 25, 25, 25));
 
         // Populate screen
-        JLabel titleLabel = new JLabel("NerdyGadgets Network Application");
-        titleLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
+        final JLabel titleLabel = new JLabel("Home");
         titleLabel.setFont(Fonts.MAIN_TITLE);
+        titleLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.add(titleLabel);
         SwingUtils.addVerticalSpacer(this, 15);
 
-        SwingUtils.addButton(this, "Open Network Configuration", null, 350, 50, this::actionOpenNetworkConfiguration);
+        SwingUtils.addButton(this, "Network Configurations", null, 350, 50, this::actionOpenNetworkConfigurations);
         SwingUtils.addVerticalSpacer(this, 10);
 
-        SwingUtils.addButton(this, "Create New Configuration", null, 350, 50, this::actionCreateNetworkConfiguration);
-        SwingUtils.addVerticalSpacer(this, 20);
+        SwingUtils.addButton(this, "Network Components", null, 350, 50, this::actionOpenViewNetworkComponents);
+        SwingUtils.addVerticalSpacer(this, 10);
 
         this.add(new JSeparator()); // Add separator
-        SwingUtils.addVerticalSpacer(this, 20);
+        SwingUtils.addVerticalSpacer(this, 10);
 
         SwingUtils.addButton(this, "Network Monitor",  null, 350, 50, this::actionOpenNetworkMonitor);
+        SwingUtils.addVerticalSpacer(this, 10);
+
+        this.add(new JSeparator());
+        SwingUtils.addVerticalSpacer(this, 10);
+
+        // Add settings button
+        SwingUtils.addButton(this, "",  "settings.png", 125, 35, this::actionOpenSettings);
     }
 
-    /* Action listeners */
+    /* Button actions */
 
     /**
-     * The {@link java.awt.event.ActionListener} for when the "Create New Configuration" button is clicked.
+     * The {@link java.awt.event.ActionListener} for when the "Network Configurations" button is clicked.
      *
      * @param event The {@link ActionEvent}.
      */
-    private void actionCreateNetworkConfiguration(ActionEvent event) {
-        window.getCreateNetworkConfigurationScreen().open();
+    private void actionOpenNetworkConfigurations(final ActionEvent event) {
+        window.openScreen("network-configurations");
     }
 
     /**
-     * The {@link java.awt.event.ActionListener} for when the "Open Network Configuration" button is clicked.
+     * The {@link java.awt.event.ActionListener} for when the "Network Components" button is clicked.
      *
      * @param event The {@link ActionEvent}.
      */
-    private void actionOpenNetworkConfiguration(ActionEvent event) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Open a network configuration file");
-        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Network Configuration Files (.json)", "json");
-        chooser.addChoosableFileFilter(extensionFilter);
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-        if (chooser.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
-            File selected = chooser.getSelectedFile();
-
-            System.out.println(selected.getName());
-            // TODO open network configuration functionality
-        }
+    private void actionOpenViewNetworkComponents(final ActionEvent event) {
+        window.openScreen("view-network-components");
     }
 
     /**
@@ -76,8 +71,17 @@ public class HomeScreen extends ApplicationScreen {
      *
      * @param event The {@link ActionEvent}.
      */
-    private void actionOpenNetworkMonitor(ActionEvent event) {
-        window.getNetworkMonitorScreen().open();
+    private void actionOpenNetworkMonitor(final ActionEvent event) {
+        window.openScreen("network-monitor");
+    }
+
+    /**
+     * The {@link java.awt.event.ActionListener} for when the "Settings" button is clicked.
+     *
+     * @param event The {@link ActionEvent}.
+     */
+    private void actionOpenSettings(final ActionEvent event) {
+        Main.settingsWindow.setVisible(true);
     }
 
     @Override
