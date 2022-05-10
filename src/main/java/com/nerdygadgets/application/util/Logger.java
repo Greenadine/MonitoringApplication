@@ -33,4 +33,8 @@ public final class Logger {
     public static void error(@NotNull final Throwable thrown, @NotNull final String message, final Object... replacements) {
         error(thrown, String.format(message, replacements));
     }
+
+    public static void debug(@NotNull final String message) {
+        System.out.println("DEBUG :: " + message);
+    }
 }

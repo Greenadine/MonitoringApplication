@@ -1,1 +1,1 @@
-wmic /node:localhost cpu get loadpercentage
+wmic cpu get loadpercentage

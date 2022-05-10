@@ -7,21 +7,19 @@ package com.nerdygadgets.application.exception;
  */
 public class DatabaseException extends RuntimeException {
 
-    private final Throwable parent;
-
     public DatabaseException(final String message) {
         this(null, message);
     }
 
     public DatabaseException(final Throwable parent, final String message, Object... replacements) {
         super(String.format(message, replacements));
-        this.parent = parent;
+        super.initCause(parent);
     }
 
     @Override
     public void printStackTrace() {
-        if (parent != null) {
-            parent.printStackTrace();
+        if (this.getCause() != null) {
+            this.getCause().printStackTrace();
         } else {
             super.printStackTrace();
         }

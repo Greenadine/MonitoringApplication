@@ -31,10 +31,30 @@ public final class Settings {
     }
 
     /**
-     * Gets whether the network monitor should keep monitoring the systems' statuses in the background, even when the network monitor panel is not opened.
+     * Returns whether debug logging should be enabled across the application.
      *
-     * @return {@code true} to keep monitoring the systems in the background,
-    *          {@code false} to only monitor the systems when the network monitor panel is opened.
+     * @return {@code true} if debug logging should be enabled across the application,
+     *         {@code false} if debug logging should be disabled across the application.
+     */
+    public static boolean isDebugLoggingEnabled() {
+        return Boolean.parseBoolean(settings.getProperty("debug-logging", "false"));
+    }
+
+    /**
+     * Sets whether debug logging should be enabled across the application.
+     *
+     * @param value {@code true} to enable debug logging across the application,
+     *              {@code false} to disable debug logging across the application.
+     */
+    public static void setDebugLogging(final boolean value) {
+        settings.setProperty("debug-logging", String.valueOf(value));
+    }
+
+    /**
+     * Returns whether the network monitor should keep monitoring the systems' statuses in the background, even when the network monitor panel is not opened.
+     *
+     * @return {@code true} if the systems should be monitored in the background,
+    *          {@code false} if the systems should only be monitored when the network monitor panel is opened.
      */
     public static boolean isBackgroundMonitoringEnabled() {
         return Boolean.parseBoolean(settings.getProperty("background-monitoring", "false"));

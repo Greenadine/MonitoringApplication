@@ -6,8 +6,6 @@ import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
 import com.nerdygadgets.application.app.window.MainWindow;
 import com.nerdygadgets.application.util.ApplicationActions;
-import com.nerdygadgets.application.util.Scheduler;
-import com.nerdygadgets.application.util.SystemMonitor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,9 +31,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         monitorPanels.setLayout(new FlowLayout(FlowLayout.LEFT));
         this.add(monitorPanels, BorderLayout.CENTER);
 
-        monitorPanels.add(new SystemMonitorPanel(this, "Firewall"));
-        monitorPanels.add(new SystemMonitorPanel(this, "Database 1"));
-        monitorPanels.add(new SystemMonitorPanel(this, "Database 2"));
+        monitorPanels.add(new SystemMonitorPanel(this, "This System"));
     }
 
     public void startMonitoringSystems() {

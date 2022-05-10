@@ -55,6 +55,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         // Schedule uptime updater & system status checker at 1-minute intervals
         if (Settings.isBackgroundMonitoringEnabled()) {
+            // TODO when implementing setting
         }
     }
 
@@ -213,21 +214,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         }
 
         systemNameLabel.setIcon(SwingUtils.getIconFromResource("status-neutral.png")); // Set status icon to neutral
-    }
-
-    /**
-     * Creates and schedules new {@link Runnable}s for periodically updating system information.
-     */
-    private void scheduleUpdaters() {
-        // If monitoring in the background is disabled, re-schedule uptime updater and system status checker
-        if (!Settings.isBackgroundMonitoringEnabled()) {
-            startMonitoringSystemStatus();
-        }
-
-        // Update CPU usage at a 1-second interval
-        cpuUsageUpdater = Scheduler.scheduleAtFixedRate(new CpuUsageUpdater(), 0, 1);
-        // Update disk(s) information at a 5-minute interval
-        disksUpdater = Scheduler.scheduleAtFixedRate(new DisksUpdater(), 0, 300);
+        systemUptimeValue.setText("Loading...");
     }
 
     /**
@@ -250,15 +237,25 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
     @Override
     public void onShowImpl() {
-        scheduleUpdaters();
+        // If monitoring in the background is disabled, re-schedule uptime updater and system status checker
+        /*if (!Settings.isBackgroundMonitoringEnabled()) {
+            startMonitoringSystemStatus();
+        }*/
+        startMonitoringSystemStatus();
+
+        // Update CPU usage at a 1-second interval
+        cpuUsageUpdater = Scheduler.scheduleAtFixedRate(new CpuUsageUpdater(), 0, 1);
+        // Update disk(s) information at a 5-minute interval
+        disksUpdater = Scheduler.scheduleAtFixedRate(new DisksUpdater(), 0, 300);
     }
 
     @Override
     public void onHideImpl() {
         // If monitoring in the background is disabled, also cancel uptime updater and system status checker
-        if (!Settings.isBackgroundMonitoringEnabled()) {
+        /*if (!Settings.isBackgroundMonitoringEnabled()) {
             stopMonitoringSystemStatus();
-        }
+        }*/
+        stopMonitoringSystemStatus();
 
         // Cancel CPU usage and disks information updaters
         cpuUsageUpdater.cancel(true);
@@ -294,7 +291,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            SystemMonitor.getCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
+            SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
         }
     }
 
@@ -307,7 +304,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final Instant lastBootUpTime = SystemMonitor.getSystemLastBootUpTime();
+            final Instant lastBootUpTime = SystemMonitor.getLocalLastBootUpTime();
             final boolean oldOnline = online;
             online = lastBootUpTime != null;
 
@@ -371,7 +368,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final ArrayList<SystemMonitor.DiskResult> disks = SystemMonitor.getDisks();
+            final ArrayList<SystemMonitor.DiskResult> disks = SystemMonitor.getLocalDisks();
 
             if (firstRun) {
                 removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update

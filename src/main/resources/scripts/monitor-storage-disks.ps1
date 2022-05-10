@@ -1,1 +1,1 @@
-wmic LOGICALDISK GET Name,Size,FreeSpace
+wmic logicaldisk get Name,Size,FreeSpace
