@@ -42,7 +42,8 @@ public class SystemMonitorPanel extends ApplicationPanel {
     private ScheduledFuture<?> disksUpdater;
     public ScheduledFuture<?> systemStatusChecker;
 
-    private static boolean online;
+    private boolean previousOnlineStatus;
+    private boolean onlineStatus;
 
     public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
         this(applicationScreen, systemName, null, null, null);
@@ -210,7 +211,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
      */
     public void startMonitoringSystemStatus() {
         uptimeUpdater = Scheduler.scheduleAtFixedRate(new UptimeUpdater(), 0, 60);
-        systemStatusChecker = Scheduler.scheduleAtFixedRate(new UptimeStatusCheck(), 60, 60);
+        systemStatusChecker = Scheduler.scheduleAtFixedRate(new UptimeStatusCheck(), 2, 60);
     }
 
     /**
@@ -287,8 +288,9 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            if (!online) {
-                systemNameLabel.setIcon(SwingUtils.getIconFromResource("status-offline.png"));
+            systemNameLabel.setIcon(SwingUtils.getIconFromResource(String.format("status-%s.png", onlineStatus ? "online" : previousOnlineStatus ? "warning" : "offline")));
+
+            if (!onlineStatus) {
                 systemUptimeValue.setText("Can't be reached");
                 // TODO maybe send some kind of warning for the system being offline, for example through email?
             }
@@ -329,10 +331,8 @@ public class SystemMonitorPanel extends ApplicationPanel {
                 lastBootUpTime = SystemMonitor.getLocalLastBootUpTime();
             }
 
-            final boolean oldOnline = online;
-            online = lastBootUpTime != null;
-
-            systemNameLabel.setIcon(SwingUtils.getIconFromResource(String.format("status-%s.png", online ? "online" : oldOnline ? "warning" : "neutral")));
+            previousOnlineStatus = onlineStatus;
+            onlineStatus = lastBootUpTime != null;
 
             // Set uptime
             if (lastBootUpTime != null) {
