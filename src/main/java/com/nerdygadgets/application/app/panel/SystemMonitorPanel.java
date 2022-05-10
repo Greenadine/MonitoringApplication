@@ -10,6 +10,7 @@ import com.nerdygadgets.application.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -27,6 +28,10 @@ import java.util.concurrent.ScheduledFuture;
  */
 public class SystemMonitorPanel extends ApplicationPanel {
 
+    private final String systemIp;
+    private final String username;
+    private final String password;
+
     private JLabel systemNameLabel;
     private WrappedJLabel systemUptimeValue;
     private LineGraphComponent cpuUsageGraphPanel;
@@ -40,7 +45,14 @@ public class SystemMonitorPanel extends ApplicationPanel {
     private static boolean online;
 
     public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName) {
+        this(applicationScreen, systemName, null, null, null);
+    }
+
+    public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName, @Nullable final String systemIp, @Nullable final String username, @Nullable final String password) {
         super(applicationScreen);
+        this.systemIp = systemIp;
+        this.username = username;
+        this.password = password;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -277,6 +289,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         public void run() {
             if (!online) {
                 systemNameLabel.setIcon(SwingUtils.getIconFromResource("status-offline.png"));
+                systemUptimeValue.setText("Can't be reached");
                 // TODO maybe send some kind of warning for the system being offline, for example through email?
             }
         }
@@ -291,7 +304,11 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
+            if (systemIp != null) {
+                SystemMonitor.getCpuLoad(systemIp, username, password).ifPresent(cpuUsageGraphPanel::appendValue);
+            } else {
+                SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
+            }
         }
     }
 
@@ -304,7 +321,14 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final Instant lastBootUpTime = SystemMonitor.getLocalLastBootUpTime();
+            final Instant lastBootUpTime;
+
+            if (systemIp != null) {
+                lastBootUpTime = SystemMonitor.getLastBootUpTime(systemIp, username, password);
+            } else {
+                lastBootUpTime = SystemMonitor.getLocalLastBootUpTime();
+            }
+
             final boolean oldOnline = online;
             online = lastBootUpTime != null;
 
@@ -368,7 +392,13 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final ArrayList<SystemMonitor.DiskResult> disks = SystemMonitor.getLocalDisks();
+            final ArrayList<SystemMonitor.DiskResult> disks;
+
+            if (systemIp != null) {
+                disks = SystemMonitor.getDisks(systemIp, username, password);
+            } else {
+                disks = SystemMonitor.getLocalDisks();
+            }
 
             if (firstRun) {
                 removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
