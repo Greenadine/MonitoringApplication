@@ -3,7 +3,6 @@ package com.nerdygadgets.application;
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 import com.nerdygadgets.application.app.window.MainWindow;
 import com.nerdygadgets.application.app.window.SettingsWindow;
-import com.nerdygadgets.application.data.NetworkComponents;
 import com.nerdygadgets.application.exception.DatabaseException;
 import com.nerdygadgets.application.exception.DisplayComponentException;
 import com.nerdygadgets.application.util.ApplicationUtils;
@@ -13,14 +12,10 @@ import javax.swing.*;
 
 public class Main {
 
-    private static NetworkComponents networkComponents;
-
     public static MainWindow mainWindow;
     public static SettingsWindow settingsWindow;
 
     public static void main(String[] args) {
-        networkComponents = new NetworkComponents();
-
         // Attempt to set application theme, and create windows
         try {
             UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
@@ -53,9 +48,5 @@ public class Main {
                 System.exit(100);
             }
         }
-    }
-
-    public static NetworkComponents getNetworkComponents() {
-        return networkComponents;
     }
 }
