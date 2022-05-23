@@ -23,6 +23,7 @@ public final class Utils {
      * @return The path to the exported resource.
      *
      */
+    @SuppressWarnings("ConstantConditions")
     static public String exportResource(String resourceName) throws Exception {
         InputStream stream = null;
         OutputStream resStreamOut = null;
@@ -77,7 +78,7 @@ public final class Utils {
         ArrayList<Database> databases = new ArrayList<>();
 
         for (long id : ids) {
-            Main.getNetworkComponents().getDatabase(id).ifPresent(databases::add);
+            // TODO get databases by id
         }
 
         return databases;
@@ -94,7 +95,7 @@ public final class Utils {
         ArrayList<Webserver> webservers = new ArrayList<>();
 
         for (long id : ids) {
-            Main.getNetworkComponents().getWebserver(id).ifPresent(webservers::add);
+            // TODO get webservers by id
         }
 
         return webservers;
