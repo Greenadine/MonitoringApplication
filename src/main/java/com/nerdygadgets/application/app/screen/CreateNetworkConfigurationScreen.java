@@ -2,8 +2,7 @@ package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
-import com.nerdygadgets.application.app.panel.NetworkComponentsListSidebar;
-import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
+import com.nerdygadgets.application.app.panel.*;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.NetworkComponent;
@@ -50,6 +49,41 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
             JLabel testLabel = new JLabel("Test " + (i + 1));
             sidebar.getDatabasesListPane().addComponent(testLabel);
         }
+
+        // create center wrapper
+        JPanel centerWrapperPanel = new JPanel();
+        centerWrapperPanel.setLayout(new BorderLayout());
+
+        // firewall panel
+        FirewallPanel firewallPanel = new FirewallPanel(this);
+
+        // Configuration components list panels
+        ConfigurationComponentsList configurationComponentDatabases = new ConfigurationComponentsList(this, "Databases");
+        ConfigurationComponentsList configurationComponentWebservers = new ConfigurationComponentsList(this, "Webservers");
+
+        // Configuration data panel
+        ConfigurationDataPanel configurationDataPanel = new ConfigurationDataPanel(this);
+
+
+        // create component list wrapper
+        JPanel componentWrapper = new JPanel();
+        componentWrapper.setLayout(new GridLayout(0, 2));
+
+        // create configuration data wrapper
+        JPanel thirdRowWrapper = new JPanel();
+
+        // add component lists to the componentWrapper
+        componentWrapper.add(configurationComponentDatabases);
+        componentWrapper.add(configurationComponentWebservers);
+
+        // add all panels to the centerWrapperPanel
+        centerWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
+        centerWrapperPanel.add(componentWrapper);
+        centerWrapperPanel.add(configurationDataPanel, BorderLayout.PAGE_END);
+
+
+        // add all to this panel
+        add(centerWrapperPanel, BorderLayout.CENTER);
     }
 
     /* Button Actions */
@@ -64,7 +98,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
      * Toggles the given {@link JXCollapsiblePane}, as well as updates the pane's toggle {@link JButton}.
      *
      * @param collapsiblePane The {@code JXCollapsiblePane}.
-     * @param toggleButton The {@code JButton} that toggles the {@code JXCollapsiblePane}.
+     * @param toggleButton    The {@code JButton} that toggles the {@code JXCollapsiblePane}.
      */
     private void togglePane(@NotNull final JXCollapsiblePane collapsiblePane, @NotNull final JButton toggleButton) {
         collapsiblePane.setCollapsed(!collapsiblePane.isCollapsed()); // Toggle collapsed
