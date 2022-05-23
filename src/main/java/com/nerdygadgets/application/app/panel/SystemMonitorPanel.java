@@ -28,19 +28,19 @@ import java.util.concurrent.ScheduledFuture;
  */
 public class SystemMonitorPanel extends ApplicationPanel {
 
-    private final String systemIp;
-    private final String username;
-    private final String password;
+    private final String systemAddress;
+    private final String systemUsername;
+    private final String systemPassword;
 
     private JLabel systemNameLabel;
     private WrappedJLabel systemUptimeValue;
     private LineGraphComponent cpuUsageGraphPanel;
     private JPanel disksTableContentPanel;
 
-    public ScheduledFuture<?> uptimeUpdater;
+    private ScheduledFuture<?> uptimeUpdater;
     private ScheduledFuture<?> cpuUsageUpdater;
     private ScheduledFuture<?> disksUpdater;
-    public ScheduledFuture<?> systemStatusChecker;
+    private ScheduledFuture<?> systemStatusChecker;
 
     private boolean previousOnlineStatus;
     private boolean onlineStatus;
@@ -49,11 +49,11 @@ public class SystemMonitorPanel extends ApplicationPanel {
         this(applicationScreen, systemName, null, null, null);
     }
 
-    public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName, @Nullable final String systemIp, @Nullable final String username, @Nullable final String password) {
+    public SystemMonitorPanel(@NotNull final ApplicationScreen applicationScreen, @NotNull final String systemName, @Nullable final String systemAddress, @Nullable final String systemUsername, @Nullable final String systemPassword) {
         super(applicationScreen);
-        this.systemIp = systemIp;
-        this.username = username;
-        this.password = password;
+        this.systemAddress = systemAddress;
+        this.systemUsername = systemUsername;
+        this.systemPassword = systemPassword;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -99,17 +99,19 @@ public class SystemMonitorPanel extends ApplicationPanel {
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        final WrappedJLabel newSystemUptimeLabel = new WrappedJLabel("Uptime", SwingConstants.LEFT);
-        newSystemUptimeLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
-        newSystemUptimeLabel.getWrapperPanel().setBackground(Colors.MONITOR_VALUE_LABEL);
-        newSystemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
-        newSystemUptimeLabel.getWrapperPanel().setAlignmentX(LEFT_ALIGNMENT);
+        // Create and add uptime label
+        final WrappedJLabel systemUptimeLabel = new WrappedJLabel("Uptime", SwingConstants.LEFT);
+        systemUptimeLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
+        systemUptimeLabel.getWrapperPanel().setBackground(Colors.MONITOR_VALUE_LABEL);
+        systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
+        systemUptimeLabel.getWrapperPanel().setAlignmentX(LEFT_ALIGNMENT);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.anchor = GridBagConstraints.WEST;
-        systemInformationPanel.add(newSystemUptimeLabel.getWrapperPanel(), constraints);
+        systemInformationPanel.add(systemUptimeLabel.getWrapperPanel(), constraints);
 
+        // Create and add uptime value label
         systemUptimeValue = new WrappedJLabel("Loading...", SwingConstants.RIGHT);
         systemUptimeValue.setFont(Fonts.MONITOR_LABEL);
         systemUptimeValue.setBackground(Colors.MONITOR_TABLE_CONTENT);
@@ -185,13 +187,13 @@ public class SystemMonitorPanel extends ApplicationPanel {
         disksTableHeaderPanel.add(diskSpaceInUseHeaderLabel);
 
         /* --- Add disks table panel  --- */
-        addEmptyDisksTable();
+        addEmptyDisksTable("Loading...");
     }
 
     /**
      * Resets the contents of the disk(s) information table.
      */
-    private void addEmptyDisksTable() {
+    private void addEmptyDisksTable(@NotNull final String labelText) {
         if (disksTableContentPanel != null) {
             disksTableContentPanel.removeAll();
         } else {
@@ -201,7 +203,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         disksTableContentPanel.setLayout(new FlowLayout());
 
-        final JLabel loadingLabel = new JLabel("Loading...");
+        final JLabel loadingLabel = new JLabel(labelText);
         loadingLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
         disksTableContentPanel.add(loadingLabel);
     }
@@ -276,7 +278,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         cpuUsageUpdater = null;
         disksUpdater = null;
 
-        addEmptyDisksTable(); // Clear disks table
+        addEmptyDisksTable("Loading..."); // Clear disks table
     }
 
     /**
@@ -292,6 +294,8 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
             if (!onlineStatus) {
                 systemUptimeValue.setText("Can't be reached");
+
+                addEmptyDisksTable("Can't be reached");
                 // TODO maybe send some kind of warning for the system being offline, for example through email?
             }
         }
@@ -306,8 +310,8 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            if (systemIp != null) {
-                SystemMonitor.getCpuLoad(systemIp, username, password).ifPresent(cpuUsageGraphPanel::appendValue);
+            if (systemAddress != null) {
+                SystemMonitor.getCpuLoad(systemAddress, systemUsername, systemPassword).ifPresent(cpuUsageGraphPanel::appendValue);
             } else {
                 SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
             }
@@ -323,13 +327,9 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final Instant lastBootUpTime;
-
-            if (systemIp != null) {
-                lastBootUpTime = SystemMonitor.getLastBootUpTime(systemIp, username, password);
-            } else {
-                lastBootUpTime = SystemMonitor.getLocalLastBootUpTime();
-            }
+            final Instant lastBootUpTime = systemAddress != null
+                    ? SystemMonitor.getLastBootUpTime(systemAddress, systemUsername, systemPassword)
+                    : SystemMonitor.getLocalLastBootUpTime();
 
             previousOnlineStatus = onlineStatus;
             onlineStatus = lastBootUpTime != null;
@@ -392,53 +392,51 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         @Override
         public void run() {
-            final ArrayList<SystemMonitor.DiskResult> disks;
+            final ArrayList<SystemMonitor.DiskResult> disks = systemAddress != null
+                    ? SystemMonitor.getDisks(systemAddress, systemUsername, systemPassword)
+                    : SystemMonitor.getLocalDisks();
 
-            if (systemIp != null) {
-                disks = SystemMonitor.getDisks(systemIp, username, password);
-            } else {
-                disks = SystemMonitor.getLocalDisks();
+            if (!disks.isEmpty()) {
+                if (firstRun) {
+                    removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
+
+                    disksTableContentPanel = new JPanel();
+                    disksTableContentPanel.setLayout(new GridLayout(1, 4));
+                    disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
+                    disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
+                    addComponent(disksTableContentPanel);
+                    firstRun = false;
+
+                    ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
+                } else {
+                    disksTableContentPanel.removeAll();
+                }
+
+                for (SystemMonitor.DiskResult disk : disks) {
+                    // Add disk name
+                    final JLabel diskNameLabel = new JLabel(disk.getName());
+                    diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+                    disksTableContentPanel.add(diskNameLabel);
+
+                    // Add disk total space
+                    final JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", disk.getTotalSpace()), SwingConstants.RIGHT);
+                    diskTotalSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+                    diskTotalSpaceLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
+                    disksTableContentPanel.add(diskTotalSpaceLabel);
+
+                    // Add disk free space
+                    final JLabel diskFreeSpaceLabel = new JLabel(String.format("%.2f GB", disk.getFreeSpace()), SwingConstants.RIGHT);
+                    diskFreeSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+                    disksTableContentPanel.add(diskFreeSpaceLabel);
+
+                    // Add disk space in use
+                    final JLabel diskSpaceInUseLabel = new JLabel(String.format("%.2f%%", 100 - (disk.getFreeSpace() / disk.getTotalSpace() * 100)), SwingConstants.RIGHT);
+                    diskSpaceInUseLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+                    disksTableContentPanel.add(diskSpaceInUseLabel);
+                }
+
+                Main.mainWindow.pack();
             }
-
-            if (firstRun) {
-                removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
-
-                disksTableContentPanel = new JPanel();
-                disksTableContentPanel.setLayout(new GridLayout(1, 4));
-                disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
-                disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
-                addComponent(disksTableContentPanel);
-                firstRun = false;
-
-                ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
-            } else {
-                disksTableContentPanel.removeAll();
-            }
-
-            for (SystemMonitor.DiskResult disk : disks) {
-                // Add disk name
-                final JLabel diskNameLabel = new JLabel(disk.getName());
-                diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-                disksTableContentPanel.add(diskNameLabel);
-
-                // Add disk total space
-                final JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", disk.getTotalSpace()), SwingConstants.RIGHT);
-                diskTotalSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-                diskTotalSpaceLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
-                disksTableContentPanel.add(diskTotalSpaceLabel);
-
-                // Add disk free space
-                final JLabel diskFreeSpaceLabel = new JLabel(String.format("%.2f GB", disk.getFreeSpace()), SwingConstants.RIGHT);
-                diskFreeSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-                disksTableContentPanel.add(diskFreeSpaceLabel);
-
-                // Add disk space in use
-                final JLabel diskSpaceInUseLabel = new JLabel(String.format("%.2f%%", 100 - (disk.getFreeSpace() / disk.getTotalSpace() * 100)), SwingConstants.RIGHT);
-                diskSpaceInUseLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-                disksTableContentPanel.add(diskSpaceInUseLabel);
-            }
-
-            Main.mainWindow.pack();
         }
     }
 }

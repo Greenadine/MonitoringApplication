@@ -22,7 +22,7 @@ public class SystemMonitor {
      * @return The system's CPU load in percentage, or {@link Optional#empty()} if failed to retrieve.
      */
     public static Optional<Integer> getLocalCpuLoad() {
-        return getCpuLoad("localhost", null, null);
+        return getCpuLoad(null, null, null);
     }
 
     /**
@@ -34,13 +34,13 @@ public class SystemMonitor {
      *
      * @return The system's CPU load in percentage, or {@link Optional#empty()} if failed to retrieve.
      */
-    public static Optional<Integer> getCpuLoad(@NotNull final String address, @Nullable final String user, @Nullable final String password) {
+    public static Optional<Integer> getCpuLoad(@Nullable final String address, @Nullable final String user, @Nullable final String password) {
         Integer cpuLoad = null;
 
         try {
             final String command;
 
-            if (address.equalsIgnoreCase("localhost")) {
+            if (address == null) {
                 command = "wmic CPU get LoadPercentage";
             } else {
                 command  = String.format("wmic /node:%s /user:%s /password:%s CPU get LoadPercentage", address, user, password);
@@ -80,7 +80,7 @@ public class SystemMonitor {
      * @return An {@code Instant} of the system's last boot-up time, or {@code null} if failed to retrieve.
      */
     public static Instant getLocalLastBootUpTime() {
-        return getLastBootUpTime("localhost", null, null);
+        return getLastBootUpTime(null, null, null);
     }
 
     /**
@@ -92,13 +92,13 @@ public class SystemMonitor {
      *
      * @return An {@code Instant} of the system's last boot-up time, or {@code null} if failed to retrieve.
      */
-    public static Instant getLastBootUpTime(@NotNull final String address, @Nullable final String user, @Nullable final String password) {
+    public static Instant getLastBootUpTime(@Nullable final String address, @Nullable final String user, @Nullable final String password) {
         Instant lastBootUpTime = null;
 
         try {
             final String command;
 
-            if (address.equalsIgnoreCase("localhost")) {
+            if (address == null) {
                 command = "wmic path Win32_OperatingSystem get LastBootUpTime";
             } else {
                 command  = String.format("wmic /node:%s /user:%s /password:%s path Win32_OperatingSystem get LastBootUpTime", address, user, password);
@@ -143,7 +143,7 @@ public class SystemMonitor {
      * @return An {@code ArrayList} containing a {@link DiskResult} for every storage disk present in the system.
      */
     public static ArrayList<DiskResult> getLocalDisks() {
-        return getDisks("localhost", null, null);
+        return getDisks(null, null, null);
     }
 
     /**
@@ -155,13 +155,13 @@ public class SystemMonitor {
      *
      * @return An {@code ArrayList} containing a {@link DiskResult} for every storage disk present in the system.
      */
-    public static ArrayList<DiskResult> getDisks(@NotNull final String address, @Nullable final String user, @Nullable final String password) {
+    public static ArrayList<DiskResult> getDisks(@Nullable final String address, @Nullable final String user, @Nullable final String password) {
         final ArrayList<DiskResult> disks = new ArrayList<>();
 
         try {
             final String command;
 
-            if (address.equalsIgnoreCase("localhost")) {
+            if (address == null) {
                 command = "wmic LogicalDisk get Name,Size,FreeSpace";
             } else {
                 command  = String.format("wmic /node:%s /user:%s /password:%s LogicalDisk get Name,Size,FreeSpace", address, user, password);
