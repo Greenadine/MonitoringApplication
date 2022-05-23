@@ -14,12 +14,10 @@ public class ConfigurationDataPanel extends ApplicationPanel {
 
         this.setLayout(new GridLayout(1, 2));
 
-        // populate panel
+        // Populate panel
         addPercentageContent();
         addCostsContent();
-
     }
-
 
     private void addPercentageContent() {
         JPanel percentagePanel = new JPanel();
@@ -37,10 +35,9 @@ public class ConfigurationDataPanel extends ApplicationPanel {
 
         this.add(costsPanel);
 
-        JLabel costsLabel = new JLabel("Total costs: €0,00,-");
+        JLabel costsLabel = new JLabel("Total costs: \u20AC0,00,-");
         costsPanel.add(costsLabel);
     }
-
 
     @Override
     public void onShowImpl() {

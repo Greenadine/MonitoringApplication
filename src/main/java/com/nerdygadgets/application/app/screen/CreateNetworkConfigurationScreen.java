@@ -7,6 +7,8 @@ import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.SwingUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +37,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         // Populate screen
         this.add(new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50, this::actionReturn), BorderLayout.PAGE_START);
 
-        //createSidebar(); // Create and populate sidebar panel
+        // Create sidebar
         sidebar = new NetworkComponentsListSidebar(this);
         this.add(sidebar, BorderLayout.LINE_START);
 
@@ -50,64 +52,59 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
             sidebar.getDatabasesListPane().addComponent(testLabel);
         }
 
-        // create center wrapper
-        JPanel centerWrapperPanel = new JPanel();
-        centerWrapperPanel.setLayout(new BorderLayout());
+        // Create center wrapper
+        JPanel contentWrapperPanel = new JPanel();
+        contentWrapperPanel.setLayout(new BorderLayout());
+        this.add(contentWrapperPanel, BorderLayout.CENTER);
 
-        // firewall panel
+        // Firewall panel
         FirewallPanel firewallPanel = new FirewallPanel(this);
+        contentWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
+
+        // Create component list wrapper
+        JPanel componentWrapper = new JPanel();
+        componentWrapper.setLayout(new GridLayout(1, 2));
+        contentWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
         ConfigurationComponentsList configurationComponentDatabases = new ConfigurationComponentsList(this, "Databases");
         ConfigurationComponentsList configurationComponentWebservers = new ConfigurationComponentsList(this, "Webservers");
-
-        // Configuration data panel
-        ConfigurationDataPanel configurationDataPanel = new ConfigurationDataPanel(this);
-
-
-        // create component list wrapper
-        JPanel componentWrapper = new JPanel();
-        componentWrapper.setLayout(new GridLayout(0, 2));
-
-        // create configuration data wrapper
-        JPanel thirdRowWrapper = new JPanel();
-
-        // add component lists to the componentWrapper
         componentWrapper.add(configurationComponentDatabases);
         componentWrapper.add(configurationComponentWebservers);
 
-        // add all panels to the centerWrapperPanel
-        centerWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
-        centerWrapperPanel.add(componentWrapper);
-        centerWrapperPanel.add(configurationDataPanel, BorderLayout.PAGE_END);
+        // Create configuration data wrapper
+        JPanel pageEndWrapperPanel = new JPanel();
+        pageEndWrapperPanel.setLayout(new BoxLayout(pageEndWrapperPanel, BoxLayout.Y_AXIS));
+        contentWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
 
+        // Configuration data panel
+        ConfigurationDataPanel configurationDataPanel = new ConfigurationDataPanel(this);
+        pageEndWrapperPanel.add(configurationDataPanel);
 
-        // add all to this panel
-        add(centerWrapperPanel, BorderLayout.CENTER);
+        // Create buttons panel
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new GridLayout(1, 7));
+        buttonsPanel.setBackground(Colors.MAIN_BACKGROUND_ACCENT);
+        pageEndWrapperPanel.add(buttonsPanel);
+
+        // Fill up the grid layout for spacing
+        for (int i = 0; i < 5; i++) {
+            buttonsPanel.add(new JLabel());
+        }
+
+        // Create optimize button
+        JButton optimizeButton = new JButton("Optimize");
+        buttonsPanel.add(optimizeButton);
+
+        // Create save button
+        JButton saveButton = new JButton("Save");
+        buttonsPanel.add(saveButton);
     }
 
     /* Button Actions */
 
     private void actionReturn(ActionEvent event) {
         window.openScreen("network-configurations");
-    }
-
-    /* Utility methods */
-
-    /**
-     * Toggles the given {@link JXCollapsiblePane}, as well as updates the pane's toggle {@link JButton}.
-     *
-     * @param collapsiblePane The {@code JXCollapsiblePane}.
-     * @param toggleButton    The {@code JButton} that toggles the {@code JXCollapsiblePane}.
-     */
-    private void togglePane(@NotNull final JXCollapsiblePane collapsiblePane, @NotNull final JButton toggleButton) {
-        collapsiblePane.setCollapsed(!collapsiblePane.isCollapsed()); // Toggle collapsed
-
-        if (collapsiblePane.isCollapsed()) {
-            toggleButton.setIcon(new ImageIcon(getClass().getResource("/assets/icons/arrow-down.png")));
-        } else {
-            toggleButton.setIcon(new ImageIcon(getClass().getResource("/assets/icons/arrow-up.png")));
-        }
     }
 
     @Override

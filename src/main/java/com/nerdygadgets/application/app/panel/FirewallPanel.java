@@ -15,17 +15,15 @@ public class FirewallPanel extends ApplicationPanel {
         // Configure panel
         this.setLayout(new GridLayout(1,2));
 
-        // populate panel
+        // Populate panel
         addFirewallHeader();
         addFirewallContent();
-
     }
-
 
     private void addFirewallHeader() {
         JPanel firewallHeaderPanel = new JPanel();
-
         firewallHeaderPanel.setBackground(Colors.MAIN_BACKGROUND);
+        firewallHeaderPanel.setBorder(new MatteBorder(2, 2, 2, 5, Colors.MAIN_BACKGROUND_ACCENT));
         this.add(firewallHeaderPanel);
 
         JLabel firewallHeaderLabel = new JLabel("Firewall");
@@ -35,13 +33,11 @@ public class FirewallPanel extends ApplicationPanel {
     private void addFirewallContent() {
         JPanel firewallContentPanel = new JPanel();
 
-
         this.add(firewallContentPanel);
 
         JLabel placeHolder = new JLabel("");
         firewallContentPanel.add(placeHolder);
     }
-
 
     @Override
     public void onShowImpl() {

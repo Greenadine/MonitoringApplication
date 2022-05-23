@@ -15,34 +15,28 @@ public class ConfigurationComponentsList extends ApplicationPanel {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-
         JPanel headerPanel = new JPanel();
         headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        headerPanel.setBorder(new MatteBorder(2,2,2,2, Color.red));
+        headerPanel.setBorder(new MatteBorder(2,2,2,2, Color.RED));
         JLabel componentLabel = new JLabel(header);
         headerPanel.add(componentLabel);
         add(headerPanel);
 
-        JPanel listOfComponentsWrapper = new JPanel();
-        JScrollPane scrollableList = new JScrollPane(listOfComponentsWrapper);
-        scrollableList.setBorder(new MatteBorder(2,2,2,2, Color.orange));
+        JPanel componentsListWrapper = new JPanel();
+        JScrollPane scrollableList = new JScrollPane(componentsListWrapper);
+        scrollableList.setBorder(new MatteBorder(2,2,2,2, Color.ORANGE));
         scrollableList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         add(scrollableList);
-
-
-
-
     }
-
 
     @Override
     public void onShowImpl() {
-
+        // Do nothing
     }
 
     @Override
     public void onHideImpl() {
-
+        // Do nothing
     }
 }
