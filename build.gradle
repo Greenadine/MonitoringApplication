@@ -21,6 +21,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
 
+    implementation 'mysql:mysql-connector-java:6.0.6'
+
     // Utility libraries
     implementation 'commons-io:commons-io:2.7'
     implementation 'com.google.guava:guava:31.1-jre'

@@ -21,19 +21,19 @@ public final class DatabaseUtils {
     static {
         Properties databaseProperties = new Properties();
 
-        try (InputStream is = Main.class.getResourceAsStream("database.properties")) {
+       /* try (InputStream is = Main.class.getResourceAsStream("database.properties")) {
 
             databaseProperties.load(is);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+        }*/
 
-        HOST = databaseProperties.getProperty("host", "145.44.235.121");
+        HOST = databaseProperties.getProperty("host", "localhost");
         DATABASE = databaseProperties.getProperty("database", "nerdygadgets");
-        USER = databaseProperties.getProperty("user", "myuser");
-        PASSWORD = databaseProperties.getProperty("password", "mypass");
+        USER = databaseProperties.getProperty("user", "root");
+        PASSWORD = databaseProperties.getProperty("password", "");
     }
 
     /**
@@ -45,7 +45,7 @@ public final class DatabaseUtils {
      */
     public static Connection getConnection() throws DatabaseException {
         try {
-            return DriverManager.getConnection("jdbc:sqlite:" + HOST + "/" + DATABASE, USER, PASSWORD);
+            return DriverManager.getConnection("jdbc:mysql:" + HOST + ":3306/" + DATABASE, USER, PASSWORD);
         } catch (SQLException ex) {
             throw new DatabaseException(ex, "Failed to establish connection with database '%s' at host '%s'. Please check credentials in 'databases.properties'.", DATABASE, HOST);
         }

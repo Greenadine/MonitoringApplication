@@ -4,53 +4,203 @@ import com.nerdygadgets.application.app.model.NetworkComponentListTableModel;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
+import com.nerdygadgets.application.model.component.Database;
+import com.nerdygadgets.application.model.component.Firewall;
+import com.nerdygadgets.application.model.component.Webserver;
 import com.nerdygadgets.application.util.ApplicationActions;
+import com.nerdygadgets.application.util.DatabaseUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.*;
 
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+
+
+public class ViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener
+{
 
 
 
-public class ViewNetworkComponentsScreen extends ApplicationScreen {
+    private JPanel databasePanel;
+    private JPanel webserverPanel;
+    private JPanel firewallPanel;
+
+    private JPanel gridPanel;
+
+    private JPanel propertiesPanel;
 
 
+    // Buttons
+    private JButton web1;
+    private JButton web2;
+    private JButton web3;
+    private JButton web4;
 
-    private JPanel componentWrapperPanel;
-    private JPanel propertiesWrapperPanel;
+    private JButton db1;
+    private JButton db2;
+    private JButton db3;
+    private JButton db4;
+
+    private JButton fw1;
+    private JButton fw2;
+
+
 
     private JButton deleteProperties;
     private JButton editProperties;
+
+    // Properties labels
+    private JLabel firewallLabel;
+    private JLabel nameOutputLabel;
+    private JLabel idOutputLabel;
+    private JLabel availabilityOutputLabel;
+    private JLabel priceOutputLabel;
+    private JLabel ipOutputLabel;
+    private JLabel subnetmaskOutputLabel;
+
+
+    ArrayList<JButton> buttons;
 
     public ViewNetworkComponentsScreen(@NotNull final ApplicationWindow window) {
         super(window);
        // Class.forName("com.mysql.jdbc.Driver");
         // Configure screen
-        this.setLayout(new BorderLayout());
-        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setLayout(new BorderLayout(20, 15));
+        //this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Populate screen
         this.add(new ScreenHeaderPanel(this, "Network Components", 1250, 50, ApplicationActions::openHome), BorderLayout.PAGE_START);
 
-        componentWrapperPanel = new JPanel();
-        componentWrapperPanel.setLayout(new FlowLayout());
-        add(componentWrapperPanel, BorderLayout.CENTER);
+//        componentWrapperPanel = new JPanel();
+//        componentWrapperPanel.setLayout(new FlowLayout());
+//        add(componentWrapperPanel, BorderLayout.CENTER);
 
-        createDatabasesTable();
-        createWebserversTable();
-        createFirewallTable();
+        firewallPanel = new JPanel();
+        firewallPanel.setLayout(new GridLayout(0,1));
+        firewallPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
-//       propertiesWrapperPanel = new JPanel();
-//       propertiesWrapperPanel.setLayout(new FlowLayout());
-//        add(propertiesWrapperPanel);
+        databasePanel = new JPanel();
+        databasePanel.setLayout(new GridLayout(0,1));
+        databasePanel.setBorder(BorderFactory.createLineBorder(Color.white));
+
+        webserverPanel = new JPanel();
+        webserverPanel.setLayout(new GridLayout(0,1));
+        webserverPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+
+        gridPanel = new JPanel();
+        gridPanel.setLayout(new GridLayout(1,3));
+        webserverPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+
+        propertiesPanel = new JPanel();
+        propertiesPanel.setLayout(new GridLayout(7,2));
+        propertiesPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
 
-        createPropertiesTable();
-        databaseConnection();
 
+        // Database
+        JLabel databaseLabel = new JLabel("Database");
+        databasePanel.add(databaseLabel, BorderLayout.LINE_START);
+        db1 = new JButton("Database 1");
+        databasePanel.add(db1);
+        db1.addActionListener(this);
+        db2 = new JButton("Database 2");
+        databasePanel.add(db2);
+        db2.addActionListener(this);
+        db3 = new JButton("Database 3");
+        databasePanel.add(db3);
+        db3.addActionListener(this);
+        db4 = new JButton("Database 4");
+        databasePanel.add(db4);
+        db4.addActionListener(this);
+
+        // Webserver
+        JLabel webserverLabel = new JLabel("Webserver");
+        webserverPanel.add(webserverLabel, BorderLayout.CENTER);
+
+        web1 = new JButton("Webserver 1");
+        webserverPanel.add(web1);
+        web1.addActionListener(this);
+        web2 = new JButton("Webserver 2");
+        webserverPanel.add(web2);
+        web2.addActionListener(this);
+        web3 = new JButton("Webserver 3");
+        webserverPanel.add(web3);
+        web3.addActionListener(this);
+        web4 = new JButton("Webserver 4");
+        webserverPanel.add(web4);
+        web4.addActionListener(this);
+
+
+
+        // Firewall
+        firewallLabel = new JLabel("Firewall");
+        firewallPanel.add(firewallLabel, BorderLayout.LINE_END);
+
+        fw1 = new JButton("Firewall 1");
+        firewallPanel.add(fw1);
+        fw1.addActionListener(this);
+
+
+        fw2 = new JButton("Firewall 2");
+        firewallPanel.add(fw2);
+        fw2.addActionListener(this);
+
+        // Properties
+        nameOutputLabel = new JLabel("(No component selected)");
+        propertiesPanel.add(nameOutputLabel);
+        JLabel test = new JLabel(" ");
+        propertiesPanel.add(test);
+
+        JLabel idLabel = new JLabel("ID:");
+        propertiesPanel.add(idLabel);
+        idOutputLabel = new JLabel("test");
+        propertiesPanel.add(idOutputLabel);
+
+        JLabel availability = new JLabel("Availability");
+        propertiesPanel.add(availability);
+        availabilityOutputLabel = new JLabel("test");
+        propertiesPanel.add(availabilityOutputLabel);
+
+        JLabel price = new JLabel("Price");
+        propertiesPanel.add(price);
+        priceOutputLabel = new JLabel("test");
+        propertiesPanel.add(priceOutputLabel);
+
+        JLabel ip = new JLabel("IP");
+        propertiesPanel.add(ip);
+        ipOutputLabel = new JLabel("test");
+        propertiesPanel.add(ipOutputLabel);
+
+        JLabel subnetmask = new JLabel("Subnet mask");
+        propertiesPanel.add(subnetmask);
+        subnetmaskOutputLabel = new JLabel("test");
+        propertiesPanel.add(subnetmaskOutputLabel);
+
+        JButton addComponent = new JButton("add new component");
+        add(addComponent, BorderLayout.PAGE_END);
+        addComponent.addActionListener(this);
+
+
+
+
+
+
+
+        gridPanel.add(webserverPanel);
+        gridPanel.add(databasePanel);
+        gridPanel.add(firewallPanel);
+
+        add(gridPanel, BorderLayout.CENTER);
+        add(propertiesPanel, BorderLayout.LINE_END);
+
+        //databaseConnection();
         setVisible(true);
     }
 
@@ -76,12 +226,12 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen {
         JTable table = new JTable(data, columnNames);
 
 
-        componentWrapperPanel.add(table.getTableHeader());
+        //componentWrapperPanel.add(table.getTableHeader());
         //add(table, BorderLayout.);
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
-        componentWrapperPanel.add(scrollPane);
+        //componentWrapperPanel.add(scrollPane);
 
 
 
@@ -104,44 +254,49 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen {
         JTable table = new JTable(data, columnNames);
 
 
-        componentWrapperPanel.add(table.getTableHeader());
+       // componentWrapperPanel.add(table.getTableHeader());
         //add(table, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
-        componentWrapperPanel.add(scrollPane);
+       // componentWrapperPanel.add(scrollPane);
     }
 
     private void createFirewallTable() {
         //webserversTable = new JTable(new NetworkComponentListTableModel());
 
+        JButton firewall1 = new JButton("Firewall 1");
+
+
         String[] columnNames = {"Firewall"};
 
         Object[][] data = {
-                {"Firewall 1"},
-                {"Firewall 2"},
-                {"Firewall 3"},
-                {"Firewall 4"},
-                {"Firewall 5"}
+                {"test"}
+
         };
 
         JTable table = new JTable(data, columnNames);
 
+        add(firewall1);
 
-        componentWrapperPanel.add(table.getTableHeader());
+
+
+        //componentWrapperPanel.add(table.getTableHeader());
         //add(table, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
-        componentWrapperPanel.add(scrollPane);
+
+        //componentWrapperPanel.add(scrollPane);
+
     }
     private void createPropertiesTable() {
         //webserversTable = new JTable(new NetworkComponentListTableModel());
 
         deleteProperties = new JButton("Delete");
-        componentWrapperPanel.add(deleteProperties);
+       // componentWrapperPanel.add(deleteProperties);
         editProperties = new JButton("Edit");
-        componentWrapperPanel.add(editProperties);
+       // componentWrapperPanel.add(editProperties);
 
         String[] columnNames = {"Properties"};
 
@@ -158,18 +313,19 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen {
 
 
 
-        componentWrapperPanel.add(table.getTableHeader());
+       // componentWrapperPanel.add(table.getTableHeader());
         //add(table, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
-        componentWrapperPanel.add(scrollPane);
+       // componentWrapperPanel.add(scrollPane);
     }
 
     public void databaseConnection (){
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DatabaseUtils.getConnection();
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM firewall");
@@ -185,6 +341,65 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen {
 
     }
 
+    public Firewall firewallInObject(int test) throws IOException
+    {
+        Firewall firewall1 = new Firewall(1,"Firewall 1", 99, 4000, "192.168.1.1", "255.255.255.0");
+        Firewall firewall2 = new Firewall(1,"Firewall 2", 95, 4400, "192.168.1.5", "255.255.255.0");
+        if (test == 1){
+            return firewall1;
+        }
+        else {
+            return firewall2;
+        }
+
+
+    }
+    public Database databaseInObject1(int nummer) throws IOException
+    {
+
+        Database database1 = new Database(1,"Database 1", 99, 4000, "192.168.1.1", "255.255.255.0");
+        Database database2 = new Database(1,"Database 2", 97, 4000, "192.168.1.1", "255.255.255.0");
+        Database database3 = new Database(1,"Database 3", 69, 4000, "192.168.1.1", "255.255.255.0");
+        Database database4 = new Database(1,"Database 4", 69, 4000, "192.168.1.1", "255.255.255.0");
+
+        if (nummer == 1){
+            return database1;
+        }
+        else if (nummer ==2 ){
+            return database2;
+        }
+        else if (nummer == 3){
+            return database3;
+        }
+        else{
+            return database4;
+        }
+
+
+    }
+    public Webserver webserverInObject(int cijfer) throws IOException
+    {
+        Webserver webserver1 = new Webserver(1,"Webserver 1", 99, 4000, "192.168.1.1", "255.255.255.0");
+        Webserver webserver2 = new Webserver(1,"Webserver 2", 99, 4000, "192.168.1.1", "255.255.255.0");
+        Webserver webserver3 = new Webserver(1,"Webserver 3", 99, 4000, "192.168.1.1", "255.255.255.0");
+        Webserver webserver4 = new Webserver(1,"Webserver 4", 99, 4000, "192.168.1.1", "255.255.255.0");
+
+        if (cijfer ==1){
+            return webserver1;
+        }
+        else if (cijfer ==2){
+            return webserver2;
+        }
+        else if (cijfer ==3){
+            return webserver3;
+        }
+        else{
+            return webserver4;
+        }
+
+
+    }
+
     @Override
     protected void onOpenImpl() {
         // TODO
@@ -193,5 +408,162 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen {
     @Override
     protected void onCloseImpl() {
         // TODO
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == fw1){
+            System.out.println("test fw1");
+            try
+            {
+                nameOutputLabel.setText(firewallInObject(1).getName());
+                idOutputLabel.setText(firewallInObject(1).getName());
+                availabilityOutputLabel.setText(String.valueOf(firewallInObject(1).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(firewallInObject(1).getPrice()));
+                ipOutputLabel.setText(firewallInObject(1).getIp());
+                subnetmaskOutputLabel.setText(firewallInObject(1).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == fw2){
+            System.out.println("test fw2");
+            try
+            {
+                nameOutputLabel.setText(firewallInObject(2).getName());
+                idOutputLabel.setText(firewallInObject(2).getName());
+                availabilityOutputLabel.setText(String.valueOf(firewallInObject(2).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(firewallInObject(2).getPrice()));
+                ipOutputLabel.setText(firewallInObject(2).getIp());
+                subnetmaskOutputLabel.setText(firewallInObject(2).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == db1){
+            System.out.println("test fw2");
+            try
+            {
+                nameOutputLabel.setText(databaseInObject1(1).getName());
+                idOutputLabel.setText(databaseInObject1(1).getName());
+                availabilityOutputLabel.setText(String.valueOf(databaseInObject1(1).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(databaseInObject1(1).getPrice()));
+                ipOutputLabel.setText(databaseInObject1(1).getIp());
+                subnetmaskOutputLabel.setText(databaseInObject1(1).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == db2){
+            System.out.println("Database 2");
+            try
+            {
+                nameOutputLabel.setText(databaseInObject1(2).getName());
+                idOutputLabel.setText(databaseInObject1(2).getName());
+                availabilityOutputLabel.setText(String.valueOf(databaseInObject1(2).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(databaseInObject1(2).getPrice()));
+                ipOutputLabel.setText(databaseInObject1(2).getIp());
+                subnetmaskOutputLabel.setText(databaseInObject1(2).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == db3){
+            System.out.println("Database 3");
+            try
+            {
+                nameOutputLabel.setText(databaseInObject1(3).getName());
+                idOutputLabel.setText(databaseInObject1(3).getName());
+                availabilityOutputLabel.setText(String.valueOf(databaseInObject1(3).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(databaseInObject1(3).getPrice()));
+                ipOutputLabel.setText(databaseInObject1(3).getIp());
+                subnetmaskOutputLabel.setText(databaseInObject1(3).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == db4){
+            System.out.println("Database 4");
+            try
+            {
+                nameOutputLabel.setText(databaseInObject1(4).getName());
+                idOutputLabel.setText(databaseInObject1(4).getName());
+                availabilityOutputLabel.setText(String.valueOf(databaseInObject1(4).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(databaseInObject1(4).getPrice()));
+                ipOutputLabel.setText(databaseInObject1(4).getIp());
+                subnetmaskOutputLabel.setText(databaseInObject1(4).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        else if (e.getSource() == web1){
+            System.out.println("Webserver 1");
+            try
+            {
+                nameOutputLabel.setText(webserverInObject(1).getName());
+                idOutputLabel.setText(webserverInObject(1).getName());
+                availabilityOutputLabel.setText(String.valueOf(webserverInObject(1).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(webserverInObject(1).getPrice()));
+                ipOutputLabel.setText(webserverInObject(1).getIp());
+                subnetmaskOutputLabel.setText(webserverInObject(1).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == web2){
+            System.out.println("Webserver 2");
+            try
+            {
+                nameOutputLabel.setText(webserverInObject(2).getName());
+                idOutputLabel.setText(webserverInObject(2).getName());
+                availabilityOutputLabel.setText(String.valueOf(webserverInObject(2).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(webserverInObject(2).getPrice()));
+                ipOutputLabel.setText(webserverInObject(2).getIp());
+                subnetmaskOutputLabel.setText(webserverInObject(2).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == web3){
+            System.out.println("Webserver 3");
+            try
+            {
+                nameOutputLabel.setText(webserverInObject(3).getName());
+                idOutputLabel.setText(webserverInObject(3).getName());
+                availabilityOutputLabel.setText(String.valueOf(webserverInObject(3).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(webserverInObject(3).getPrice()));
+                ipOutputLabel.setText(webserverInObject(3).getIp());
+                subnetmaskOutputLabel.setText(webserverInObject(3).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+        else if (e.getSource() == web4){
+            System.out.println("Webserver 4");
+            try
+            {
+                nameOutputLabel.setText(webserverInObject(4).getName());
+                idOutputLabel.setText(webserverInObject(4).getName());
+                availabilityOutputLabel.setText(String.valueOf(webserverInObject(4).getAvailability()));
+                priceOutputLabel.setText(String.valueOf(webserverInObject(4).getPrice()));
+                ipOutputLabel.setText(webserverInObject(4).getIp());
+                subnetmaskOutputLabel.setText(webserverInObject(4).getSubnet());
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        }
+
     }
 }
