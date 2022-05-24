@@ -23,13 +23,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
-
+import java.util.Properties;
 
 public class ViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener
 {
-
-
-
     private JPanel databasePanel;
     private JPanel webserverPanel;
     private JPanel firewallPanel;
@@ -52,8 +49,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     private JButton fw1;
     private JButton fw2;
-
-
 
     private JButton deleteProperties;
     private JButton editProperties;
@@ -84,17 +79,11 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         databaseList = new ArrayList<>();
         firewallList = new ArrayList<>();
         webserverList = new ArrayList<>();
-       // Class.forName("com.mysql.jdbc.Driver");
         // Configure screen
         this.setLayout(new BorderLayout(20, 15));
-        //this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Populate screen
         this.add(new ScreenHeaderPanel(this, "Network Components", 1250, 50, ApplicationActions::openHome), BorderLayout.PAGE_START);
-
-//        componentWrapperPanel = new JPanel();
-//        componentWrapperPanel.setLayout(new FlowLayout());
-//        add(componentWrapperPanel, BorderLayout.CENTER);
 
         firewallPanel = new JPanel();
         firewallPanel.setLayout(new GridLayout(0,1));
@@ -222,8 +211,20 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         add(gridPanel, BorderLayout.CENTER);
         add(propertiesPanel, BorderLayout.LINE_END);
 
-        //databaseConnection();
+        databaseConnection();
         setVisible(true);
+    }
+
+    @Override
+    protected void onOpenImpl()
+    {
+
+    }
+
+    @Override
+    protected void onCloseImpl()
+    {
+
     }
 
     private void addDatabaseButtons()
@@ -234,134 +235,20 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     }
 
-    private void createDatabasesTable() {
-
-
-       // databasesTable = new JTable(new NetworkComponentListTableModel());
-        //databasesTable = new JTable(new NetworkComponentListTableModel());
-
-        // Create scroll pane as content panel
-
-
-        String[] columnNames = {"Database"};
-
-        Object[][] data = {
-                {"Database 1"},
-                {"Database 2"},
-                {"Database 3"},
-                {"Database 4"},
-                {"Database 5"}
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-
-        //componentWrapperPanel.add(table.getTableHeader());
-        //add(table, BorderLayout.);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-        //componentWrapperPanel.add(scrollPane);
-
-
-
-        // TODO finish
-    }
-
-    private void createWebserversTable() {
-        //webserversTable = new JTable(new NetworkComponentListTableModel());
-
-        String[] columnNames = {"Webserver"};
-
-        Object[][] data = {
-                {"Webserver 1"},
-                {"Webserver 2"},
-                {"Webserver 3"},
-                {"Webserver 4"},
-                {"Webserver 5"}
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-
-       // componentWrapperPanel.add(table.getTableHeader());
-        //add(table, BorderLayout.CENTER);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-       // componentWrapperPanel.add(scrollPane);
-    }
-
-    private void createFirewallTable() {
-        //webserversTable = new JTable(new NetworkComponentListTableModel());
-
-        JButton firewall1 = new JButton("Firewall 1");
-
-
-        String[] columnNames = {"Firewall"};
-
-        Object[][] data = {
-                {"test"}
-
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-        add(firewall1);
-
-
-
-        //componentWrapperPanel.add(table.getTableHeader());
-        //add(table, BorderLayout.CENTER);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-
-        //componentWrapperPanel.add(scrollPane);
-
-    }
-    private void createPropertiesTable() {
-        //webserversTable = new JTable(new NetworkComponentListTableModel());
-
-        deleteProperties = new JButton("Delete");
-       // componentWrapperPanel.add(deleteProperties);
-        editProperties = new JButton("Edit");
-       // componentWrapperPanel.add(editProperties);
-
-        String[] columnNames = {"Properties"};
-
-        Object[][] data = {
-                {"Firewall 1"},
-                {"Firewall 2"},
-                {"Firewall 3"},
-                {"Firewall 4"},
-                {"Firewall 5"}
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-
-
-
-       // componentWrapperPanel.add(table.getTableHeader());
-        //add(table, BorderLayout.CENTER);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-       // componentWrapperPanel.add(scrollPane);
-    }
-
     public void databaseConnection (){
-
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DatabaseUtils.getConnection();
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM firewall");
 
             while (resultSet.next()){
+                System.out.println(resultSet.getString("id"));
                 System.out.println(resultSet.getString("name"));
+                System.out.println(resultSet.getString("availability"));
+                System.out.println(resultSet.getString("price"));
+                System.out.println(resultSet.getString("ip"));
+                System.out.println(resultSet.getString("subnetmask"));
             }
         }
 
@@ -398,42 +285,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         webserverList.add(webserver2);
         webserverList.add(webserver3);
         webserverList.add(webserver4);
-
-
-
-    }
-
-//    public Webserver webserverInObject(int cijfer) throws IOException
-//    {
-//        Webserver webserver1 = new Webserver(1,"Webserver 1", 99, 4000, "192.168.1.1", "255.255.255.0");
-//        Webserver webserver2 = new Webserver(1,"Webserver 2", 99, 4000, "192.168.1.1", "255.255.255.0");
-//        Webserver webserver3 = new Webserver(1,"Webserver 3", 99, 4000, "192.168.1.1", "255.255.255.0");
-//        Webserver webserver4 = new Webserver(1,"Webserver 4", 99, 4000, "192.168.1.1", "255.255.255.0");
-//
-//        if (cijfer ==1){
-//            return webserver1;
-//        }
-//        else if (cijfer ==2){
-//            return webserver2;
-//        }
-//        else if (cijfer ==3){
-//            return webserver3;
-//        }
-//        else{
-//            return webserver4;
-//        }
-//
-//
-//    }
-
-    @Override
-    protected void onOpenImpl() {
-        // TODO
-    }
-
-    @Override
-    protected void onCloseImpl() {
-        // TODO
     }
 
     @Override
@@ -530,6 +381,8 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             ipOutputLabel.setText(webserverList.get(3).getIp());
             subnetmaskOutputLabel.setText(webserverList.get(3).getSubnet());
         }
+
+        //Haalt de ingevoerde gegevens van het dialoog op en zet het in d1 (alleen database)
         else if (e.getSource() == addComponent){
             AddComponentDialog dialoog = new AddComponentDialog(true);
             try
@@ -548,7 +401,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                 throw new RuntimeException(ex);
             }
             System.out.println("test");
-            //System.out.println(AddComponentDialog.);
         }
 
     }
