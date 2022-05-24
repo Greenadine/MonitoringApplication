@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConfigurationDataPanel extends ApplicationPanel {
+
+    private JLabel availabilityValueLabel;
+
     public ConfigurationDataPanel(@NotNull ApplicationScreen parentScreen) {
         super(parentScreen);
 
@@ -25,8 +28,8 @@ public class ConfigurationDataPanel extends ApplicationPanel {
         percentagePanel.setBackground(Colors.MAIN_BACKGROUND);
         this.add(percentagePanel);
 
-        JLabel percentagePanelLabel = new JLabel("Availability with this design: 0%");
-        percentagePanel.add(percentagePanelLabel);
+        availabilityValueLabel = new JLabel("Availability with this design: 0%");
+        percentagePanel.add(availabilityValueLabel);
     }
 
     private void addCostsContent() {
@@ -38,6 +41,11 @@ public class ConfigurationDataPanel extends ApplicationPanel {
         JLabel costsLabel = new JLabel("Total costs: \u20AC0,00,-");
         costsPanel.add(costsLabel);
     }
+
+    public void setAvailabilityValue(final double availability) {
+        availabilityValueLabel.setText(String.format(""));
+    }
+
 
     @Override
     public void onShowImpl() {

@@ -26,6 +26,11 @@ import java.awt.event.ActionEvent;
 public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
     private final NetworkComponentsListSidebar sidebar;
+    private final ConfigurationDataPanel configurationDataPanel;
+
+    private final FirewallPanel firewallPanel;
+    private final ConfigurationComponentsList databasesComponentsList;
+    private final ConfigurationComponentsList webserversComponentsList;
 
     public CreateNetworkConfigurationScreen(@NotNull final ApplicationWindow window) {
         super(window);
@@ -45,16 +50,14 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         JLabel label1 = new JLabel("Test1");
         label1.setBorder(new MatteBorder(5, 5, 5, 5, Color.GREEN));
 
-
         // Create center wrapper
         JPanel contentWrapperPanel = new JPanel();
         contentWrapperPanel.setLayout(new BorderLayout());
 
-
         this.add(contentWrapperPanel, BorderLayout.CENTER);
 
         // Firewall panel
-        FirewallPanel firewallPanel = new FirewallPanel(this);
+        firewallPanel = new FirewallPanel(this);
         contentWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
 
         // Create component list wrapper
@@ -63,11 +66,10 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         contentWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
-        ConfigurationComponentsList configurationComponentDatabases = new ConfigurationComponentsList(this, "Databases");
-        ConfigurationComponentsList configurationComponentWebservers = new ConfigurationComponentsList(this, "Webservers");
-        componentWrapper.add(configurationComponentDatabases);
-        componentWrapper.add(configurationComponentWebservers);
-
+        databasesComponentsList = new ConfigurationComponentsList(this, "Databases");
+        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers");
+        componentWrapper.add(databasesComponentsList);
+        componentWrapper.add(webserversComponentsList);
 
         // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();
@@ -75,7 +77,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         contentWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
 
         // Configuration data panel
-        ConfigurationDataPanel configurationDataPanel = new ConfigurationDataPanel(this);
+        configurationDataPanel = new ConfigurationDataPanel(this);
         pageEndWrapperPanel.add(configurationDataPanel);
 
         // Create buttons panel
@@ -96,6 +98,26 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         // Create save button
         JButton saveButton = new JButton("Save");
         buttonsPanel.add(saveButton);
+    }
+
+    public NetworkComponentsListSidebar getSidebar() {
+        return sidebar;
+    }
+
+    public ConfigurationDataPanel getConfigurationDataPanel() {
+        return configurationDataPanel;
+    }
+
+    public FirewallPanel getFirewallPanel() {
+        return firewallPanel;
+    }
+
+    public ConfigurationComponentsList getDatabasesComponentsList() {
+        return databasesComponentsList;
+    }
+
+    public ConfigurationComponentsList getWebserversComponentsList() {
+        return webserversComponentsList;
     }
 
     /* Button Actions */
