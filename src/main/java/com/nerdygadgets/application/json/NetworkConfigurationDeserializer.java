@@ -36,6 +36,6 @@ public class NetworkConfigurationDeserializer extends StdDeserializer<NetworkCon
         final long[] webserverIds = mapper.readValue(node.get("webservers").traverse(), long[].class);
         final NetworkComponentList<Webserver> webservers = new NetworkComponentList<>(Utils.getWebserversById(webserverIds));
 
-        return new NetworkConfiguration(name, ip, subnet, firewall, databases, webservers);
+        return new NetworkConfiguration(name, firewall, databases, webservers);
     }
 }

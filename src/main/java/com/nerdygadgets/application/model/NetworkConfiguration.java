@@ -14,22 +14,18 @@ import org.jetbrains.annotations.Nullable;
 public class NetworkConfiguration {
 
     private final String name;
-    private final String ip;
-    private final String subnet;
 
     private Firewall firewall;
     private final NetworkComponentList<Database> databases;
     private final NetworkComponentList<Webserver> webservers;
 
-    public NetworkConfiguration(@NotNull final String name, @NotNull final String ip, @NotNull final String subnet) {
-        this(name, ip, subnet, null, new NetworkComponentList<>(), new NetworkComponentList<>());
+    public NetworkConfiguration(@NotNull final String name, @NotNull final Firewall firewall) {
+        this(name, firewall, new NetworkComponentList<>(), new NetworkComponentList<>());
     }
 
-    public NetworkConfiguration(@NotNull final String name, @NotNull final String ip, @NotNull final String subnet, @Nullable final Firewall firewall,
+    public NetworkConfiguration(@NotNull final String name, @Nullable final Firewall firewall,
                                 @NotNull final NetworkComponentList<Database> databases, @NotNull final NetworkComponentList<Webserver> webservers) {
         this.name = name;
-        this.ip = ip;
-        this.subnet = subnet;
         this.firewall = firewall;
         this.databases = databases;
         this.webservers = webservers;
@@ -42,24 +38,6 @@ public class NetworkConfiguration {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Gets the IP of the network configuration.
-     *
-     * @return The network configuration's IP.
-     */
-    public String getIp() {
-        return ip;
-    }
-
-    /**
-     * Gets the subnet mask of the network configuration.
-     *
-     * @return The network configuration's subnet mask.
-     */
-    public String getSubnet() {
-        return subnet;
     }
 
     /**

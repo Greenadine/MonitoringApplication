@@ -19,8 +19,6 @@ public class NetworkConfigurationSerializer extends StdSerializer<NetworkConfigu
         gen.writeStartObject();
 
         gen.writeStringField("name", networkConfiguration.getName());
-        gen.writeStringField("ip", networkConfiguration.getIp());
-        gen.writeStringField("subnet", networkConfiguration.getSubnet());
         gen.writeNumberField("firewall", networkConfiguration.getFirewall().getId());
         gen.writeObjectField("databases", Utils.getComponentIds(networkConfiguration.getDatabases().getComponents()));
         gen.writeObjectField("webservers", Utils.getComponentIds(networkConfiguration.getWebservers().getComponents()));

@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
  * @author Kevin Zuman
  */
 public class ScreenHeaderPanel extends ApplicationPanel {
-
+    private JLabel titleLabel;
     public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height, final ActionListener returnAction) {
         super(screen);
 
@@ -48,11 +48,15 @@ public class ScreenHeaderPanel extends ApplicationPanel {
     }
 
     private void createTitle(@NotNull final String screenName, final int width) {
-        JLabel titleLabel = new JLabel(screenName);
+        titleLabel = new JLabel(screenName);
         titleLabel.setFont(Fonts.MAIN_HEADER_TITLE);
         titleLabel.setAlignmentX(LEFT_ALIGNMENT);
         titleLabel.setBorder(new EmptyBorder(5,5, 5, width / 2 - 6 * screenName.length()));
         this.add(titleLabel);
+    }
+
+    public void setTitle(String title) {
+        titleLabel.setText(title);
     }
 
     @Override

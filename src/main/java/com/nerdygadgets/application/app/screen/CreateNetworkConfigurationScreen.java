@@ -100,26 +100,6 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         buttonsPanel.add(saveButton);
     }
 
-    public NetworkComponentsListSidebar getSidebar() {
-        return sidebar;
-    }
-
-    public ConfigurationDataPanel getConfigurationDataPanel() {
-        return configurationDataPanel;
-    }
-
-    public FirewallPanel getFirewallPanel() {
-        return firewallPanel;
-    }
-
-    public ConfigurationComponentsList getDatabasesComponentsList() {
-        return databasesComponentsList;
-    }
-
-    public ConfigurationComponentsList getWebserversComponentsList() {
-        return webserversComponentsList;
-    }
-
     /* Button Actions */
 
     private void actionReturn(ActionEvent event) {

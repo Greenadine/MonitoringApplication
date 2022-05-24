@@ -2,10 +2,11 @@ package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
-import com.nerdygadgets.application.util.ApplicationActions;
-import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Fonts;
-import com.nerdygadgets.application.util.SwingUtils;
+import com.nerdygadgets.application.model.NetworkConfiguration;
+import com.nerdygadgets.application.model.component.Database;
+import com.nerdygadgets.application.model.component.Firewall;
+import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 public class NetworkConfigurationsScreen extends ApplicationScreen {
 
@@ -63,13 +65,33 @@ public class NetworkConfigurationsScreen extends ApplicationScreen {
         chooser.addChoosableFileFilter(extensionFilter);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        try {
+            Firewall firewall = new Firewall("Firewall1", 0.9999, 3000, "192.168.0.1", "255.255.255.0");
+            Database database1 = new Database("Database1", 0.95, 5000, "192.168.0.2", "255.255.255.0");
+            Database database2 = new Database("Database2", 0.90, 5000, "192.168.0.3", "255.255.255.0");
+            Webserver webserver1 = new Webserver("Webserver1", 0.98, 5000, "192.168.0.4", "255.255.255.0");
+            Webserver webserver2 = new Webserver("Webserver2", 0.95, 5000, "192.168.0.5", "255.255.255.0");
 
-        if (chooser.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
-            final File selected = chooser.getSelectedFile();
+            NetworkConfiguration configuration = new NetworkConfiguration("Test Network Configuration", firewall);
+            configuration.addDatabase(database1);
+            configuration.addDatabase(database2);
+            configuration.addWebserver(webserver1);
+            configuration.addWebserver(webserver2);
 
-            System.out.println(selected.getName());
-            // TODO open network configuration functionality
+            // TODO pass configuration to view network configuration screen
+            ((ViewNetworkConfigurationScreen)window.getScreen("view-network-configuration")).setConfiguration(configuration);
+        } catch (IOException ex) {
+            Logger.error(ex, "Failed to create mock network configuration.");
         }
+        window.openScreen("view-network-configuration");
+
+//        if (chooser.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
+//            final File selected = chooser.getSelectedFile();
+//
+//            System.out.println(selected.getName());
+//            // TODO open network configuration functionality
+//        }
+
     }
 
     /**
