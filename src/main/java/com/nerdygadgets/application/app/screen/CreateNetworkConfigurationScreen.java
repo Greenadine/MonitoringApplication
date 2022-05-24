@@ -39,22 +39,18 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
         // Create sidebar
         sidebar = new NetworkComponentsListSidebar(this);
+//        sidebar.setPreferredSize(new Dimension(150, 500));
         this.add(sidebar, BorderLayout.LINE_START);
 
         JLabel label1 = new JLabel("Test1");
         label1.setBorder(new MatteBorder(5, 5, 5, 5, Color.GREEN));
 
-        sidebar.getWebserversListPane().addComponent(label1);
-        sidebar.getFirewallListPane().addComponent(new JLabel("Test1"));
-
-        for (int i = 0; i < 5; i++) {
-            JLabel testLabel = new JLabel("Test " + (i + 1));
-            sidebar.getDatabasesListPane().addComponent(testLabel);
-        }
 
         // Create center wrapper
         JPanel contentWrapperPanel = new JPanel();
         contentWrapperPanel.setLayout(new BorderLayout());
+
+
         this.add(contentWrapperPanel, BorderLayout.CENTER);
 
         // Firewall panel
@@ -71,6 +67,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         ConfigurationComponentsList configurationComponentWebservers = new ConfigurationComponentsList(this, "Webservers");
         componentWrapper.add(configurationComponentDatabases);
         componentWrapper.add(configurationComponentWebservers);
+
 
         // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();

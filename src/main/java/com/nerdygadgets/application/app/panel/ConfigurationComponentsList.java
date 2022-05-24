@@ -16,7 +16,7 @@ public class ConfigurationComponentsList extends ApplicationPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel headerPanel = new JPanel();
-        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 500));
         headerPanel.setBorder(new MatteBorder(2,2,2,2, Color.RED));
         JLabel componentLabel = new JLabel(header);
         headerPanel.add(componentLabel);
