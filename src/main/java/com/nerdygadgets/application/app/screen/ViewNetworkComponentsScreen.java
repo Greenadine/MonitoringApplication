@@ -201,7 +201,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
 
         addDatabaseButtons();
-        componentInObject();
 
 
         gridPanel.add(webserverPanel);
