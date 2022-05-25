@@ -1,6 +1,7 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.model.component.Database;
+import com.nerdygadgets.application.model.component.Firewall;
 import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
 
@@ -27,10 +28,13 @@ public class AddComponentDialog extends JDialog implements ActionListener
     private JTextField availTextField;
     private JTextField priceTextField;
 
+    public JComboBox componentList;
+
 
 
     public AddComponentDialog(boolean modal)
     {
+
 
         setModal(modal);
         setLayout(new GridLayout(9,1));
@@ -42,10 +46,22 @@ public class AddComponentDialog extends JDialog implements ActionListener
         nameTextField = new JTextField(20);
         add(nameTextField);
 
+
+
         JLabel type = new JLabel("Type");
         add(type);
-        typeTextField = new JTextField(20);
-        add(typeTextField);
+        String[] componenten = { "webserver", "database", "firewall"};
+
+        //Create the combo box, select item at index 4.
+        //Indices start at 0, so 4 specifies the pig.
+        componentList = new JComboBox(componenten);
+        componentList.setSelectedIndex(2);
+        componentList.addActionListener(this);
+        add(componentList);
+
+
+//        typeTextField = new JTextField(20);
+//        add(typeTextField);
 
         JLabel ipAdres = new JLabel("IP address");
         add(ipAdres);
@@ -98,13 +114,28 @@ public class AddComponentDialog extends JDialog implements ActionListener
 
     }
 
-    public Database getWaarde() throws IOException
+    public Database getDatabaseWaarde() throws IOException
     {
-        if (Objects.equals(typeTextField.getText(), "database")){
+        if (Objects.equals(componentList.getSelectedItem(), "database")){
             return new Database(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
         }
 
+
         return null;
 
+    }
+    public Webserver getWebserverWaarde() throws IOException
+    {
+        if (Objects.equals(componentList.getSelectedItem(), "webserver")){
+            return new Webserver(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
+        }
+        return null;
+    }
+    public Firewall getFirewallWaarde() throws IOException
+    {
+        if (Objects.equals(componentList.getSelectedItem(), "firewall")){
+            return new Firewall(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
+        }
+        return null;
     }
 }

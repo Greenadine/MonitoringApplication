@@ -66,7 +66,9 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
 
 
-    public ArrayList<JButton> buttons;
+    public ArrayList<JButton> databaseButtons;
+    public ArrayList<JButton> webserverButtons;
+    public ArrayList<JButton> firewallButtons;
     private ArrayList<Database> databaseList;
     private ArrayList<Firewall> firewallList;
     private ArrayList<Webserver> webserverList;
@@ -75,7 +77,9 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
     {
         super(window);
 
-        buttons = new ArrayList<>();
+        databaseButtons = new ArrayList<>();
+        firewallButtons = new ArrayList<>();
+        webserverButtons = new ArrayList<>();
         databaseList = new ArrayList<>();
         firewallList = new ArrayList<>();
         webserverList = new ArrayList<>();
@@ -112,21 +116,21 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         databasePanel.add(databaseLabel, BorderLayout.LINE_START);
         db1 = new JButton("Database 1");
         db1.addActionListener(this);
-        buttons.add(db1);
+        databaseButtons.add(db1);
 
 
         db2 = new JButton("Database 2");
         db2.addActionListener(this);
-        buttons.add(db2);
+        databaseButtons.add(db2);
 
 
         db3 = new JButton("Database 3");
         db3.addActionListener(this);
-        buttons.add(db3);
+        databaseButtons.add(db3);
 
         db4 = new JButton("Database 4");
         db4.addActionListener(this);
-        buttons.add(db4);
+        databaseButtons.add(db4);
 
 
         // Webserver
@@ -134,17 +138,20 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         webserverPanel.add(webserverLabel, BorderLayout.CENTER);
 
         web1 = new JButton("Webserver 1");
-        webserverPanel.add(web1);
         web1.addActionListener(this);
+        webserverButtons.add(web1);
+
         web2 = new JButton("Webserver 2");
-        webserverPanel.add(web2);
         web2.addActionListener(this);
+        webserverButtons.add(web2);
+
         web3 = new JButton("Webserver 3");
-        webserverPanel.add(web3);
         web3.addActionListener(this);
+        webserverButtons.add(web3);
+
         web4 = new JButton("Webserver 4");
-        webserverPanel.add(web4);
         web4.addActionListener(this);
+        webserverButtons.add(web4);
 
 
 
@@ -200,7 +207,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
 
 
-        addDatabaseButtons();
+
 
 
         gridPanel.add(webserverPanel);
@@ -214,6 +221,9 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         getFirewallFromDatabase();
         getDatabaseFromDatabase();
         getWebserverFromDatabase();
+        addDatabaseButtons();
+        addWebserverButtons();
+        addFirewallButtons();
         setVisible(true);
     }
 
@@ -231,8 +241,22 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     private void addDatabaseButtons()
     {
-        for (JButton j: buttons){
+        for (JButton j: databaseButtons){
             databasePanel.add(j);
+        }
+
+    }
+    private void addWebserverButtons()
+    {
+        for (JButton j: webserverButtons){
+            webserverPanel.add(j);
+        }
+
+    }
+    private void addFirewallButtons()
+    {
+        for (JButton j: firewallButtons){
+            firewallPanel.add(j);
         }
 
     }
@@ -262,6 +286,10 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
                 Firewall tijdelijk = new Firewall(id, name, availability, price, ip, subnetmask);
                 firewallList.add(tijdelijk);
+
+                JButton nf = new JButton(name);
+                nf.addActionListener(this);
+                firewallButtons.add(nf);
 
             }
 
@@ -301,6 +329,10 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
                 Database tijdelijk = new Database(id, name, availability, price, ip, subnetmask);
                databaseList.add(tijdelijk);
+                JButton nd = new JButton(name);
+                nd.addActionListener(this);
+                databaseButtons.add(nd);
+
 
             }
 
@@ -339,6 +371,9 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
                 Webserver tijdelijk = new Webserver(id, name, availability, price, ip, subnetmask);
                 webserverList.add(tijdelijk);
+                JButton nw = new JButton(name);
+                nw.addActionListener(this);
+                webserverButtons.add(nw);
 
             }
 
@@ -357,7 +392,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             String sql = "INSERT INTO database1 (name, availability, price, ip, subnet)" + "values (?,?,?,?,?)";
 
             PreparedStatement preparedStmt = connection.prepareStatement(sql);
-            //preparedStmt.setLong(1, id);
             preparedStmt.setString (1, name);
             preparedStmt.setDouble   (2, availability);
             preparedStmt.setDouble(3, price);
@@ -367,8 +401,55 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             preparedStmt.execute();
             connection.close();
 
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
+    }
+    public void putWebserverObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            //Statement statement = connection.createStatement();
+
+            String sql = "INSERT INTO webserver (name, availability, price, ip, subnet)" + "values (?,?,?,?,?)";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(sql);
+            preparedStmt.setString (1, name);
+            preparedStmt.setDouble   (2, availability);
+            preparedStmt.setDouble(3, price);
+            preparedStmt.setString    (4, ip);
+            preparedStmt.setString    (5, subnetmask);
+
+            preparedStmt.execute();
+            connection.close();
+
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+    public void putFirewallObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            //Statement statement = connection.createStatement();
+
+            String sql = "INSERT INTO firewall (name, availability, price, ip, subnetmask)" + "values (?,?,?,?,?)";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(sql);
+            preparedStmt.setString (1, name);
+            preparedStmt.setDouble   (2, availability);
+            preparedStmt.setDouble(3, price);
+            preparedStmt.setString    (4, ip);
+            preparedStmt.setString    (5, subnetmask);
+
+            preparedStmt.execute();
+            connection.close();
 
         }
 
@@ -482,21 +563,62 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             try
             {
 
-                Database d1 = dialoog.getWaarde();
-                if (d1 != null){
+                if (dialoog.componentList.getSelectedItem() == "database"){
+                    Database d1 = dialoog.getDatabaseWaarde();
+                    if (d1 != null){
 
-                    putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnet());
+                        putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnet());
 
-                    System.out.println("d1 is toegevoegd");
-                    JButton j1 = new JButton(d1.getName());
-                    j1.addActionListener(this);
-                    firewallPanel.add(j1);
-                    firewallPanel.revalidate();
-                    firewallPanel.repaint();
+                        System.out.println("database is toegevoegd");
+                        JButton j1 = new JButton(d1.getName());
+                        j1.addActionListener(this);
+                        databasePanel.add(j1);
+                        databasePanel.revalidate();
+                        databasePanel.repaint();
+                    }
+                    else {
+                        System.out.println("database is leeg");
+                    }
                 }
-                else {
-                    System.out.println("d1 is leeg");
+                else if (dialoog.componentList.getSelectedItem() == "webserver"){
+                    Webserver w1 = dialoog.getWebserverWaarde();
+                    if (w1 != null){
+
+                        putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnet());
+
+                        System.out.println("webserver is toegevoegd");
+                        JButton j1 = new JButton(w1.getName());
+                        j1.addActionListener(this);
+                        webserverPanel.add(j1);
+                        webserverPanel.revalidate();
+                        webserverPanel.repaint();
+                    }
+                    else {
+                        System.out.println("webserver is leeg");
+                    }
                 }
+                else if (dialoog.componentList.getSelectedItem() == "firewall")
+                {
+                    Firewall f1 = dialoog.getFirewallWaarde();
+                    if (f1 != null)
+                    {
+
+                        putFirewallObjectInDatabase(f1.getName(), f1.getAvailability(), f1.getPrice(), f1.getIp(), f1.getSubnet());
+
+                        System.out.println("firewall is toegevoegd");
+                        JButton j1 = new JButton(f1.getName());
+                        j1.addActionListener(this);
+                        firewallPanel.add(j1);
+                        firewallPanel.revalidate();
+                        firewallPanel.repaint();
+                    }
+                    else {
+                        System.out.println("firewall is leeg");
+                    }
+
+                }
+
+
 
 
 
