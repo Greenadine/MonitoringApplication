@@ -1,13 +1,13 @@
 package com.nerdygadgets.application.app.panel;
 
+import com.nerdygadgets.application.app.component.NetworkConfigurationComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.model.NetworkComponentList;
-import com.nerdygadgets.application.model.component.Database;
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
 import com.nerdygadgets.application.util.Colors;
-import org.jdesktop.swingx.JXGlassBox;
+import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,12 +31,15 @@ public class ConfigurationComponentsList extends ApplicationPanel {
 
         // Create and add header panel
         JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 10));
         headerPanel.setBackground(Colors.MAIN_BACKGROUND);
         headerPanel.setBorder(new MatteBorder(1,2,2,2, Colors.MAIN_BACKGROUND_ACCENT));
 
-        JLabel componentLabel = new JLabel(header);
-        headerPanel.add(componentLabel);
+        JLabel componentLabel = new JLabel(header, SwingConstants.CENTER);
+        componentLabel.setFont(Fonts.NETWORK_CONFIGURATION_HEADER);
+        componentLabel.setAlignmentX(CENTER_ALIGNMENT);
+        headerPanel.add(componentLabel, BorderLayout.CENTER);
         grid1.add(headerPanel);
 
         // Create and add scroll pane
@@ -56,14 +59,12 @@ public class ConfigurationComponentsList extends ApplicationPanel {
         return componentsListWrapper;
     }
 
-    public <T extends NetworkComponent> void setComponentList(NetworkComponentList<T> componentList) {
-        for (T component : componentList.getComponents()) {
-            componentsListWrapper.add(new JLabel(component.getName()));
+    public <T extends NetworkComponent> void setComponentList(@NotNull NetworkConfiguration configuration, @NotNull NetworkComponentList<T> componentList) {
+        if (!componentList.isEmpty()) {
+            for (T component : componentList.getComponents()) {
+                componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
+            }
         }
-    }
-
-    public void clearComponentList() {
-        componentsListWrapper.removeAll();
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ConfigurationComponentsList extends ApplicationPanel {
 
     @Override
     public void onHideImpl() {
-        // Do nothing
+        componentsListWrapper.removeAll();
     }
 }
 

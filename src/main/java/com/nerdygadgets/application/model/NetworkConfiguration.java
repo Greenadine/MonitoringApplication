@@ -118,7 +118,12 @@ public class NetworkConfiguration {
      * @return the availability of the entire {@code NetworkConfiguration}.
      */
     public double getAvailability() {
-        return firewall.getAvailability() * databases.getJointAvailability() * webservers.getJointAvailability();
+        if (firewall == null && databases.isEmpty() && webservers.isEmpty()) {
+            return 0;
+        }
+        return (firewall != null ? firewall.getAvailability() : 1)
+                * (databases.isEmpty() ? 1 : databases.getJointAvailability())
+                * (webservers.isEmpty() ? 1 : webservers.getJointAvailability());
     }
 
     /**
@@ -127,6 +132,9 @@ public class NetworkConfiguration {
      * @return the price of the entire {@code NetworkConfiguration}.
      */
     public double getPrice() {
-        return firewall.getPrice() + databases.getTotalPrice() + webservers.getTotalPrice();
+        if (firewall == null && databases.isEmpty() && webservers.isEmpty()) {
+            return 0;
+        }
+        return (firewall != null ? firewall.getPrice() : 1) + databases.getTotalPrice() + webservers.getTotalPrice();
     }
 }

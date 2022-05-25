@@ -3,8 +3,10 @@ package com.nerdygadgets.application.app.panel;
 import com.nerdygadgets.application.app.component.NetworkConfigurationComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Firewall;
 import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,8 +15,9 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class FirewallPanel extends ApplicationPanel {
+
     private JPanel firewallContentPanel;
-    private JLabel firewallName;
+
     public FirewallPanel(@NotNull ApplicationScreen parentScreen) {
         super(parentScreen);
         // Configure panel
@@ -23,18 +26,19 @@ public class FirewallPanel extends ApplicationPanel {
 
         // Populate panel
         addFirewallHeader();
-
         addFirewallContent();
     }
 
     private void addFirewallHeader() {
         JPanel firewallHeaderPanel = new JPanel();
+        firewallHeaderPanel.setLayout(new BorderLayout());
         firewallHeaderPanel.setBackground(Colors.MAIN_BACKGROUND);
         firewallHeaderPanel.setBorder(new MatteBorder(0, 2, 2, 2, Colors.MAIN_BACKGROUND_ACCENT));
         this.add(firewallHeaderPanel);
 
-        JLabel firewallHeaderLabel = new JLabel("Firewall");
-        firewallHeaderPanel.add(firewallHeaderLabel);
+        JLabel firewallHeaderLabel = new JLabel("Firewall", SwingConstants.CENTER);
+        firewallHeaderLabel.setFont(Fonts.NETWORK_CONFIGURATION_HEADER);
+        firewallHeaderPanel.add(firewallHeaderLabel, BorderLayout.CENTER);
     }
 
     private void addFirewallContent() {
@@ -46,25 +50,21 @@ public class FirewallPanel extends ApplicationPanel {
         firewallContentWrapper.add(firewallContentPanel);
         this.add(firewallContentWrapper);
 
-        firewallName = new JLabel("");
+        JLabel firewallName = new JLabel("");
         firewallContentPanel.add(firewallName);
     }
 
-    public void setFirewall(Firewall firewall) {
-        if (firewall == null){
-            firewallContentPanel.removeAll();
-        } else{
-            firewallContentPanel.add(new NetworkConfigurationComponent(this, firewall));
-        }
+    public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final Firewall firewall) {
+        firewallContentPanel.add(new NetworkConfigurationComponent(this, configuration, firewall));
     }
 
     @Override
     public void onShowImpl() {
-
+        // Do nothing
     }
 
     @Override
     public void onHideImpl() {
-
+        firewallContentPanel.removeAll();
     }
 }

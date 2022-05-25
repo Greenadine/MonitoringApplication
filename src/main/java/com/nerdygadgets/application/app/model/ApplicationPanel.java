@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public abstract class ApplicationPanel extends JPanel {
 
-    protected final ApplicationScreen parentScreen;
+    public final ApplicationScreen parentScreen;
 
     protected final ArrayList<ApplicationComponent> components;
 

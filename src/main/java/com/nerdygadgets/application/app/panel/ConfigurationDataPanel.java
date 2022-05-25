@@ -48,29 +48,21 @@ public class ConfigurationDataPanel extends ApplicationPanel {
     }
 
     public void setAvailabilityValue(final double availability) {
-        if (availability == -1) {
-            availabilityValueLabel.setText("Availability with this design: 0%");
-        } else {
-            availabilityValueLabel.setText("Availability with this design: " + String.format("%.2f%%", availability * 100));
-        }
+        availabilityValueLabel.setText("Availability with this design: " + String.format("%.2f%%", availability * 100));
     }
 
     public void setPriceValue(final double price) {
-        if (price == -1) {
-            costsValueLabel.setText("Total costs: \u20AC0,00,-");
-        } else {
-            costsValueLabel.setText("Total costs: " + String.format("\u20AC%.2f", price));
-        }
+        costsValueLabel.setText("Total costs: " + String.format("\u20AC%.2f", price));
     }
-
 
     @Override
     public void onShowImpl() {
-
+        // Do nothing
     }
 
     @Override
     public void onHideImpl() {
-
+        availabilityValueLabel.setText("Availability with this design: 0%");
+        costsValueLabel.setText("Total costs: \u20AC0,00,-");
     }
 }

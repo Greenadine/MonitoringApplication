@@ -20,9 +20,14 @@ import java.awt.event.ActionListener;
  * @author Kevin Zuman
  */
 public class ScreenHeaderPanel extends ApplicationPanel {
+
+    private final int width;
+
     private JLabel titleLabel;
+
     public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height, final ActionListener returnAction) {
         super(screen);
+        this.width = width;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -32,7 +37,7 @@ public class ScreenHeaderPanel extends ApplicationPanel {
 
         createReturnButton(returnAction); // Create and add return button
         SwingUtils.addVerticalSeparator(this); // Add separator
-        createTitle(screenName, width);
+        createTitle(screenName);
     }
 
     private void createReturnButton(ActionListener returnAction) {
@@ -47,7 +52,7 @@ public class ScreenHeaderPanel extends ApplicationPanel {
         this.add(returnButton);
     }
 
-    private void createTitle(@NotNull final String screenName, final int width) {
+    private void createTitle(@NotNull final String screenName) {
         titleLabel = new JLabel(screenName);
         titleLabel.setFont(Fonts.MAIN_HEADER_TITLE);
         titleLabel.setAlignmentX(LEFT_ALIGNMENT);
@@ -57,6 +62,7 @@ public class ScreenHeaderPanel extends ApplicationPanel {
 
     public void setTitle(String title) {
         titleLabel.setText(title);
+        titleLabel.setBorder(new EmptyBorder(5,5, 5, width / 2 - 6 * title.length()));
     }
 
     @Override

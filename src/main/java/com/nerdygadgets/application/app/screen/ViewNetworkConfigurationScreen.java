@@ -5,30 +5,28 @@ import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.NetworkComponent;
+import com.nerdygadgets.application.model.component.Firewall;
 import com.nerdygadgets.application.model.component.Webserver;
 import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.SwingUtils;
-import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
     private NetworkConfiguration configuration;
-    private final NetworkComponentsListSidebar sidebar;
-    private final ConfigurationDataPanel configurationDataPanel;
 
-    private final FirewallPanel firewallPanel;
-    private final ConfigurationComponentsList databasesComponentsList;
-    private final ConfigurationComponentsList webserversComponentsList;
     private final ScreenHeaderPanel screenHeaderPanel;
+    private final NetworkComponentsListSidebar sidebar;
+
+    private FirewallPanel firewallPanel;
+    private ConfigurationComponentsList databasesComponentsList;
+    private ConfigurationComponentsList webserversComponentsList;
+    private ConfigurationDataPanel configurationDataPanel;
 
     public ViewNetworkConfigurationScreen(@NotNull final ApplicationWindow window) {
         super(window);
@@ -42,37 +40,36 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
         // Create sidebar
         sidebar = new NetworkComponentsListSidebar(this);
-//        sidebar.setPreferredSize(new Dimension(150, 500));
         this.add(sidebar, BorderLayout.LINE_START);
 
-        JLabel label1 = new JLabel("Test1");
-        label1.setBorder(new MatteBorder(5, 5, 5, 5, Color.GREEN));
+        populateCenter();
+    }
 
-        // Create center wrapper
-        JPanel contentWrapperPanel = new JPanel();
-        contentWrapperPanel.setLayout(new BorderLayout());
-
-        this.add(contentWrapperPanel, BorderLayout.CENTER);
+    private void populateCenter() {
+        // Create and add center wrapper panel
+        JPanel centerWrapperPanel = new JPanel();
+        centerWrapperPanel.setLayout(new BorderLayout());
+        this.add(centerWrapperPanel, BorderLayout.CENTER);
 
         // Firewall panel
         firewallPanel = new FirewallPanel(this);
-        contentWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
+        centerWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
 
         // Create component list wrapper
         JPanel componentWrapper = new JPanel();
         componentWrapper.setLayout(new GridLayout(1, 2));
-        contentWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
+        centerWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
-        databasesComponentsList = new ConfigurationComponentsList(this, "Databases");
         webserversComponentsList = new ConfigurationComponentsList(this, "Webservers");
+        databasesComponentsList = new ConfigurationComponentsList(this, "Databases");
         componentWrapper.add(databasesComponentsList);
         componentWrapper.add(webserversComponentsList);
 
         // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();
         pageEndWrapperPanel.setLayout(new BoxLayout(pageEndWrapperPanel, BoxLayout.Y_AXIS));
-        contentWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
+        centerWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
 
         // Configuration data panel
         configurationDataPanel = new ConfigurationDataPanel(this);
@@ -96,8 +93,6 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
         // Create save button
         JButton saveButton = new JButton("Save");
         buttonsPanel.add(saveButton);
-
-
     }
 
     /**
@@ -105,22 +100,64 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
      *
      * @param configuration The {@code NetworkConfiguration}.
      */
-    public void setConfiguration(@Nullable final NetworkConfiguration configuration) {
+    public void setConfiguration(@NotNull final NetworkConfiguration configuration) {
+        if (this.configuration != null) {
+            firewallPanel.onHideImpl();
+            databasesComponentsList.onHideImpl();
+            webserversComponentsList.onHideImpl();
+            configurationDataPanel.onHideImpl();
+        }
+
         this.configuration = configuration;
 
         // set and add the name in the title for the screen
         screenHeaderPanel.setTitle(configuration.getName());
 
-        // set and add the firewall for the firewall panel
-        firewallPanel.setFirewall(configuration.getFirewall());
+        // Set the firewall for the firewall panel
+        if (configuration.getFirewall() != null) {
+            firewallPanel.setFirewall(configuration, configuration.getFirewall());
+        }
 
         // sets and add the components for databases & webservers panel
-        databasesComponentsList.setComponentList(configuration.getDatabases());
-        webserversComponentsList.setComponentList(configuration.getWebservers());
+        databasesComponentsList.setComponentList(configuration, configuration.getDatabases());
+        webserversComponentsList.setComponentList(configuration, configuration.getWebservers());
 
         // sets the configuration data panel values
         configurationDataPanel.setAvailabilityValue(configuration.getAvailability());
         configurationDataPanel.setPriceValue(configuration.getPrice());
+    }
+
+    /**
+     * Populates the {@link Database}s list in the sidebar with the given {@code Collection} of {@code Database}s.
+     *
+     * @param databases A {@code Collection} of {@code Database} to populate the sidebar with.
+     */
+    public void populateDatabases(Collection<Database> databases) {
+        for (Database database : databases) {
+            // TODO add all databases to sidebar
+        }
+    }
+
+    /**
+     * Populates the {@link Webserver}s list in the sidebar with the given {@code Collection} of {@code Webserver}s.
+     *
+     * @param webservers A {@code Collection} of {@code Webservers} to populate the sidebar with.
+     */
+    public void populateWebservers(Collection<Webserver> webservers) {
+        for (Webserver webserver : webservers) {
+            // TODO add all webservers to sidebar
+        }
+    }
+
+    /**
+     * Populates the {@link Firewall}s list in the sidebar with the given {@code Collection} of {@code Firewall}s.
+     *
+     * @param firewalls A {@code Collection} of {@code Firewall} to populate the sidebar with.
+     */
+    public void populateFirewalls(Collection<Firewall> firewalls) {
+        for (Firewall firewall : firewalls) {
+            // TODO add all firewalls to sidebar
+        }
     }
 
     /* Button Actions */
@@ -131,21 +168,11 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
     @Override
     protected void onOpenImpl() {
-
+        // Do nothing
     }
 
     @Override
     protected void onCloseImpl() {
-        this.configuration = null;
-
-        firewallPanel.setFirewall(null);
-
-        // sets and add the components for databases & webservers panel
-        databasesComponentsList.clearComponentList();
-        webserversComponentsList.clearComponentList();
-
-        // sets the configuration data panel values
-        configurationDataPanel.setAvailabilityValue(-1);
-        configurationDataPanel.setPriceValue(-1);
+        this.configuration = null; // Reset the configuration
     }
 }

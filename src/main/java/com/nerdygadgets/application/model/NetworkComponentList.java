@@ -58,7 +58,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
      * @param networkComponent The {@code NetworkComponent}.
      */
     public void removeComponent(@NotNull final T networkComponent) {
-        this.networkComponents.add(networkComponent);
+        this.networkComponents.remove(networkComponent);
     }
 
     /**
@@ -94,5 +94,14 @@ public class NetworkComponentList<T extends NetworkComponent> {
      */
     public double getTotalPrice() {
         return networkComponents.stream().mapToDouble(NetworkComponent::getPrice).sum();
+    }
+
+    /**
+     * Returns whether this list is empty.
+     *
+     * @return {@code true} if this list is empty, {@code false} if the list contains any {@link NetworkComponent}.
+     */
+    public boolean isEmpty() {
+        return networkComponents.isEmpty();
     }
 }
