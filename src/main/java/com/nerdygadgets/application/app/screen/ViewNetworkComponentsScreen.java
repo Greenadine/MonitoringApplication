@@ -619,20 +619,24 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                 }
 
 
-
-
-
-
-
-
             } catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }
             System.out.println("test");
         }
-       else{
+
+
+        else{
+           // if (e.getActionCommand() == databaseList.)
+
+
+
+
             System.out.println("Dit is Firewall 3");
+            System.out.println(e.getActionCommand());
+
+
         }
 
 
