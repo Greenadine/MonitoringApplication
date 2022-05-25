@@ -211,7 +211,10 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         add(gridPanel, BorderLayout.CENTER);
         add(propertiesPanel, BorderLayout.LINE_END);
 
-        databaseConnection();
+
+        getFirewallFromDatabase();
+        getDatabaseFromDatabase();
+        getWebserverFromDatabase();
         setVisible(true);
     }
 
@@ -235,21 +238,37 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     }
 
-    public void databaseConnection (){
+    public void getFirewallFromDatabase(){
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM firewall");
 
+            long id = 0;
+            String name = "";
+            double availability = 0.0;
+            double price = 0;
+            String ip = "";
+            String subnetmask = "";
+
+
             while (resultSet.next()){
-                System.out.println(resultSet.getString("id"));
-                System.out.println(resultSet.getString("name"));
-                System.out.println(resultSet.getString("availability"));
-                System.out.println(resultSet.getString("price"));
-                System.out.println(resultSet.getString("ip"));
-                System.out.println(resultSet.getString("subnetmask"));
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnetmask");
+
+                Firewall tijdelijk = new Firewall(id, name, availability, price, ip, subnetmask);
+                firewallList.add(tijdelijk);
+
             }
+
+
+
+
         }
 
         catch (Exception e){
@@ -258,34 +277,79 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     }
 
-    public void componentInObject() throws IOException
-    {
-        Firewall firewall1 = new Firewall(1,"Firewall 1", 99, 4000, "192.168.1.1", "255.255.255.0");
-        Firewall firewall2 = new Firewall(1,"Firewall 2", 95, 4400, "192.168.1.5", "255.255.255.0");
+    public void getDatabaseFromDatabase(){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            Statement statement = connection.createStatement();
 
-        firewallList.add(firewall1);
-        firewallList.add(firewall2);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM database1");
 
-        Database database1 = new Database(1,"Database 1", 99, 4000, "192.168.1.1", "255.255.255.0");
-        Database database2 = new Database(1,"Database 2", 97, 4000, "192.168.1.1", "255.255.255.0");
-        Database database3 = new Database(1,"Database 3", 69, 4000, "192.168.1.1", "255.255.255.0");
-        Database database4 = new Database(1,"Database 4", 69, 4000, "192.168.1.1", "255.255.255.0");
+            long id = 0;
+            String name = "";
+            double availability = 0.0;
+            double price = 0;
+            String ip = "";
+            String subnetmask = "";
 
-        databaseList.add(database1);
-        databaseList.add(database2);
-        databaseList.add(database3);
-        databaseList.add(database4);
 
-        Webserver webserver1 = new Webserver(1,"Webserver 1", 99, 4000, "192.168.1.1", "255.255.255.0");
-        Webserver webserver2 = new Webserver(1,"Webserver 2", 99, 4000, "192.168.1.1", "255.255.255.0");
-        Webserver webserver3 = new Webserver(1,"Webserver 3", 99, 4000, "192.168.1.1", "255.255.255.0");
-        Webserver webserver4 = new Webserver(1,"Webserver 4", 99, 4000, "192.168.1.1", "255.255.255.0");
+            while (resultSet.next()){
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnet");
 
-        webserverList.add(webserver1);
-        webserverList.add(webserver2);
-        webserverList.add(webserver3);
-        webserverList.add(webserver4);
+                Database tijdelijk = new Database(id, name, availability, price, ip, subnetmask);
+               databaseList.add(tijdelijk);
+
+            }
+
+
+
+
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
+
+    public void getWebserverFromDatabase(){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM webserver");
+
+            long id = 0;
+            String name = "";
+            double availability = 0.0;
+            double price = 0;
+            String ip = "";
+            String subnetmask = "";
+
+
+            while (resultSet.next()){
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnet");
+
+                Webserver tijdelijk = new Webserver(id, name, availability, price, ip, subnetmask);
+                webserverList.add(tijdelijk);
+
+            }
+
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -382,18 +446,25 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             subnetmaskOutputLabel.setText(webserverList.get(3).getSubnet());
         }
 
+
         //Haalt de ingevoerde gegevens van het dialoog op en zet het in d1 (alleen database)
         else if (e.getSource() == addComponent){
             AddComponentDialog dialoog = new AddComponentDialog(true);
             try
             {
+
                 Database d1 = dialoog.getWaarde();
                 System.out.println(d1.getId());
 
-                if (Objects.equals(d1.getType(), "firewall")){
-                    JButton button = new JButton();
+                System.out.println("d1 is toegevoegd");
+                    JButton j1 = new JButton(d1.getName());
+                    j1.addActionListener(this);
+                    firewallPanel.add(j1);
+                    firewallPanel.revalidate();
+                    firewallPanel.repaint();
 
-                }
+
+
 
 
             } catch (IOException ex)
@@ -402,6 +473,10 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             }
             System.out.println("test");
         }
+       else{
+            System.out.println("Dit is Firewall 3");
+        }
+
 
     }
 }
