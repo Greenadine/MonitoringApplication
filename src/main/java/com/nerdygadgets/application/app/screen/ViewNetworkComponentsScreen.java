@@ -349,6 +349,36 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         }
     }
 
+    public void putDatabaseObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
+            //Statement statement = connection.createStatement();
+
+            String sql = "INSERT INTO database1 (name, availability, price, ip, subnet)" + "values (?,?,?,?,?)";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(sql);
+            //preparedStmt.setLong(1, id);
+            preparedStmt.setString (1, name);
+            preparedStmt.setDouble   (2, availability);
+            preparedStmt.setDouble(3, price);
+            preparedStmt.setString    (4, ip);
+            preparedStmt.setString    (5, subnetmask);
+
+            preparedStmt.execute();
+            connection.close();
+
+
+
+
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -453,14 +483,21 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             {
 
                 Database d1 = dialoog.getWaarde();
-                System.out.println(d1.getId());
+                if (d1 != null){
 
-                System.out.println("d1 is toegevoegd");
+                    putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnet());
+
+                    System.out.println("d1 is toegevoegd");
                     JButton j1 = new JButton(d1.getName());
                     j1.addActionListener(this);
                     firewallPanel.add(j1);
                     firewallPanel.revalidate();
                     firewallPanel.repaint();
+                }
+                else {
+                    System.out.println("d1 is leeg");
+                }
+
 
 
 

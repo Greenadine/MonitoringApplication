@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Objects;
 
 public class AddComponentDialog extends JDialog implements ActionListener
 {
@@ -99,13 +100,11 @@ public class AddComponentDialog extends JDialog implements ActionListener
 
     public Database getWaarde() throws IOException
     {
-        if (typeTextField.getText() == "database"){
-            Database tijdelijkeDatabase = new Database(1,nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-            return tijdelijkeDatabase;
+        if (Objects.equals(typeTextField.getText(), "database")){
+            return new Database(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
         }
 
-        return new Database(99,nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-
+        return null;
 
     }
 }
