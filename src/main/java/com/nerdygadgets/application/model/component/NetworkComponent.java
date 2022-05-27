@@ -19,17 +19,17 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
     protected final double price;
     protected final double score;
     protected final String ip;
-    protected final String subnet;
+    protected final String subnetMask;
     protected final Image image;
 
-    public NetworkComponent(final long id, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet, @NotNull final Image image) {
+    public NetworkComponent(final long id, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnetMask, @NotNull final Image image) {
         this.id = id;
         this.name = name;
         this.availability = availability;
         this.price = price;
         this.score = availability * (1 / price);
         this.ip = ip;
-        this.subnet = subnet;
+        this.subnetMask = subnetMask;
         this.image = image;
     }
 
@@ -101,8 +101,8 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
      *
      * @return The network component's subnet mask.
      */
-    public String getSubnet() {
-        return subnet;
+    public String getSubnetMask() {
+        return subnetMask;
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "%s (ID: %d)\n- IP: %s\n- Subnet: %s\n- Availability: %.2f\n- Price: %.2f", name, id, ip, subnet, availability, price);
+        return String.format(Locale.US, "%s (ID: %d)\n- IP: %s\n- Subnet: %s\n- Availability: %.2f\n- Price: %.2f", name, id, ip, subnetMask, availability, price);
     }
 
     @Override

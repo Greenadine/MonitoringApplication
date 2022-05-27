@@ -1,4 +1,4 @@
-package com.nerdygadgets.application.app.panel;
+package com.nerdygadgets.application.app.panel.networkcomponents;
 
 import com.nerdygadgets.application.app.component.DropdownListComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
@@ -6,6 +6,7 @@ import com.nerdygadgets.application.app.model.ApplicationScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class NetworkComponentsListSidebar extends ApplicationPanel {
 
@@ -18,6 +19,10 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setMinimumSize(new Dimension(Integer.MAX_VALUE, 100));
+        this.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
+        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        this.setBounds(0, 0, Integer.MAX_VALUE, 100);
 
         // Create and add webservers list
         webserversListPane = new DropdownListComponent(this, "Webservers");

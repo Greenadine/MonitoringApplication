@@ -13,7 +13,7 @@ public final class Fonts {
     public static final Font MAIN_HEADER_TITLE = DEFAULT.deriveFont(Font.BOLD, 20f);
 
     public static final Font MAIN_SIDEBAR_TITLE = DEFAULT.deriveFont(Font.BOLD, 16f);
-    public static final Font MAIN_SIDEBAR_PARAGRAPH = DEFAULT.deriveFont(16f);
+    public static final Font MAIN_SIDEBAR_PARAGRAPH = DEFAULT.deriveFont(13f);
 
     public static final Font MAIN_TABLE_TITLE = DEFAULT.deriveFont(Font.BOLD, 14f);
     public static final Font MAIN_TABLE_PARAGRAPH = DEFAULT.deriveFont(14f);

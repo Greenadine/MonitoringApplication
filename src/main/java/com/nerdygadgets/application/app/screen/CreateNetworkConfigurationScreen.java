@@ -2,12 +2,9 @@ package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
-import com.nerdygadgets.application.app.panel.NetworkComponentsListSidebar;
+import com.nerdygadgets.application.app.panel.networkcomponents.NetworkComponentsListSidebar;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
 import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
 

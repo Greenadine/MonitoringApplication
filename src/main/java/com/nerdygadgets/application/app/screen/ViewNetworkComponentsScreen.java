@@ -1,32 +1,25 @@
 package com.nerdygadgets.application.app.screen;
 
-import com.nerdygadgets.application.app.model.NetworkComponentListTableModel;
-import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
+import com.nerdygadgets.application.app.component.NetworkComponentsEntry;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
+import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
 import com.nerdygadgets.application.util.ApplicationActions;
-import com.nerdygadgets.application.util.DatabaseUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.*;
-
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Properties;
 
-public class ViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener
-{
+public class ViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener {
+
     private JPanel databasePanel;
     private JPanel webserverPanel;
     private JPanel firewallPanel;
@@ -34,7 +27,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
     private JPanel gridPanel;
 
     private JPanel propertiesPanel;
-
 
     // Buttons
     private JButton web1;
@@ -64,8 +56,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
     private JButton addComponent;
 
-
-
     public ArrayList<JButton> databaseButtons;
     public ArrayList<JButton> webserverButtons;
     public ArrayList<JButton> firewallButtons;
@@ -73,8 +63,11 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
     private ArrayList<Firewall> firewallList;
     private ArrayList<Webserver> webserverList;
 
-    public ViewNetworkComponentsScreen(@NotNull final ApplicationWindow window) throws IOException
-    {
+    private ArrayList<NetworkComponentsEntry> databases;
+    private ArrayList<NetworkComponentsEntry> webservers;
+    private ArrayList<NetworkComponentsEntry> firewalls;
+
+    public ViewNetworkComponentsScreen(@NotNull final ApplicationWindow window) {
         super(window);
 
         databaseButtons = new ArrayList<>();
@@ -109,8 +102,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         propertiesPanel.setLayout(new GridLayout(7,2));
         propertiesPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
-
-
         // Database
         JLabel databaseLabel = new JLabel("Database");
         databasePanel.add(databaseLabel, BorderLayout.LINE_START);
@@ -118,11 +109,9 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         db1.addActionListener(this);
         databaseButtons.add(db1);
 
-
         db2 = new JButton("Database 2");
         db2.addActionListener(this);
         databaseButtons.add(db2);
-
 
         db3 = new JButton("Database 3");
         db3.addActionListener(this);
@@ -131,7 +120,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         db4 = new JButton("Database 4");
         db4.addActionListener(this);
         databaseButtons.add(db4);
-
 
         // Webserver
         JLabel webserverLabel = new JLabel("Webserver");
@@ -153,8 +141,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         web4.addActionListener(this);
         webserverButtons.add(web4);
 
-
-
         // Firewall
         firewallLabel = new JLabel("Firewall");
         firewallPanel.add(firewallLabel, BorderLayout.LINE_END);
@@ -162,7 +148,6 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         fw1 = new JButton("Firewall 1");
         firewallPanel.add(fw1);
         fw1.addActionListener(this);
-
 
         fw2 = new JButton("Firewall 2");
         firewallPanel.add(fw2);
@@ -203,20 +188,12 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         add(addComponent, BorderLayout.PAGE_END);
         addComponent.addActionListener(this);
 
-
-
-
-
-
-
-
         gridPanel.add(webserverPanel);
         gridPanel.add(databasePanel);
         gridPanel.add(firewallPanel);
 
         add(gridPanel, BorderLayout.CENTER);
         add(propertiesPanel, BorderLayout.LINE_END);
-
 
         getFirewallFromDatabase();
         getDatabaseFromDatabase();
@@ -227,38 +204,22 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         setVisible(true);
     }
 
-    @Override
-    protected void onOpenImpl()
-    {
-
-    }
-
-    @Override
-    protected void onCloseImpl()
-    {
-
-    }
-
-    private void addDatabaseButtons()
-    {
-        for (JButton j: databaseButtons){
+    private void addDatabaseButtons() {
+        for (JButton j : databaseButtons) {
             databasePanel.add(j);
         }
-
     }
-    private void addWebserverButtons()
-    {
-        for (JButton j: webserverButtons){
+    private void addWebserverButtons() {
+        for (JButton j: webserverButtons) {
             webserverPanel.add(j);
         }
 
     }
-    private void addFirewallButtons()
-    {
-        for (JButton j: firewallButtons){
+
+    private void addFirewallButtons() {
+        for (JButton j: firewallButtons) {
             firewallPanel.add(j);
         }
-
     }
 
     public void getFirewallFromDatabase(){
@@ -268,13 +229,23 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM firewall");
 
-            long id = 0;
-            String name = "";
-            double availability = 0.0;
-            double price = 0;
-            String ip = "";
-            String subnetmask = "";
+            long id;
+            String name;
+            double availability;
+            double price;
+            String ip;
+            String subnetmask;
 
+            while (resultSet.next()) {
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnetmask");
+
+                Firewall firewall = new Firewall(id, name, availability, price, ip, subnetmask);
+            }
 
             while (resultSet.next()){
                 id = Long.parseLong(resultSet.getString("id"));
@@ -290,18 +261,10 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                 JButton nf = new JButton(name);
                 nf.addActionListener(this);
                 firewallButtons.add(nf);
-
             }
-
-
-
-
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     public void getDatabaseFromDatabase(){
@@ -311,13 +274,12 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM database1");
 
-            long id = 0;
-            String name = "";
-            double availability = 0.0;
-            double price = 0;
-            String ip = "";
-            String subnetmask = "";
-
+            long id;
+            String name;
+            double availability;
+            double price;
+            String ip;
+            String subnetmask;
 
             while (resultSet.next()){
                 id = Long.parseLong(resultSet.getString("id"));
@@ -328,38 +290,29 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                 subnetmask = resultSet.getString("subnet");
 
                 Database tijdelijk = new Database(id, name, availability, price, ip, subnetmask);
-               databaseList.add(tijdelijk);
+                databaseList.add(tijdelijk);
                 JButton nd = new JButton(name);
                 nd.addActionListener(this);
                 databaseButtons.add(nd);
-
-
             }
-
-
-
-
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public void getWebserverFromDatabase(){
-        try{
+        try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM webserver");
 
-            long id = 0;
-            String name = "";
-            double availability = 0.0;
-            double price = 0;
-            String ip = "";
-            String subnetmask = "";
-
+            long id;
+            String name ;
+            double availability;
+            double price;
+            String ip;
+            String subnetmask;
 
             while (resultSet.next()){
                 id = Long.parseLong(resultSet.getString("id"));
@@ -374,12 +327,8 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                 JButton nw = new JButton(name);
                 nw.addActionListener(this);
                 webserverButtons.add(nw);
-
             }
-
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -401,16 +350,12 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             preparedStmt.execute();
             connection.close();
 
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
     public void putWebserverObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
-        try{
+        try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
             //Statement statement = connection.createStatement();
 
@@ -425,17 +370,13 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
 
             preparedStmt.execute();
             connection.close();
-
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
+
     public void putFirewallObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
-        try{
+        try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
             //Statement statement = connection.createStatement();
 
@@ -451,19 +392,13 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             preparedStmt.execute();
             connection.close();
 
-        }
-
-        catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 
-
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == fw1){
             System.out.println("Firewall 1");
             nameOutputLabel.setText(firewallList.get(0).getName());
@@ -471,7 +406,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(firewallList.get(0).getAvailability()));
             priceOutputLabel.setText(String.valueOf(firewallList.get(0).getPrice()));
             ipOutputLabel.setText(firewallList.get(0).getIp());
-            subnetmaskOutputLabel.setText(firewallList.get(0).getSubnet());
+            subnetmaskOutputLabel.setText(firewallList.get(0).getSubnetMask());
         }
         else if (e.getSource() == fw2){
             System.out.println("Firewall 2");
@@ -480,7 +415,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(firewallList.get(1).getAvailability()));
             priceOutputLabel.setText(String.valueOf(firewallList.get(1).getPrice()));
             ipOutputLabel.setText(firewallList.get(1).getIp());
-            subnetmaskOutputLabel.setText(firewallList.get(1).getSubnet());
+            subnetmaskOutputLabel.setText(firewallList.get(1).getSubnetMask());
         }
         else if (e.getSource() == db1){
             System.out.println("Database 1");
@@ -489,7 +424,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(databaseList.get(0).getAvailability()));
             priceOutputLabel.setText(String.valueOf(databaseList.get(0).getPrice()));
             ipOutputLabel.setText(databaseList.get(0).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(0).getSubnet());
+            subnetmaskOutputLabel.setText(databaseList.get(0).getSubnetMask());
         }
         else if (e.getSource() == db2){
             System.out.println("Database 2");
@@ -498,7 +433,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(databaseList.get(1).getAvailability()));
             priceOutputLabel.setText(String.valueOf(databaseList.get(1).getPrice()));
             ipOutputLabel.setText(databaseList.get(1).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(1).getSubnet());
+            subnetmaskOutputLabel.setText(databaseList.get(1).getSubnetMask());
         }
         else if (e.getSource() == db3){
             System.out.println("Database 3");
@@ -507,7 +442,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(databaseList.get(2).getAvailability()));
             priceOutputLabel.setText(String.valueOf(databaseList.get(2).getPrice()));
             ipOutputLabel.setText(databaseList.get(2).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(2).getSubnet());
+            subnetmaskOutputLabel.setText(databaseList.get(2).getSubnetMask());
         }
         else if (e.getSource() == db4){
             System.out.println("Database 4");
@@ -516,7 +451,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(databaseList.get(3).getAvailability()));
             priceOutputLabel.setText(String.valueOf(databaseList.get(3).getPrice()));
             ipOutputLabel.setText(databaseList.get(3).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(3).getSubnet());
+            subnetmaskOutputLabel.setText(databaseList.get(3).getSubnetMask());
         }
 
         else if (e.getSource() == web1){
@@ -526,7 +461,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(webserverList.get(0).getAvailability()));
             priceOutputLabel.setText(String.valueOf(webserverList.get(0).getPrice()));
             ipOutputLabel.setText(webserverList.get(0).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(0).getSubnet());
+            subnetmaskOutputLabel.setText(webserverList.get(0).getSubnetMask());
         }
         else if (e.getSource() == web2){
             System.out.println("Webserver 2");
@@ -535,7 +470,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(webserverList.get(1).getAvailability()));
             priceOutputLabel.setText(String.valueOf(webserverList.get(1).getPrice()));
             ipOutputLabel.setText(webserverList.get(1).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(1).getSubnet());
+            subnetmaskOutputLabel.setText(webserverList.get(1).getSubnetMask());
         }
         else if (e.getSource() == web3){
             System.out.println("Webserver 3");
@@ -544,7 +479,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(webserverList.get(2).getAvailability()));
             priceOutputLabel.setText(String.valueOf(webserverList.get(2).getPrice()));
             ipOutputLabel.setText(webserverList.get(2).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(2).getSubnet());
+            subnetmaskOutputLabel.setText(webserverList.get(2).getSubnetMask());
         }
         else if (e.getSource() == web4){
             System.out.println("Webserver 4");
@@ -553,9 +488,8 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             availabilityOutputLabel.setText(String.valueOf(webserverList.get(3).getAvailability()));
             priceOutputLabel.setText(String.valueOf(webserverList.get(3).getPrice()));
             ipOutputLabel.setText(webserverList.get(3).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(3).getSubnet());
+            subnetmaskOutputLabel.setText(webserverList.get(3).getSubnetMask());
         }
-
 
         //Haalt de ingevoerde gegevens van het dialoog op en zet het in d1 (alleen database)
         else if (e.getSource() == addComponent){
@@ -567,7 +501,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                     Database d1 = dialoog.getDatabaseWaarde();
                     if (d1 != null){
 
-                        putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnet());
+                        putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
 
                         System.out.println("database is toegevoegd");
                         JButton j1 = new JButton(d1.getName());
@@ -584,7 +518,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                     Webserver w1 = dialoog.getWebserverWaarde();
                     if (w1 != null){
 
-                        putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnet());
+                        putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
 
                         System.out.println("webserver is toegevoegd");
                         JButton j1 = new JButton(w1.getName());
@@ -603,7 +537,7 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
                     if (f1 != null)
                     {
 
-                        putFirewallObjectInDatabase(f1.getName(), f1.getAvailability(), f1.getPrice(), f1.getIp(), f1.getSubnet());
+                        putFirewallObjectInDatabase(f1.getName(), f1.getAvailability(), f1.getPrice(), f1.getIp(), f1.getSubnetMask());
 
                         System.out.println("firewall is toegevoegd");
                         JButton j1 = new JButton(f1.getName());
@@ -625,20 +559,20 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
             }
             System.out.println("test");
         }
-
-
         else{
            // if (e.getActionCommand() == databaseList.)
-
-
-
-
             System.out.println("Dit is Firewall 3");
             System.out.println(e.getActionCommand());
-
-
         }
+    }
 
+    @Override
+    protected void onOpenImpl() {
+        // Do nothing
+    }
 
+    @Override
+    protected void onCloseImpl() {
+        // Do nothing
     }
 }

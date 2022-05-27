@@ -23,7 +23,7 @@ public class NetworkComponentSerializer extends StdSerializer<NetworkComponent> 
         gen.writeNumberField("availability", networkComponent.getAvailability());
         gen.writeNumberField("price", networkComponent.getPrice());
         gen.writeStringField("ip", networkComponent.getIp());
-        gen.writeStringField("subnet", networkComponent.getSubnet());
+        gen.writeStringField("subnet", networkComponent.getSubnetMask());
 
         gen.writeEndObject();
     }
