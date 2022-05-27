@@ -14,8 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-public class NewViewNetworkComponentsScreen extends ApplicationScreen {
+public class NewViewNetworkComponentsScreen extends ApplicationScreen
+{
 
     private final NetworkComponentButtonListPanel databaseList;
     private final NetworkComponentButtonListPanel webserverList;
@@ -23,7 +28,8 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen {
 
     private final NetworkComponentDetailsPanel detailsPanel;
 
-    public NewViewNetworkComponentsScreen(@NotNull ApplicationWindow window) {
+    public NewViewNetworkComponentsScreen(@NotNull ApplicationWindow window)
+    {
         super(window);
 
         // Configure screen
@@ -50,39 +56,69 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen {
         wrapperGridPanel.add(firewallList);
     }
 
-    public NetworkComponentDetailsPanel getDetailsPanel() {
+    public NetworkComponentDetailsPanel getDetailsPanel()
+    {
         return detailsPanel;
     }
 
     @Override
-    protected void onOpenImpl() {
+    protected void onOpenImpl()
+    {
         // TODO load components from database to lists
 
-        try {
-            // Add mock databases
-            for (int i = 0; i < 10; i++) {
-                Database database = new Database("Database " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-                databaseList.addComponent(database);
-            }
+        GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
+        for (Database database: databaseConnection.getDatabaseFromDatabase()){
+            databaseList.addComponent(database);
+        }
+        for (Firewall firewall: databaseConnection.getFirewallFromDatabase()){
+            firewallList.addComponent(firewall);
+        }
+        for (Webserver webserver: databaseConnection.getWebserverFromDatabase()){
+            webserverList.addComponent(webserver);
+        }
 
-            // Add mock webservers
-            for (int i = 0; i < 15; i++) {
-                Webserver webserver = new Webserver("Webserver " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-                webserverList.addComponent(webserver);
-            }
 
-            // Add mock firewalls
-            for (int i = 0; i < 3; i++) {
-                Firewall firewall = new Firewall("Firewall " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-                firewallList.addComponent(firewall);
-            }
-        } catch (IOException ignored) { }
+
+
+
+
+//        try
+//        {
+//            // Add mock databases
+//            for (int i = 0; i < 10; i++)
+//            {
+//                Database database = new Database("Database " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
+//                databaseList.addComponent(database);
+//            }
+//
+//            // Add mock webservers
+//            for (int i = 0; i < 15; i++)
+//            {
+//                Webserver webserver = new Webserver("Webserver " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
+//                webserverList.addComponent(webserver);
+//            }
+//
+//            // Add mock firewalls
+//            for (int i = 0; i < 3; i++)
+//            {
+//                Firewall firewall = new Firewall("Firewall " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
+//                firewallList.addComponent(firewall);
+//            }
+//
+//
+//        } catch (IOException ignored)
+//        {
+//        }
     }
 
     @Override
-    protected void onCloseImpl() {
+    protected void onCloseImpl()
+    {
         databaseList.clear();
         webserverList.clear();
         firewallList.clear();
     }
+
+
 }
+
