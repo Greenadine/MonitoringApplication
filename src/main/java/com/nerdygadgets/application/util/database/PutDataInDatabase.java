@@ -54,6 +54,7 @@ public class PutDataInDatabase
             Connection connection = ConnectionToDatabase.DatabaseConnection();
             String sql = "INSERT INTO firewall (name, availability, price, ip, subnetmask)" + "values (?,?,?,?,?)";
 
+
             PreparedStatement preparedStmt = connection.prepareStatement(sql);
             preparedStmt.setString(1, name);
             preparedStmt.setDouble(2, availability);

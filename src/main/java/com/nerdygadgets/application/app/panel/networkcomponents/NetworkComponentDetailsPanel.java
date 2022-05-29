@@ -164,7 +164,9 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     /* Button actions */
 
     private void actionDeleteComponent(ActionEvent event) {
-        RemoveDataFromDatabase.deleteFromDatabase(String.valueOf(component.getId()), component.getType().name().toLowerCase());
+        RemoveDataFromDatabase.deleteFromDatabase(component.getId(), component.getType().name().toLowerCase());
+        parentScreen.onClose();
+        parentScreen.onOpen();
     }
 
     private void actionEditComponent(ActionEvent event) {
