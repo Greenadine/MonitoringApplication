@@ -89,7 +89,10 @@ public class AddComponentDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        setVisible(false);
+        if (e.getSource() == addButton){
+            setVisible(false);
+        }
+
     }
 
     @SuppressWarnings("unchecked,ConstantConditions")

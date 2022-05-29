@@ -91,6 +91,7 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
 
         try {
             PutDataInDatabase.updateData(addDialog.getComponent());
+            databaseList.addComponent(addDialog.getComponent());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
