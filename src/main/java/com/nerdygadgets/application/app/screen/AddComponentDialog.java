@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddComponentDialog extends JDialog implements ActionListener
@@ -28,14 +29,10 @@ public class AddComponentDialog extends JDialog implements ActionListener
     private JTextField availTextField;
     private JTextField priceTextField;
 
-    public JComboBox componentList;
+    public JComboBox<NetworkComponent> componentList;
 
-
-
-    public AddComponentDialog(boolean modal)
-    {
-
-
+    @SuppressWarnings("unchecked,rawtypes")
+    public AddComponentDialog(boolean modal) {
         setModal(modal);
         setLayout(new GridLayout(9,1));
         setSize(200,300);
@@ -45,8 +42,6 @@ public class AddComponentDialog extends JDialog implements ActionListener
         add(name);
         nameTextField = new JTextField(20);
         add(nameTextField);
-
-
 
         JLabel type = new JLabel("Type");
         add(type);
@@ -58,7 +53,6 @@ public class AddComponentDialog extends JDialog implements ActionListener
         componentList.setSelectedIndex(2);
         componentList.addActionListener(this);
         add(componentList);
-
 
 //        typeTextField = new JTextField(20);
 //        add(typeTextField);
@@ -91,48 +85,31 @@ public class AddComponentDialog extends JDialog implements ActionListener
         add(addButton);
         addButton.addActionListener(this);
 
-
-
-
-
-
         setVisible(true);
-
-
-
-
     }
 
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton){
             setVisible(false);
-
         }
-
-
     }
 
-    public Database getDatabaseWaarde() throws IOException
-    {
+    public Database getDatabaseWaarde() throws IOException {
         if (Objects.equals(componentList.getSelectedItem(), "database")){
             return new Database(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
         }
-
-
         return null;
-
     }
-    public Webserver getWebserverWaarde() throws IOException
-    {
+
+    public Webserver getWebserverWaarde() throws IOException {
         if (Objects.equals(componentList.getSelectedItem(), "webserver")){
             return new Webserver(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
         }
         return null;
     }
-    public Firewall getFirewallWaarde() throws IOException
-    {
+
+    public Firewall getFirewallWaarde() throws IOException {
         if (Objects.equals(componentList.getSelectedItem(), "firewall")){
             return new Firewall(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
         }

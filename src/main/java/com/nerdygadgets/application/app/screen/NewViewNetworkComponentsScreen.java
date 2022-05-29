@@ -19,8 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class NewViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener
-{
+public class NewViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener {
 
     private final NetworkComponentButtonListPanel databaseList;
     private final NetworkComponentButtonListPanel webserverList;
@@ -30,8 +29,7 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
 
     private JButton dialogAddComponent;
 
-    public NewViewNetworkComponentsScreen(@NotNull ApplicationWindow window)
-    {
+    public NewViewNetworkComponentsScreen(@NotNull ApplicationWindow window) {
         super(window);
 
         // Configure screen
@@ -63,24 +61,14 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         wrapperGridPanel.add(webserverList);
         firewallList = new NetworkComponentButtonListPanel(this, "Firewalls", detailsPanel);
         wrapperGridPanel.add(firewallList);
-
-
-
     }
 
-    public NetworkComponentDetailsPanel getDetailsPanel()
-    {
+    public NetworkComponentDetailsPanel getDetailsPanel() {
         return detailsPanel;
     }
 
     @Override
-    protected void onOpenImpl()
-    {
-        databaseList.clear();
-        firewallList.clear();
-        webserverList.clear();
-        // TODO load components from database to lists
-
+    protected void onOpenImpl() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (Database database: databaseConnection.getDatabaseFromDatabase()){
             databaseList.addComponent(database);
@@ -91,114 +79,56 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         for (Webserver webserver: databaseConnection.getWebserverFromDatabase()){
             webserverList.addComponent(webserver);
         }
-
-       // this.repaint();
-
-
-
-
-//this.repaint();
-
-
-
-//        try
-//        {
-//            // Add mock databases
-//            for (int i = 0; i < 10; i++)
-//            {
-//                Database database = new Database("Database " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-//                databaseList.addComponent(database);
-//            }
-//
-//            // Add mock webservers
-//            for (int i = 0; i < 15; i++)
-//            {
-//                Webserver webserver = new Webserver("Webserver " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-//                webserverList.addComponent(webserver);
-//            }
-//
-//            // Add mock firewalls
-//            for (int i = 0; i < 3; i++)
-//            {
-//                Firewall firewall = new Firewall("Firewall " + (i + 1), 90, 4000, "192.168.0." + (1 + i), "255.255.255.0");
-//                firewallList.addComponent(firewall);
-//            }
-//
-//
-//        } catch (IOException ignored)
-//        {
-//        }
     }
 
     @Override
-    protected void onCloseImpl()
-    {
+    protected void onCloseImpl() {
         databaseList.clear();
         webserverList.clear();
         firewallList.clear();
     }
 
-
-
-
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         //Haalt de ingevoerde gegevens van het dialoog op
         if (e.getSource() == dialogAddComponent){
-        AddComponentDialog dialoog = new AddComponentDialog(true);
-        try
-        {
+            AddComponentDialog dialoog = new AddComponentDialog(true);
 
-            if (dialoog.componentList.getSelectedItem() == "database"){
-                Database d1 = dialoog.getDatabaseWaarde();
-                if (d1 != null){
-                    PutDataInDatabase DataIn = new PutDataInDatabase();
-                    DataIn.putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
-
-
-
+            try {
+                if (dialoog.componentList.getSelectedItem() == "database"){
+                    Database d1 = dialoog.getDatabaseWaarde();
+                    if (d1 != null){
+                        PutDataInDatabase DataIn = new PutDataInDatabase();
+                        DataIn.putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
+                    } else {
+                        System.out.println("database object is leeg");
+                    }
                 }
-                else {
-                    System.out.println("database object is leeg");
+                else if (dialoog.componentList.getSelectedItem() == "webserver"){
+                    Webserver w1 = dialoog.getWebserverWaarde();
+                    if (w1 != null){
+                        PutDataInDatabase DataIn = new PutDataInDatabase();
+                        DataIn.putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
+
+                       //onOpenImpl();
+
+                    } else {
+                        System.out.println("Webserver object is leeg");
+                    }
                 }
+                else if (dialoog.componentList.getSelectedItem() == "firewall"){
+                    Firewall f1 = dialoog.getFirewallWaarde();
+                    if (f1 != null){
+                        PutDataInDatabase DataIn = new PutDataInDatabase();
+                        DataIn.putFirewallObjectInDatabase(f1.getName(),f1.getAvailability(),f1.getPrice(),f1.getIp(),f1.getSubnetMask());
+                    } else {
+                        System.out.println("Firewall object is leeg");
+                    }
+                }
+
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-            else if (dialoog.componentList.getSelectedItem() == "webserver"){
-                Webserver w1 = dialoog.getWebserverWaarde();
-                if (w1 != null){
-                    PutDataInDatabase DataIn = new PutDataInDatabase();
-                    DataIn.putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
-
-                   //onOpenImpl();
-
-                }
-                else {
-                    System.out.println("Webserver object is leeg");
-                }
-            }
-            else if (dialoog.componentList.getSelectedItem() == "firewall"){
-                Firewall f1 = dialoog.getFirewallWaarde();
-                if (f1 != null){
-                    PutDataInDatabase DataIn = new PutDataInDatabase();
-                    DataIn.putFirewallObjectInDatabase(f1.getName(),f1.getAvailability(),f1.getPrice(),f1.getIp(),f1.getSubnetMask());
-
-
-                }
-                else {
-                    System.out.println("Firewall object is leeg");
-                }
-            }
-
-
-
-        } catch (IOException ex)
-        {
-            throw new RuntimeException(ex);
         }
-            onOpenImpl();
-
-
-    }
     }
 }
-

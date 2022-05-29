@@ -17,7 +17,7 @@ public class Webserver extends NetworkComponent {
     private static long nextId = 0;
 
     public Webserver(final long id, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {
-        super(id, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\webserver.png")));
+        super(id, ComponentType.WEBSERVER, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\webserver.png")));
     }
 
     public Webserver(@NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {

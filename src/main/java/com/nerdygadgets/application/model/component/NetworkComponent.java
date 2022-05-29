@@ -14,6 +14,7 @@ import java.util.Locale;
 public abstract class NetworkComponent implements Comparable<NetworkComponent> {
 
     protected final long id;
+    protected final ComponentType type;
     protected final String name;
     protected final double availability;
     protected final double price;
@@ -22,8 +23,9 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
     protected final String subnetMask;
     protected final Image image;
 
-    public NetworkComponent(final long id, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnetMask, @NotNull final Image image) {
+    public NetworkComponent(final long id, @NotNull final ComponentType type, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnetMask, @NotNull final Image image) {
         this.id = id;
+        this.type = type;
         this.name = name;
         this.availability = availability;
         this.price = price;
@@ -34,21 +36,21 @@ public abstract class NetworkComponent implements Comparable<NetworkComponent> {
     }
 
     /**
-     * Gets the type identifier of the network component.
-     *
-     * @return The network component's type identifier.
-     */
-    public String getType() {
-        return getClass().getSimpleName().toLowerCase();
-    }
-
-    /**
      * Gets the ID of the network component.
      *
      * @return The network component's ID.
      */
     public long getId() {
         return id;
+    }
+
+    /**
+     * Gets the type identifier of the network component.
+     *
+     * @return The network component's type identifier.
+     */
+    public ComponentType getType() {
+        return type;
     }
 
     /**

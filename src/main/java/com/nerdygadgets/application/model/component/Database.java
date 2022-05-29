@@ -17,7 +17,7 @@ public class Database extends NetworkComponent {
     private static long nextId = 0;
 
     public Database(final long id, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {
-        super(id, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\database.png")));
+        super(id, ComponentType.DATABASE, name, availability, price, ip, subnet, ImageIO.read(new File("assets\\images\\database.png")));
     }
 
     public Database(@NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnet) throws IOException {

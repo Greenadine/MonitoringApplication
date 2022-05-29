@@ -17,7 +17,7 @@ public class NetworkComponentSerializer extends StdSerializer<NetworkComponent> 
     public void serialize(NetworkComponent networkComponent, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
 
-        gen.writeStringField("type", networkComponent.getType());
+        gen.writeStringField("type", networkComponent.getType().name());
         gen.writeNumberField("id", networkComponent.getId());
         gen.writeStringField("name", networkComponent.getName());
         gen.writeNumberField("availability", networkComponent.getAvailability());

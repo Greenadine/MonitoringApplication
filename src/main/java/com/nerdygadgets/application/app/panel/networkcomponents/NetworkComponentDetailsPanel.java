@@ -8,6 +8,7 @@ import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.SwingUtils;
+import com.nerdygadgets.application.util.database.RemoveDataFromDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ import java.util.Locale;
 
 public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener
 {
+
+    private NetworkComponent component;
 
     private final JLabel componentName;
     private final JLabel componentId;
@@ -127,6 +130,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
 
         // Add delete component button
         deleteComponentButton = new WrappedJButton("Delete", SwingUtils.getIconFromResource("delete.png"));
+        deleteComponentButton.getButton().addActionListener(this::actionDeleteComponent);
         deleteComponentButton.getButton().setEnabled(false);
         deleteComponentButton.getButton().setBorder(new EmptyBorder(10, 15, 10, 15));
         deleteComponentButton.setBorder(new MatteBorder(2, 2, 2, 2, Colors.MAIN_BACKGROUND_ACCENT));
@@ -134,6 +138,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
 
         // Add edit component button
         editComponentButton = new WrappedJButton("Edit", SwingUtils.getIconFromResource("edit.png"));
+        editComponentButton.getButton().addActionListener(this::actionEditComponent);
         editComponentButton.getButton().setBorder(new EmptyBorder(10, 20, 10, 25));
         editComponentButton.getButton().setEnabled(false);
         editComponentButton.setBorder(new MatteBorder(2, 2, 2, 2, Colors.MAIN_BACKGROUND_ACCENT));
@@ -141,6 +146,8 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     }
 
     public <T extends NetworkComponent> void displayComponent(@NotNull final T component) {
+        this.component = component;
+
         // Set values to display component details
         componentName.setText(component.getName());
         componentId.setText("ID: " + component.getId());
@@ -152,6 +159,16 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         // Enable delete and edit buttons
         deleteComponentButton.getButton().setEnabled(true);
         editComponentButton.getButton().setEnabled(true);
+    }
+
+    /* Button actions */
+
+    private void actionDeleteComponent(ActionEvent event) {
+        RemoveDataFromDatabase.deleteFromDatabase(String.valueOf(component.getId()), component.getType().name().toLowerCase());
+    }
+
+    private void actionEditComponent(ActionEvent event) {
+
     }
 
     @Override
