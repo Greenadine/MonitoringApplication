@@ -398,174 +398,174 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == fw1){
-            System.out.println("Firewall 1");
-            nameOutputLabel.setText(firewallList.get(0).getName());
-            idOutputLabel.setText(firewallList.get(0).getName());
-            availabilityOutputLabel.setText(String.valueOf(firewallList.get(0).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(firewallList.get(0).getPrice()));
-            ipOutputLabel.setText(firewallList.get(0).getIp());
-            subnetmaskOutputLabel.setText(firewallList.get(0).getSubnetMask());
-        }
-        else if (e.getSource() == fw2){
-            System.out.println("Firewall 2");
-            nameOutputLabel.setText(firewallList.get(1).getName());
-            idOutputLabel.setText(firewallList.get(1).getName());
-            availabilityOutputLabel.setText(String.valueOf(firewallList.get(1).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(firewallList.get(1).getPrice()));
-            ipOutputLabel.setText(firewallList.get(1).getIp());
-            subnetmaskOutputLabel.setText(firewallList.get(1).getSubnetMask());
-        }
-        else if (e.getSource() == db1){
-            System.out.println("Database 1");
-            nameOutputLabel.setText(databaseList.get(0).getName());
-            idOutputLabel.setText(databaseList.get(0).getName());
-            availabilityOutputLabel.setText(String.valueOf(databaseList.get(0).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(databaseList.get(0).getPrice()));
-            ipOutputLabel.setText(databaseList.get(0).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(0).getSubnetMask());
-        }
-        else if (e.getSource() == db2){
-            System.out.println("Database 2");
-            nameOutputLabel.setText(databaseList.get(1).getName());
-            idOutputLabel.setText(databaseList.get(1).getName());
-            availabilityOutputLabel.setText(String.valueOf(databaseList.get(1).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(databaseList.get(1).getPrice()));
-            ipOutputLabel.setText(databaseList.get(1).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(1).getSubnetMask());
-        }
-        else if (e.getSource() == db3){
-            System.out.println("Database 3");
-            nameOutputLabel.setText(databaseList.get(2).getName());
-            idOutputLabel.setText(databaseList.get(2).getName());
-            availabilityOutputLabel.setText(String.valueOf(databaseList.get(2).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(databaseList.get(2).getPrice()));
-            ipOutputLabel.setText(databaseList.get(2).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(2).getSubnetMask());
-        }
-        else if (e.getSource() == db4){
-            System.out.println("Database 4");
-            nameOutputLabel.setText(databaseList.get(3).getName());
-            idOutputLabel.setText(databaseList.get(3).getName());
-            availabilityOutputLabel.setText(String.valueOf(databaseList.get(3).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(databaseList.get(3).getPrice()));
-            ipOutputLabel.setText(databaseList.get(3).getIp());
-            subnetmaskOutputLabel.setText(databaseList.get(3).getSubnetMask());
-        }
-
-        else if (e.getSource() == web1){
-            System.out.println("Webserver 1");
-            nameOutputLabel.setText(webserverList.get(0).getName());
-            idOutputLabel.setText(webserverList.get(0).getName());
-            availabilityOutputLabel.setText(String.valueOf(webserverList.get(0).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(webserverList.get(0).getPrice()));
-            ipOutputLabel.setText(webserverList.get(0).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(0).getSubnetMask());
-        }
-        else if (e.getSource() == web2){
-            System.out.println("Webserver 2");
-            nameOutputLabel.setText(webserverList.get(1).getName());
-            idOutputLabel.setText(webserverList.get(1).getName());
-            availabilityOutputLabel.setText(String.valueOf(webserverList.get(1).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(webserverList.get(1).getPrice()));
-            ipOutputLabel.setText(webserverList.get(1).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(1).getSubnetMask());
-        }
-        else if (e.getSource() == web3){
-            System.out.println("Webserver 3");
-            nameOutputLabel.setText(webserverList.get(2).getName());
-            idOutputLabel.setText(webserverList.get(2).getName());
-            availabilityOutputLabel.setText(String.valueOf(webserverList.get(2).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(webserverList.get(2).getPrice()));
-            ipOutputLabel.setText(webserverList.get(2).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(2).getSubnetMask());
-        }
-        else if (e.getSource() == web4){
-            System.out.println("Webserver 4");
-            nameOutputLabel.setText(webserverList.get(3).getName());
-            idOutputLabel.setText(webserverList.get(3).getName());
-            availabilityOutputLabel.setText(String.valueOf(webserverList.get(3).getAvailability()));
-            priceOutputLabel.setText(String.valueOf(webserverList.get(3).getPrice()));
-            ipOutputLabel.setText(webserverList.get(3).getIp());
-            subnetmaskOutputLabel.setText(webserverList.get(3).getSubnetMask());
-        }
-
-        //Haalt de ingevoerde gegevens van het dialoog op en zet het in d1 (alleen database)
-        else if (e.getSource() == addComponent){
-            AddComponentDialog dialoog = new AddComponentDialog(true);
-            try
-            {
-
-                if (dialoog.componentList.getSelectedItem() == "database"){
-                    Database d1 = dialoog.getDatabaseWaarde();
-                    if (d1 != null){
-
-                        putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
-
-                        System.out.println("database is toegevoegd");
-                        JButton j1 = new JButton(d1.getName());
-                        j1.addActionListener(this);
-                        databasePanel.add(j1);
-                        databasePanel.revalidate();
-                        databasePanel.repaint();
-                    }
-                    else {
-                        System.out.println("database is leeg");
-                    }
-                }
-                else if (dialoog.componentList.getSelectedItem() == "webserver"){
-                    Webserver w1 = dialoog.getWebserverWaarde();
-                    if (w1 != null){
-
-                        putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
-
-                        System.out.println("webserver is toegevoegd");
-                        JButton j1 = new JButton(w1.getName());
-                        j1.addActionListener(this);
-                        webserverPanel.add(j1);
-                        webserverPanel.revalidate();
-                        webserverPanel.repaint();
-                    }
-                    else {
-                        System.out.println("webserver is leeg");
-                    }
-                }
-                else if (dialoog.componentList.getSelectedItem() == "firewall")
-                {
-                    Firewall f1 = dialoog.getFirewallWaarde();
-                    if (f1 != null)
-                    {
-
-                        putFirewallObjectInDatabase(f1.getName(), f1.getAvailability(), f1.getPrice(), f1.getIp(), f1.getSubnetMask());
-
-                        System.out.println("firewall is toegevoegd");
-                        JButton j1 = new JButton(f1.getName());
-                        j1.addActionListener(this);
-                        firewallPanel.add(j1);
-                        firewallPanel.revalidate();
-                        firewallPanel.repaint();
-                    }
-                    else {
-                        System.out.println("firewall is leeg");
-                    }
-
-                }
-
-
-            } catch (IOException ex)
-            {
-                throw new RuntimeException(ex);
-            }
-            System.out.println("test");
-        }
-        else{
-           // if (e.getActionCommand() == databaseList.)
-            System.out.println("Dit is Firewall 3");
-            System.out.println(e.getActionCommand());
-        }
-    }
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        if (e.getSource() == fw1){
+//            System.out.println("Firewall 1");
+//            nameOutputLabel.setText(firewallList.get(0).getName());
+//            idOutputLabel.setText(firewallList.get(0).getName());
+//            availabilityOutputLabel.setText(String.valueOf(firewallList.get(0).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(firewallList.get(0).getPrice()));
+//            ipOutputLabel.setText(firewallList.get(0).getIp());
+//            subnetmaskOutputLabel.setText(firewallList.get(0).getSubnetMask());
+//        }
+//        else if (e.getSource() == fw2){
+//            System.out.println("Firewall 2");
+//            nameOutputLabel.setText(firewallList.get(1).getName());
+//            idOutputLabel.setText(firewallList.get(1).getName());
+//            availabilityOutputLabel.setText(String.valueOf(firewallList.get(1).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(firewallList.get(1).getPrice()));
+//            ipOutputLabel.setText(firewallList.get(1).getIp());
+//            subnetmaskOutputLabel.setText(firewallList.get(1).getSubnetMask());
+//        }
+//        else if (e.getSource() == db1){
+//            System.out.println("Database 1");
+//            nameOutputLabel.setText(databaseList.get(0).getName());
+//            idOutputLabel.setText(databaseList.get(0).getName());
+//            availabilityOutputLabel.setText(String.valueOf(databaseList.get(0).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(databaseList.get(0).getPrice()));
+//            ipOutputLabel.setText(databaseList.get(0).getIp());
+//            subnetmaskOutputLabel.setText(databaseList.get(0).getSubnetMask());
+//        }
+//        else if (e.getSource() == db2){
+//            System.out.println("Database 2");
+//            nameOutputLabel.setText(databaseList.get(1).getName());
+//            idOutputLabel.setText(databaseList.get(1).getName());
+//            availabilityOutputLabel.setText(String.valueOf(databaseList.get(1).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(databaseList.get(1).getPrice()));
+//            ipOutputLabel.setText(databaseList.get(1).getIp());
+//            subnetmaskOutputLabel.setText(databaseList.get(1).getSubnetMask());
+//        }
+//        else if (e.getSource() == db3){
+//            System.out.println("Database 3");
+//            nameOutputLabel.setText(databaseList.get(2).getName());
+//            idOutputLabel.setText(databaseList.get(2).getName());
+//            availabilityOutputLabel.setText(String.valueOf(databaseList.get(2).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(databaseList.get(2).getPrice()));
+//            ipOutputLabel.setText(databaseList.get(2).getIp());
+//            subnetmaskOutputLabel.setText(databaseList.get(2).getSubnetMask());
+//        }
+//        else if (e.getSource() == db4){
+//            System.out.println("Database 4");
+//            nameOutputLabel.setText(databaseList.get(3).getName());
+//            idOutputLabel.setText(databaseList.get(3).getName());
+//            availabilityOutputLabel.setText(String.valueOf(databaseList.get(3).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(databaseList.get(3).getPrice()));
+//            ipOutputLabel.setText(databaseList.get(3).getIp());
+//            subnetmaskOutputLabel.setText(databaseList.get(3).getSubnetMask());
+//        }
+//
+//        else if (e.getSource() == web1){
+//            System.out.println("Webserver 1");
+//            nameOutputLabel.setText(webserverList.get(0).getName());
+//            idOutputLabel.setText(webserverList.get(0).getName());
+//            availabilityOutputLabel.setText(String.valueOf(webserverList.get(0).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(webserverList.get(0).getPrice()));
+//            ipOutputLabel.setText(webserverList.get(0).getIp());
+//            subnetmaskOutputLabel.setText(webserverList.get(0).getSubnetMask());
+//        }
+//        else if (e.getSource() == web2){
+//            System.out.println("Webserver 2");
+//            nameOutputLabel.setText(webserverList.get(1).getName());
+//            idOutputLabel.setText(webserverList.get(1).getName());
+//            availabilityOutputLabel.setText(String.valueOf(webserverList.get(1).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(webserverList.get(1).getPrice()));
+//            ipOutputLabel.setText(webserverList.get(1).getIp());
+//            subnetmaskOutputLabel.setText(webserverList.get(1).getSubnetMask());
+//        }
+//        else if (e.getSource() == web3){
+//            System.out.println("Webserver 3");
+//            nameOutputLabel.setText(webserverList.get(2).getName());
+//            idOutputLabel.setText(webserverList.get(2).getName());
+//            availabilityOutputLabel.setText(String.valueOf(webserverList.get(2).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(webserverList.get(2).getPrice()));
+//            ipOutputLabel.setText(webserverList.get(2).getIp());
+//            subnetmaskOutputLabel.setText(webserverList.get(2).getSubnetMask());
+//        }
+//        else if (e.getSource() == web4){
+//            System.out.println("Webserver 4");
+//            nameOutputLabel.setText(webserverList.get(3).getName());
+//            idOutputLabel.setText(webserverList.get(3).getName());
+//            availabilityOutputLabel.setText(String.valueOf(webserverList.get(3).getAvailability()));
+//            priceOutputLabel.setText(String.valueOf(webserverList.get(3).getPrice()));
+//            ipOutputLabel.setText(webserverList.get(3).getIp());
+//            subnetmaskOutputLabel.setText(webserverList.get(3).getSubnetMask());
+//        }
+//
+//        //Haalt de ingevoerde gegevens van het dialoog op en zet het in d1 (alleen database)
+//        else if (e.getSource() == addComponent){
+//            AddComponentDialog dialoog = new AddComponentDialog(true);
+//            try
+//            {
+//
+//                if (dialoog.componentList.getSelectedItem() == "database"){
+//                    Database d1 = dialoog.getDatabaseWaarde();
+//                    if (d1 != null){
+//
+//                        putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
+//
+//                        System.out.println("database is toegevoegd");
+//                        JButton j1 = new JButton(d1.getName());
+//                        j1.addActionListener(this);
+//                        databasePanel.add(j1);
+//                        databasePanel.revalidate();
+//                        databasePanel.repaint();
+//                    }
+//                    else {
+//                        System.out.println("database is leeg");
+//                    }
+//                }
+//                else if (dialoog.componentList.getSelectedItem() == "webserver"){
+//                    Webserver w1 = dialoog.getWebserverWaarde();
+//                    if (w1 != null){
+//
+//                        putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
+//
+//                        System.out.println("webserver is toegevoegd");
+//                        JButton j1 = new JButton(w1.getName());
+//                        j1.addActionListener(this);
+//                        webserverPanel.add(j1);
+//                        webserverPanel.revalidate();
+//                        webserverPanel.repaint();
+//                    }
+//                    else {
+//                        System.out.println("webserver is leeg");
+//                    }
+//                }
+//                else if (dialoog.componentList.getSelectedItem() == "firewall")
+//                {
+//                    Firewall f1 = dialoog.getFirewallWaarde();
+//                    if (f1 != null)
+//                    {
+//
+//                        putFirewallObjectInDatabase(f1.getName(), f1.getAvailability(), f1.getPrice(), f1.getIp(), f1.getSubnetMask());
+//
+//                        System.out.println("firewall is toegevoegd");
+//                        JButton j1 = new JButton(f1.getName());
+//                        j1.addActionListener(this);
+//                        firewallPanel.add(j1);
+//                        firewallPanel.revalidate();
+//                        firewallPanel.repaint();
+//                    }
+//                    else {
+//                        System.out.println("firewall is leeg");
+//                    }
+//
+//                }
+//
+//
+//            } catch (IOException ex)
+//            {
+//                throw new RuntimeException(ex);
+//            }
+//            System.out.println("test");
+//        }
+//        else{
+//           // if (e.getActionCommand() == databaseList.)
+//            System.out.println("Dit is Firewall 3");
+//            System.out.println(e.getActionCommand());
+//        }
+//    }
 
     @Override
     protected void onOpenImpl() {
@@ -575,5 +575,11 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
     @Override
     protected void onCloseImpl() {
         // Do nothing
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+
     }
 }

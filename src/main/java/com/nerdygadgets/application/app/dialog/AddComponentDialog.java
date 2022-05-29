@@ -109,24 +109,4 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         }
     }
 
-    public Database getDatabaseWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "database")){
-            return new Database(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
-    }
-
-    public Webserver getWebserverWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "webserver")){
-            return new Webserver(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
-    }
-
-    public Firewall getFirewallWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "firewall")){
-            return new Firewall(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
-    }
 }

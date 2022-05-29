@@ -1,6 +1,7 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.dialog.AddComponentDialog;
+import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 import com.nerdygadgets.application.util.database.PutDataInDatabase;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
@@ -90,8 +91,19 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         AddComponentDialog addDialog = new AddComponentDialog(true);
 
         try {
-            PutDataInDatabase.updateData(addDialog.getComponent());
-            databaseList.addComponent(addDialog.getComponent());
+            NetworkComponent component = addDialog.getComponent();
+            PutDataInDatabase.updateData(component);
+
+            switch (component.getType()){
+                case DATABASE:
+                    databaseList.addComponent(component);
+                    break;
+                case WEBSERVER:
+                    webserverList.addComponent(component);
+                    break;
+                case FIREWALL:
+                    firewallList.addComponent(component);
+            }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
