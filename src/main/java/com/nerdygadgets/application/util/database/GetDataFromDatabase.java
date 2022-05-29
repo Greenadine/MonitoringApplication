@@ -17,23 +17,14 @@ public class GetDataFromDatabase
     private String ip;
     private String subnetmask;
 
-    public Connection DatabaseConnection()
-    {
-        try
-        {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-        } catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public ArrayList<Firewall> getFirewallFromDatabase()
     {
         ArrayList<Firewall> firewallArrayList = new ArrayList<>();
         try
         {
-            Connection connection = DatabaseConnection();
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM firewall");
@@ -64,7 +55,7 @@ public class GetDataFromDatabase
         ArrayList<Webserver> webserverArrayList = new ArrayList<>();
         try
         {
-            Connection connection = DatabaseConnection();
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM webserver");
@@ -95,7 +86,7 @@ public class GetDataFromDatabase
         ArrayList<Database> databaseArrayList = new ArrayList<>();
         try
         {
-            Connection connection = DatabaseConnection();
+            Connection connection = ConnectionToDatabase.DatabaseConnection();;
             Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM database1");

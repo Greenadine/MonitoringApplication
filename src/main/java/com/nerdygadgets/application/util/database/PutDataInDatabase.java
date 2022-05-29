@@ -9,8 +9,7 @@ public class PutDataInDatabase
 
     public void putDatabaseObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
-            //Statement statement = connection.createStatement();
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
 
             String sql = "INSERT INTO database1 (name, availability, price, ip, subnet)" + "values (?,?,?,?,?)";
 
@@ -30,8 +29,7 @@ public class PutDataInDatabase
     }
     public void putWebserverObjectInDatabase(String name, double availability, double price, String ip, String subnetmask){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root","");
-            //Statement statement = connection.createStatement();
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
 
             String sql = "INSERT INTO webserver (name, availability, price, ip, subnet)" + "values (?,?,?,?,?)";
 
@@ -53,9 +51,7 @@ public class PutDataInDatabase
     {
         try
         {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-            //Statement statement = connection.createStatement();
-
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
             String sql = "INSERT INTO firewall (name, availability, price, ip, subnetmask)" + "values (?,?,?,?,?)";
 
             PreparedStatement preparedStmt = connection.prepareStatement(sql);

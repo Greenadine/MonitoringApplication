@@ -5,16 +5,6 @@ import java.util.Objects;
 
 public class RemoveDataFromDatabase
 {
-        public Connection DatabaseConnection()
-        {
-            try
-            {
-                return DriverManager.getConnection("jdbc:mysql://localhost:3306/nerdygadgets", "root", "");
-            } catch (SQLException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
 
 
         public void deleteFromDatabase(String id, String type)
@@ -24,7 +14,7 @@ public class RemoveDataFromDatabase
             }
 
             try {
-                Connection connection = DatabaseConnection();
+                Connection connection = ConnectionToDatabase.DatabaseConnection();;
 
                 String sql = "DELETE FROM ? WHERE id = ?";
 
