@@ -1,5 +1,6 @@
 package com.nerdygadgets.application.app.screen;
 
+import com.nerdygadgets.application.app.dialog.AddComponentDialog;
 import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 import com.nerdygadgets.application.util.database.PutDataInDatabase;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
@@ -27,8 +28,6 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
 
     private final NetworkComponentDetailsPanel detailsPanel;
 
-    private JButton dialogAddComponent;
-
     public NewViewNetworkComponentsScreen(@NotNull ApplicationWindow window) {
         super(window);
 
@@ -38,10 +37,9 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         // Populate screen
         this.add(new ScreenHeaderPanel(this, "Network Components", 1250, 50, ApplicationActions::openHome), BorderLayout.PAGE_START);
         //Add dialog button
-        dialogAddComponent = new JButton("Add component");
+        JButton dialogAddComponent = new JButton("Add component");
         this.add(dialogAddComponent, BorderLayout.PAGE_END);
         dialogAddComponent.addActionListener(this);
-
 
         // Create wrapper grid panel for component lists
         JPanel wrapperGridPanel = new JPanel();
@@ -51,8 +49,6 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         // Add component details panel as right sidebar
         detailsPanel = new NetworkComponentDetailsPanel(this);
         this.add(detailsPanel, BorderLayout.LINE_END);
-
-
 
         // Add component lists to wrapper panel
         databaseList = new NetworkComponentButtonListPanel(this, "Databases", detailsPanel);
@@ -90,45 +86,13 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //Haalt de ingevoerde gegevens van het dialoog op
-        if (e.getSource() == dialogAddComponent){
-            AddComponentDialog dialoog = new AddComponentDialog(true);
+        // Retrieves component data from dialog and updates data in database
+        AddComponentDialog addDialog = new AddComponentDialog(true);
 
-            try {
-                if (dialoog.componentList.getSelectedItem() == "database"){
-                    Database d1 = dialoog.getDatabaseWaarde();
-                    if (d1 != null){
-                        PutDataInDatabase DataIn = new PutDataInDatabase();
-                        DataIn.putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
-                    } else {
-                        System.out.println("database object is leeg");
-                    }
-                }
-                else if (dialoog.componentList.getSelectedItem() == "webserver"){
-                    Webserver w1 = dialoog.getWebserverWaarde();
-                    if (w1 != null){
-                        PutDataInDatabase DataIn = new PutDataInDatabase();
-                        DataIn.putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
-
-                       //onOpenImpl();
-
-                    } else {
-                        System.out.println("Webserver object is leeg");
-                    }
-                }
-                else if (dialoog.componentList.getSelectedItem() == "firewall"){
-                    Firewall f1 = dialoog.getFirewallWaarde();
-                    if (f1 != null){
-                        PutDataInDatabase DataIn = new PutDataInDatabase();
-                        DataIn.putFirewallObjectInDatabase(f1.getName(),f1.getAvailability(),f1.getPrice(),f1.getIp(),f1.getSubnetMask());
-                    } else {
-                        System.out.println("Firewall object is leeg");
-                    }
-                }
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        try {
+            PutDataInDatabase.updateData(addDialog.getComponent());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

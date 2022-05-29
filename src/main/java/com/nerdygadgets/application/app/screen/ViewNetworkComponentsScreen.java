@@ -1,6 +1,7 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.component.NetworkComponentsEntry;
+import com.nerdygadgets.application.app.dialog.AddComponentDialog;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;

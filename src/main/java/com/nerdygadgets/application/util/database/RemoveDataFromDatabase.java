@@ -18,7 +18,6 @@ public final class RemoveDataFromDatabase {
                 String sql = String.format("DELETE FROM %s WHERE id = ?", type);
 
                 PreparedStatement preparedStmt = connection.prepareStatement(sql);
-                //preparedStmt.setString (1, type);
                 preparedStmt.setLong (1, id);
 
                 preparedStmt.execute();

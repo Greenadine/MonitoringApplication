@@ -4,10 +4,13 @@ import com.nerdygadgets.application.app.component.WrappedJButton;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
-import com.nerdygadgets.application.model.component.NetworkComponent;
+import com.nerdygadgets.application.app.screen.NewViewNetworkComponentsScreen;
+import com.nerdygadgets.application.model.component.*;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
+import com.nerdygadgets.application.util.Logger;
 import com.nerdygadgets.application.util.SwingUtils;
+import com.nerdygadgets.application.util.database.EditDataFromDatabase;
 import com.nerdygadgets.application.util.database.RemoveDataFromDatabase;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +20,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Locale;
 
 public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener
@@ -169,8 +173,31 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         parentScreen.onOpen();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void actionEditComponent(ActionEvent event) {
+        // TODO retrieve values from edit dialog
+        long id = 0;
+        ComponentType type = ComponentType.DATABASE;
+        String name = "";
+        double availability = 0;
+        double price = 0;
+        String ip = "";
+        String subnetMask = "";
 
+        try {
+            switch (type) {
+                case DATABASE:
+                    EditDataFromDatabase.editComponent(new Database(id, name, availability, price, ip, subnetMask));
+                    break;
+                case FIREWALL:
+                    EditDataFromDatabase.editComponent(new Firewall(id, name, availability, price, ip, subnetMask));
+                    break;
+                case WEBSERVER:
+                    EditDataFromDatabase.editComponent(new Webserver(id, name, availability, price, ip, subnetMask));
+            }
+        } catch (IOException ex) {
+            Logger.error(ex, "Failed to edit component in database.");
+        }
     }
 
     @Override

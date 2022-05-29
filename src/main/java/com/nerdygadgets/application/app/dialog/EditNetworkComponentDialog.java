@@ -1,21 +1,13 @@
-package com.nerdygadgets.application.app.screen;
+package com.nerdygadgets.application.app.dialog;
 
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.Firewall;
 import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
-public class AddComponentDialog extends JDialog implements ActionListener
-{
+public class EditNetworkComponentDialog extends JDialog implements ActionListener {
 
     //Buttons
     private JButton cancel;
@@ -23,7 +15,6 @@ public class AddComponentDialog extends JDialog implements ActionListener
 
     //Textfields
     private JTextField nameTextField;
-    private JTextField typeTextField;
     private JTextField ipTextField;
     private JTextField subnetTextField;
     private JTextField availTextField;
@@ -31,8 +22,8 @@ public class AddComponentDialog extends JDialog implements ActionListener
 
     public JComboBox<NetworkComponent> componentList;
 
-    @SuppressWarnings("unchecked,rawtypes")
-    public AddComponentDialog(boolean modal) {
+    @SuppressWarnings("rawtypes,unchecked")
+    public EditNetworkComponentDialog(boolean modal) {
         setModal(modal);
         setLayout(new GridLayout(9,1));
         setSize(200,300);
@@ -90,29 +81,6 @@ public class AddComponentDialog extends JDialog implements ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addButton){
-            setVisible(false);
-        }
-    }
-
-    public Database getDatabaseWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "database")){
-            return new Database(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
-    }
-
-    public Webserver getWebserverWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "webserver")){
-            return new Webserver(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
-    }
-
-    public Firewall getFirewallWaarde() throws IOException {
-        if (Objects.equals(componentList.getSelectedItem(), "firewall")){
-            return new Firewall(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText() );
-        }
-        return null;
+        setVisible(false);
     }
 }
