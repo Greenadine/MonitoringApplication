@@ -1,5 +1,7 @@
 package com.nerdygadgets.application.app.screen;
 
+import com.nerdygadgets.application.util.database.GetDataFromDatabase;
+import com.nerdygadgets.application.util.database.PutDataInDatabase;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.networkcomponents.NetworkComponentButtonListPanel;
@@ -12,12 +14,10 @@ import com.nerdygadgets.application.util.ApplicationActions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.sql.*;
 
 public class NewViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener
 {
@@ -196,7 +196,7 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
             throw new RuntimeException(ex);
         }
             onOpenImpl();
-        repaint();
+
 
     }
     }

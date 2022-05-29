@@ -14,9 +14,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 
-public class NetworkComponentDetailsPanel extends ApplicationPanel {
+public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener
+{
 
     private final JLabel componentName;
     private final JLabel componentId;
@@ -169,5 +172,11 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel {
         // Disable delete and edit buttons
         deleteComponentButton.getButton().setEnabled(false);
         editComponentButton.getButton().setEnabled(false);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+
     }
 }

@@ -1,8 +1,7 @@
-package com.nerdygadgets.application.app.screen;
+package com.nerdygadgets.application.util.database;
 
 import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.NetworkComponent;
 import com.nerdygadgets.application.model.component.Webserver;
 
 import java.sql.*;

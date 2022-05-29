@@ -1,4 +1,4 @@
-package com.nerdygadgets.application.app.screen;
+package com.nerdygadgets.application.util.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
