@@ -55,6 +55,7 @@ public class NetworkComponentButtonListPanel extends ApplicationPanel {
         listPanel.removeAll();
     }
 
+
     @Override
     public void onShowImpl() {
         // Do nothing

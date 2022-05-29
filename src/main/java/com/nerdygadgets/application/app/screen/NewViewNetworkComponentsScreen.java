@@ -76,6 +76,9 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
     @Override
     protected void onOpenImpl()
     {
+        databaseList.clear();
+        firewallList.clear();
+        webserverList.clear();
         // TODO load components from database to lists
 
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
@@ -89,8 +92,12 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
             webserverList.addComponent(webserver);
         }
 
+       // this.repaint();
 
-this.repaint();
+
+
+
+//this.repaint();
 
 
 
@@ -149,7 +156,7 @@ this.repaint();
                     PutDataInDatabase DataIn = new PutDataInDatabase();
                     DataIn.putDatabaseObjectInDatabase(d1.getName(),d1.getAvailability(),d1.getPrice(),d1.getIp(),d1.getSubnetMask());
 
-                    onOpenImpl();
+
 
                 }
                 else {
@@ -162,7 +169,7 @@ this.repaint();
                     PutDataInDatabase DataIn = new PutDataInDatabase();
                     DataIn.putWebserverObjectInDatabase(w1.getName(),w1.getAvailability(),w1.getPrice(),w1.getIp(),w1.getSubnetMask());
 
-                    onOpenImpl();
+                   //onOpenImpl();
 
                 }
                 else {
@@ -174,7 +181,7 @@ this.repaint();
                 if (f1 != null){
                     PutDataInDatabase DataIn = new PutDataInDatabase();
                     DataIn.putFirewallObjectInDatabase(f1.getName(),f1.getAvailability(),f1.getPrice(),f1.getIp(),f1.getSubnetMask());
-                    onOpenImpl();
+
 
                 }
                 else {
@@ -188,6 +195,9 @@ this.repaint();
         {
             throw new RuntimeException(ex);
         }
+            onOpenImpl();
+        repaint();
+
     }
     }
 }
