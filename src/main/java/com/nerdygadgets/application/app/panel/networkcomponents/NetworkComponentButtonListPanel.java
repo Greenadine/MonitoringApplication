@@ -48,6 +48,7 @@ public class NetworkComponentButtonListPanel extends ApplicationPanel {
     public <T extends NetworkComponent> void addComponent(T component) {
         NetworkComponentsEntry componentButton = new NetworkComponentsEntry(this, component, detailsPanel);
         listPanel.add(componentButton);
+        listPanel.revalidate();
         listPanel.repaint();
     }
 

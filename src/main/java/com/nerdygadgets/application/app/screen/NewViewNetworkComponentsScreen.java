@@ -103,9 +103,11 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
                     break;
                 case FIREWALL:
                     firewallList.addComponent(component);
+                    break;
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
+
 }
