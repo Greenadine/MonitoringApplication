@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Objects;
 
 public class NewViewNetworkComponentsScreen extends ApplicationScreen implements ActionListener {
 
@@ -89,25 +90,37 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
     public void actionPerformed(ActionEvent e) {
         // Retrieves component data from dialog and updates data in database
         AddComponentDialog addDialog = new AddComponentDialog(true);
-
-        try {
-            NetworkComponent component = addDialog.getComponent();
-            PutDataInDatabase.updateData(component);
-
-            switch (component.getType()){
-                case DATABASE:
-                    databaseList.addComponent(component);
-                    break;
-                case WEBSERVER:
-                    webserverList.addComponent(component);
-                    break;
-                case FIREWALL:
-                    firewallList.addComponent(component);
-                    break;
+        try
+        {
+            if (addDialog.getComponent().getName() == null){
+                System.out.println("Object is leeg");
             }
-        } catch (IOException ex) {
+            else {
+                try {
+                    NetworkComponent component = addDialog.getComponent();
+                    PutDataInDatabase.updateData(component);
+
+                    switch (component.getType()){
+                        case DATABASE:
+                            databaseList.addComponent(component);
+                            break;
+                        case WEBSERVER:
+                            webserverList.addComponent(component);
+                            break;
+                        case FIREWALL:
+                            firewallList.addComponent(component);
+                            break;
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        } catch (IOException ex)
+        {
             throw new RuntimeException(ex);
         }
+
+
     }
 
 }

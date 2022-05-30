@@ -2,6 +2,7 @@ package com.nerdygadgets.application.app.panel.networkcomponents;
 
 import com.nerdygadgets.application.app.component.WrappedJButton;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
+import com.nerdygadgets.application.app.dialog.EditNetworkComponentDialog;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.screen.NewViewNetworkComponentsScreen;
@@ -174,30 +175,34 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void actionEditComponent(ActionEvent event) {
-        // TODO retrieve values from edit dialog
-        long id = 0;
-        ComponentType type = ComponentType.DATABASE;
-        String name = "";
-        double availability = 0;
-        double price = 0;
-        String ip = "";
-        String subnetMask = "";
+    private void actionEditComponent(ActionEvent event)
+    {
+        EditNetworkComponentDialog editNetworkComponentDialog = new EditNetworkComponentDialog(true, component.getName(), component.getPrice(), component.getAvailability(), component.getIp(), component.getSubnetMask());
+        NetworkComponent componentDialoog = null;
+        try
+        {
+            componentDialoog = editNetworkComponentDialog.getComponent();
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+
 
         try {
-            switch (type) {
+            switch (componentDialoog.getType()) {
                 case DATABASE:
-                    EditDataFromDatabase.editComponent(new Database(id, name, availability, price, ip, subnetMask));
+                    EditDataFromDatabase.editComponent(new Database(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
                     break;
                 case FIREWALL:
-                    EditDataFromDatabase.editComponent(new Firewall(id, name, availability, price, ip, subnetMask));
+                    EditDataFromDatabase.editComponent(new Firewall(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
                     break;
                 case WEBSERVER:
-                    EditDataFromDatabase.editComponent(new Webserver(id, name, availability, price, ip, subnetMask));
+                    EditDataFromDatabase.editComponent(new Webserver(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
             }
         } catch (IOException ex) {
             Logger.error(ex, "Failed to edit component in database.");
         }
+
     }
 
     @Override

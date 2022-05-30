@@ -17,19 +17,21 @@ public final class EditDataFromDatabase {
             type = "database1";
         }
 
+        //type = "webserver";
+
         try {
             Connection connection = ConnectionToDatabase.DatabaseConnection();
 
-            String sql = "UPDATE ? SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ? WHERE id = ?";
+            String sql = String.format("UPDATE %s SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ? WHERE id = ?", type);
 
             PreparedStatement preparedStmt = connection.prepareStatement(sql);
-            preparedStmt.setString (1, type);
-            preparedStmt.setString (2, component.getName());
-            preparedStmt.setDouble (3, component.getAvailability());
-            preparedStmt.setDouble (4, component.getPrice());
-            preparedStmt.setString (5, component.getIp());
-            preparedStmt.setString (6, component.getSubnetMask());
-            preparedStmt.setLong (7, component.getId());
+            //preparedStmt.setString (1, type);
+            preparedStmt.setString (1, component.getName());
+            preparedStmt.setDouble (2, component.getAvailability());
+            preparedStmt.setDouble (3, component.getPrice());
+            preparedStmt.setString (4, component.getIp());
+            preparedStmt.setString (5, component.getSubnetMask());
+            preparedStmt.setLong (6, component.getId());
 
             preparedStmt.execute();
             connection.close();

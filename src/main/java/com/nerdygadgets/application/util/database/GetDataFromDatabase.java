@@ -68,7 +68,7 @@ public class GetDataFromDatabase
                 availability = Double.parseDouble(resultSet.getString("availability"));
                 price = Double.parseDouble(resultSet.getString("price"));
                 ip = resultSet.getString("ip");
-                subnetmask = resultSet.getString("subnet");
+                subnetmask = resultSet.getString("subnetmask");
 
                 Webserver webserver = new Webserver(id, name, availability, price, ip, subnetmask);
                 webserverArrayList.add(webserver);
@@ -98,7 +98,7 @@ public class GetDataFromDatabase
                 availability = Double.parseDouble(resultSet.getString("availability"));
                 price = Double.parseDouble(resultSet.getString("price"));
                 ip = resultSet.getString("ip");
-                subnetmask = resultSet.getString("subnet");
+                subnetmask = resultSet.getString("subnetmask");
 
                 Database database = new Database(id, name, availability, price, ip, subnetmask);
                 databaseArrayList.add(database);
