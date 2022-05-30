@@ -92,7 +92,7 @@ public class NewViewNetworkComponentsScreen extends ApplicationScreen implements
         AddComponentDialog addDialog = new AddComponentDialog(true);
         try
         {
-            if (addDialog.getComponent().getName() == null){
+            if (addDialog.getComponent() == null){
                 System.out.println("Object is leeg");
             }
             else {

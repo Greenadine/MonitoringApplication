@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static java.awt.Color.red;
+
 public class AddComponentDialog extends JDialog implements ActionListener {
 
     //Buttons
@@ -41,7 +43,7 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         JLabel name = new JLabel("Name");
         add(name);
         nameTextField = new JTextField(20);
-        nameTextField.setText("Vul naam in");
+        //nameTextField.setText("Vul naam in");
         add(nameTextField);
 
         JLabel type = new JLabel("Type");
@@ -53,7 +55,7 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         componentList = new JComboBox(componenten);
         componentList.setSelectedIndex(2);
         componentList.addActionListener(this);
-        componentList.setSelectedItem("webserver");
+        //componentList.setSelectedItem("webserver");
         add(componentList);
 
 //        typeTextField = new JTextField(20);
@@ -62,25 +64,25 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         JLabel ipAdres = new JLabel("IP address");
         add(ipAdres);
         ipTextField = new JTextField(20);
-        ipTextField.setText("Vul IP-adres in");
+        //ipTextField.setText("Vul IP-adres in");
         add(ipTextField);
 
         JLabel subnetmask = new JLabel("Subnet mask");
         add(subnetmask);
         subnetTextField = new JTextField(20);
-        subnetTextField.setText("Vul subnetmask in");
+        //subnetTextField.setText("Vul subnetmask in");
         add(subnetTextField);
 
         JLabel availability = new JLabel("Availability");
         add(availability);
         availTextField = new JTextField(20);
-        availTextField.setText("Vul availability in");
+       // availTextField.setText("Vul availability in");
         add(availTextField);
 
         JLabel price = new JLabel("Price");
         add(price);
         priceTextField = new JTextField(20);
-        priceTextField.setText("Vul price in");
+        //priceTextField.setText("Vul price in");
         add(priceTextField);
 
         cancel = new JButton("Cancel");
@@ -94,9 +96,70 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    public boolean checks(){
+        // Create default border
+        nameTextField.setBorder(BorderFactory.createEmptyBorder());
+        ipTextField.setBorder(BorderFactory.createEmptyBorder());
+        availTextField.setBorder(BorderFactory.createEmptyBorder());
+        priceTextField.setBorder(BorderFactory.createEmptyBorder());
+        subnetTextField.setBorder(BorderFactory.createEmptyBorder());
+
+        boolean check =true;
+
+        if (nameTextField.getText().isEmpty()){
+            nameTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+
+        }
+        if (ipTextField.getText().isEmpty()){
+            ipTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+
+        if (priceTextField.getText().isEmpty()){
+            priceTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        else {
+            try
+            {
+                Double.parseDouble(priceTextField.getText());
+            }
+            catch (NumberFormatException e)
+            {
+                priceTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+                check = false;
+            }
+        }
+        if (subnetTextField.getText().isEmpty()){
+            subnetTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        if (availTextField.getText().isEmpty()){
+            availTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        else
+        {
+            try
+            {
+                Double.parseDouble(availTextField.getText());
+            } catch (NumberFormatException e)
+            {
+                availTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+                check = false;
+            }
+        }
+        if (check){
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addButton){
+        if (e.getSource() == addButton && checks()){
             setVisible(false);
         }
 
@@ -104,10 +167,7 @@ public class AddComponentDialog extends JDialog implements ActionListener {
 
     @SuppressWarnings("unchecked,ConstantConditions")
     public <T extends NetworkComponent> T getComponent() throws IOException {
-        if (Objects.equals(priceTextField.getText(), "Vul price in")){
-            return (T) new Webserver(null,0,0,null,null);
-        }
-        else {
+        if (checks()){
             switch ((String) componentList.getSelectedItem()) {
                 case "webserver":
                     return (T) new Webserver(nameTextField.getText(), Integer.parseInt(availTextField.getText()),Integer.parseInt(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
@@ -118,6 +178,9 @@ public class AddComponentDialog extends JDialog implements ActionListener {
                 default:
                     throw new IllegalArgumentException();
             }
+        }
+        else {
+            return null;
         }
 
     }

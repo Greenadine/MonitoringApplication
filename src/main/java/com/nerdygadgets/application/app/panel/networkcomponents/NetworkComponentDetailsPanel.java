@@ -181,27 +181,40 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         NetworkComponent componentDialoog = null;
         try
         {
-            componentDialoog = editNetworkComponentDialog.getComponent();
+            if(editNetworkComponentDialog.getComponent() == null){
+                System.out.println("object is leeg");
+            }
+            else {
+                try
+                {
+                    componentDialoog = editNetworkComponentDialog.getComponent();
+                } catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+
+
+
+                try {
+                    switch (componentDialoog.getType()) {
+                        case DATABASE:
+                            EditDataFromDatabase.editComponent(new Database(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
+                            break;
+                        case FIREWALL:
+                            EditDataFromDatabase.editComponent(new Firewall(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
+                            break;
+                        case WEBSERVER:
+                            EditDataFromDatabase.editComponent(new Webserver(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
+                    }
+                } catch (IOException ex) {
+                    Logger.error(ex, "Failed to edit component in database.");
+                }
+            }
         } catch (IOException e)
         {
             throw new RuntimeException(e);
         }
 
-
-        try {
-            switch (componentDialoog.getType()) {
-                case DATABASE:
-                    EditDataFromDatabase.editComponent(new Database(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-                    break;
-                case FIREWALL:
-                    EditDataFromDatabase.editComponent(new Firewall(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-                    break;
-                case WEBSERVER:
-                    EditDataFromDatabase.editComponent(new Webserver(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-            }
-        } catch (IOException ex) {
-            Logger.error(ex, "Failed to edit component in database.");
-        }
 
     }
 

@@ -32,7 +32,6 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
         setLayout(new GridLayout(9,1));
         setSize(200,300);
         setTitle("Add Network Component");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JLabel name = new JLabel("Name");
         add(name);
@@ -89,24 +88,90 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
         setVisible(true);
     }
 
+    public boolean checks(){
+        // Create default border
+        nameTextField.setBorder(BorderFactory.createEmptyBorder());
+        ipTextField.setBorder(BorderFactory.createEmptyBorder());
+        availTextField.setBorder(BorderFactory.createEmptyBorder());
+        priceTextField.setBorder(BorderFactory.createEmptyBorder());
+        subnetTextField.setBorder(BorderFactory.createEmptyBorder());
+
+        boolean check =true;
+
+        if (nameTextField.getText().isEmpty()){
+            nameTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+
+        }
+        if (ipTextField.getText().isEmpty()){
+            ipTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+
+        if (priceTextField.getText().isEmpty()){
+            priceTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        else {
+            try
+            {
+                Double.parseDouble(priceTextField.getText());
+            }
+            catch (NumberFormatException e)
+            {
+                priceTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+                check = false;
+            }
+        }
+        if (subnetTextField.getText().isEmpty()){
+            subnetTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        if (availTextField.getText().isEmpty()){
+            availTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+            check = false;
+        }
+        else
+        {
+            try
+            {
+                Double.parseDouble(availTextField.getText());
+            } catch (NumberFormatException e)
+            {
+                availTextField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+                check = false;
+            }
+        }
+        return check;
+    }
+
     @SuppressWarnings("unchecked,ConstantConditions")
     public <T extends NetworkComponent> T getComponent() throws IOException
     {
-        switch ((String) componentList.getSelectedItem()) {
-            case "webserver":
-                return (T) new Webserver(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
-            case "database":
-                return (T) new Database(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
-            case "firewall":
-                return (T) new Firewall(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
-            default:
-                throw new IllegalArgumentException();
+        if (checks()){
+            switch ((String) componentList.getSelectedItem()) {
+                case "webserver":
+                    return (T) new Webserver(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
+                case "database":
+                    return (T) new Database(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
+                case "firewall":
+                    return (T) new Firewall(nameTextField.getText(), Double.parseDouble(availTextField.getText()),Double.parseDouble(priceTextField.getText()), ipTextField.getText(), subnetTextField.getText());
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
+        else {
+            return null;
+        }
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addButton){
+        if (e.getSource() == addButton && checks()){
+            setVisible(false);
+        }
+        else if (e.getSource() == cancel){
             setVisible(false);
         }
 
