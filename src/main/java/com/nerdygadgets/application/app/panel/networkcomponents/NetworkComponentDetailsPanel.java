@@ -214,6 +214,8 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         {
             throw new RuntimeException(e);
         }
+        parentScreen.onClose();
+        parentScreen.onOpen();
 
 
     }

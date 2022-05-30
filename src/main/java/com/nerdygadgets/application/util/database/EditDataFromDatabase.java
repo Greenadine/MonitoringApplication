@@ -17,6 +17,7 @@ public final class EditDataFromDatabase {
             type = "database1";
         }
 
+
         //type = "webserver";
 
         try {
@@ -35,6 +36,7 @@ public final class EditDataFromDatabase {
 
             preparedStmt.execute();
             connection.close();
+            System.out.println("test editcomponent");
         } catch (Exception e){
             e.printStackTrace();
         }
