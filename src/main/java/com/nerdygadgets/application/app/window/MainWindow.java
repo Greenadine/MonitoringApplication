@@ -19,9 +19,8 @@ public class MainWindow extends ApplicationWindow {
 
         // Create and register screens
         registerScreen("home", new HomeScreen(this));
-        registerScreen("network-configurations", new NetworkConfigurationsScreen(this));
-        registerScreen("view-network-configuration", new ViewNetworkConfigurationScreen(this));
-        registerScreen("create-network-configuration", new CreateNetworkConfigurationScreen(this));
+        registerScreen("network-configurations-menu", new NetworkConfigurationsMenuScreen(this));
+        registerScreen("network-configuration", new NetworkConfigurationScreen(this));
         registerScreen("view-network-components", new ViewNetworkComponentsScreen(this));
         registerScreen("network-monitor", new NetworkMonitorScreen(this));
 

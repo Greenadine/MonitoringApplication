@@ -44,21 +44,24 @@ public class FirewallPanel extends ApplicationPanel {
 
     private void addFirewallContent() {
         JPanel firewallContentWrapper = new JPanel();
-        firewallContentWrapper.setBorder(new MatteBorder(0,0,2,0,Colors.MAIN_BACKGROUND_ACCENT));
+        firewallContentWrapper.setBorder(new MatteBorder(-10,0,2,0,Colors.MAIN_BACKGROUND_ACCENT));
         firewallContentPanel = new JPanel();
-        firewallContentPanel.setBorder(new EmptyBorder(0,0,-10,0));
 
         firewallContentWrapper.add(firewallContentPanel);
         this.add(firewallContentWrapper);
-
-        JLabel firewallName = new JLabel("");
-        firewallContentPanel.add(firewallName);
     }
 
     public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final NetworkComponent firewall) {
         firewallContentPanel.add(new NetworkConfigurationComponent(this, configuration, firewall));
         this.firewall = firewall;
 
+        firewallContentPanel.revalidate();
+        firewallContentPanel.repaint();
+    }
+
+    public void clear() {
+        this.firewall = null;
+        firewallContentPanel.removeAll();
         firewallContentPanel.revalidate();
         firewallContentPanel.repaint();
     }
@@ -74,6 +77,7 @@ public class FirewallPanel extends ApplicationPanel {
 
     @Override
     public void onHideImpl() {
+        this.firewall = null;
         firewallContentPanel.removeAll();
     }
 }

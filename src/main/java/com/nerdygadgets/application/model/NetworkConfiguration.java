@@ -58,11 +58,12 @@ public class NetworkConfiguration {
      * @param firewall The firewall.
      */
     public void setFirewall(@Nullable final NetworkComponent firewall) {
+        this.firewall = firewall;
+
         if (firewall != null) {
             if (firewall.getType() != ComponentType.FIREWALL) {
                 throw new IllegalArgumentException("Provided component is not a firewall.");
             }
-            this.firewall = firewall;
         }
     }
 
@@ -138,12 +139,10 @@ public class NetworkConfiguration {
      * @return The availability of the entire {@code NetworkConfiguration}.
      */
     public double getAvailability() {
-        if (firewall == null && databases.isEmpty() && webservers.isEmpty()) {
+        if (firewall == null || databases.isEmpty() || webservers.isEmpty()) {
             return 0;
         }
-        return (firewall != null ? firewall.getAvailability() : 0)
-                * (databases.isEmpty() ? 0 : databases.getJointAvailability())
-                * (webservers.isEmpty() ? 0 : webservers.getJointAvailability());
+        return firewall.getAvailability() * databases.getJointAvailability() * webservers.getJointAvailability();
     }
 
     /**

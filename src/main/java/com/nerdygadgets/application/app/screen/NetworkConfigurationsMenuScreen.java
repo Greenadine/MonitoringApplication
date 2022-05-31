@@ -13,9 +13,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-public class NetworkConfigurationsScreen extends ApplicationScreen {
+public class NetworkConfigurationsMenuScreen extends ApplicationScreen {
 
-    public NetworkConfigurationsScreen(@NotNull final ApplicationWindow window) {
+    public NetworkConfigurationsMenuScreen(@NotNull final ApplicationWindow window) {
         super(window);
 
         // Configure screen
@@ -65,9 +65,8 @@ public class NetworkConfigurationsScreen extends ApplicationScreen {
             final File selected = chooser.getSelectedFile();
             NetworkConfiguration configuration = NetworkConfigurationUtils.deserialize(selected);
 
-            // Display configuration on screen, and open screen
-            ((ViewNetworkConfigurationScreen) window.getScreen("view-network-configuration")).setConfiguration(configuration);
-            window.openScreen("view-network-configuration");
+            ((NetworkConfigurationScreen) window.getScreen("network-configuration")).setConfiguration(configuration);
+            window.openScreen("network-configuration");
         }
     }
 
@@ -77,7 +76,9 @@ public class NetworkConfigurationsScreen extends ApplicationScreen {
      * @param event The {@link ActionEvent}.
      */
     private void actionCreateNewConfiguration(ActionEvent event) {
-        window.openScreen("create-network-configuration");
+        // Pass an empty network configuration to the screen, and open the screen
+        ((NetworkConfigurationScreen) window.getScreen("network-configuration")).setConfiguration(new NetworkConfiguration());
+        window.openScreen("network-configuration");
     }
 
     @Override

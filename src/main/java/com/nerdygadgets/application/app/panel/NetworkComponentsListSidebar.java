@@ -3,6 +3,7 @@ package com.nerdygadgets.application.app.panel;
 import com.nerdygadgets.application.app.component.NetworkComponentSidebarEntry;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.Colors;
@@ -15,24 +16,16 @@ import java.awt.*;
 
 public class NetworkComponentsListSidebar extends ApplicationPanel {
 
+    private final NetworkConfigurationScreen configurationScreen;
+
     private final JPanel databaseList;
     private final JPanel webserversList;
     private final JPanel firewallList;
-    private final NetworkConfiguration configuration;
 
-    private final FirewallPanel configurationFirewall;
-    private final ConfigurationComponentsList configurationDatabases;
-    private final ConfigurationComponentsList configurationWebservers;
-
-    public NetworkComponentsListSidebar(@NotNull ApplicationScreen parentScreen, @NotNull NetworkConfiguration configuration,
-                                        @NotNull FirewallPanel configurationFirewall, @NotNull ConfigurationComponentsList configurationDatabases,
-                                        @NotNull ConfigurationComponentsList configurationWebservers) {
+    public NetworkComponentsListSidebar(@NotNull NetworkConfigurationScreen parentScreen) {
         super(parentScreen);
 
-        this.configuration = configuration;
-        this.configurationFirewall = configurationFirewall;
-        this.configurationDatabases = configurationDatabases;
-        this.configurationWebservers = configurationWebservers;
+        this.configurationScreen = parentScreen;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -54,6 +47,7 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
         JScrollPane databaseListScrollPane = new JScrollPane(databaseList);
         databaseListScrollPane.setPreferredSize(new Dimension(100, 50));
         databaseListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        databaseListScrollPane.getVerticalScrollBar().setUnitIncrement(15);
         this.add(databaseListScrollPane);
 
         // Create and add webservers list
@@ -72,6 +66,7 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
         JScrollPane webserverListScrollPane = new JScrollPane(webserversList);
         webserverListScrollPane.setPreferredSize(new Dimension(100, 50));
         webserverListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        webserverListScrollPane.getVerticalScrollBar().setUnitIncrement(15);
         this.add(webserverListScrollPane);
 
         // Create and add firewalls list
@@ -90,40 +85,41 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
         JScrollPane firewallListScrollPane = new JScrollPane(firewallList);
         firewallListScrollPane.setPreferredSize(new Dimension(100, 50));
         firewallListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        firewallListScrollPane.getVerticalScrollBar().setUnitIncrement(15);
         this.add(firewallListScrollPane);
     }
 
     public void getDatabases() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent database : databaseConnection.getDatabaseFromDatabase()) {
-            databaseList.add(new NetworkComponentSidebarEntry(this, database, configuration));
+            databaseList.add(new NetworkComponentSidebarEntry(this, database, configurationScreen.getConfiguration()));
         }
     }
 
     public void getWebservers() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent webserver : databaseConnection.getWebserverFromDatabase()) {
-            webserversList.add(new NetworkComponentSidebarEntry(this, webserver, configuration));
+            webserversList.add(new NetworkComponentSidebarEntry(this, webserver, configurationScreen.getConfiguration()));
         }
     }
 
     public void getFirewalls() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent firewall : databaseConnection.getFirewallFromDatabase()) {
-            firewallList.add(new NetworkComponentSidebarEntry(this, firewall, configuration));
+            firewallList.add(new NetworkComponentSidebarEntry(this, firewall, configurationScreen.getConfiguration()));
         }
     }
 
     public FirewallPanel getConfigurationFirewall() {
-        return configurationFirewall;
+        return configurationScreen.getFirewallPanel();
     }
 
     public ConfigurationComponentsList getConfigurationDatabases() {
-        return configurationDatabases;
+        return configurationScreen.getDatabaseList();
     }
 
     public ConfigurationComponentsList getConfigurationWebservers() {
-        return configurationWebservers;
+        return configurationScreen.getWebserverList();
     }
 
     @Override

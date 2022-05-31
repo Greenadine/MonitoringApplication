@@ -2,6 +2,7 @@ package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.util.Colors;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,11 +12,15 @@ import java.awt.*;
 
 public class ConfigurationDataPanel extends ApplicationPanel {
 
+    private final NetworkConfigurationScreen configurationScreen;
+
     private JLabel availabilityValueLabel;
     private JLabel costsValueLabel;
 
-    public ConfigurationDataPanel(@NotNull ApplicationScreen parentScreen) {
+    public ConfigurationDataPanel(@NotNull NetworkConfigurationScreen parentScreen) {
         super(parentScreen);
+
+        this.configurationScreen = parentScreen;
 
         this.setLayout(new GridLayout(1, 2));
 
@@ -53,6 +58,11 @@ public class ConfigurationDataPanel extends ApplicationPanel {
 
     public void setPriceValue(final double price) {
         costsValueLabel.setText("Total costs: " + String.format("\u20AC%.2f", price));
+    }
+
+    public void update() {
+        setAvailabilityValue(configurationScreen.getConfiguration().getAvailability());
+        setPriceValue(configurationScreen.getConfiguration().getPrice());
     }
 
     @Override

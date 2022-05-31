@@ -1,19 +1,20 @@
 package com.nerdygadgets.application.app.component;
 
-import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.PanelComponent;
 import com.nerdygadgets.application.app.panel.NetworkComponentsListSidebar;
+import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class NetworkComponentSidebarEntry extends PanelComponent {
+
+    private final NetworkConfigurationScreen configurationScreen;
 
     private final NetworkComponentsListSidebar sidebar;
 
@@ -23,6 +24,7 @@ public class NetworkComponentSidebarEntry extends PanelComponent {
     public NetworkComponentSidebarEntry(@NotNull NetworkComponentsListSidebar parentPanel, @NotNull final NetworkComponent component, @NotNull final NetworkConfiguration configuration) {
         super(parentPanel);
 
+        this.configurationScreen = (NetworkConfigurationScreen) parentPanel.parentScreen;
         this.sidebar = parentPanel;
         this.configuration = configuration;
 
@@ -33,10 +35,9 @@ public class NetworkComponentSidebarEntry extends PanelComponent {
 
         // Create button
         WrappedJButton button = new WrappedJButton(component.getName(), SwingUtils.getIconFromResource("add.png"));
-//        button.setPreferredSize(new Dimension(290, 35));
+        button.getButton().setPreferredSize(new Dimension(250, 35));
         button.getButton().addActionListener(this::actionAddToConfiguration);
         button.getButton().setBackground(Colors.MAIN_BACKGROUND_ACCENT);
-        button.getButton().setHorizontalAlignment(SwingConstants.RIGHT);
         this.add(button);
 
         this.setMaximumSize(this.getPreferredSize());
@@ -58,6 +59,8 @@ public class NetworkComponentSidebarEntry extends PanelComponent {
                 sidebar.getConfigurationFirewall().setFirewall(configuration, component);
                 break;
         }
+
+        configurationScreen.setConfiguration(configuration);
     }
     @Override
     public void onShow() {

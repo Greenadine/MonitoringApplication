@@ -3,6 +3,7 @@ package com.nerdygadgets.application.app.panel;
 import com.nerdygadgets.application.app.component.NetworkConfigurationComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkComponentList;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.NetworkComponent;
@@ -17,14 +18,17 @@ import java.util.ArrayList;
 
 public class ConfigurationComponentsList extends ApplicationPanel {
 
+    private final NetworkConfigurationScreen configurationScreen;
+
     private final JPanel componentsListWrapper;
-    private final NetworkConfiguration configuration;
     private final ArrayList<NetworkComponent> components;
 
-    public ConfigurationComponentsList(@NotNull ApplicationScreen parentScreen, @NotNull final String header, @NotNull final NetworkConfiguration configuration) {
+    public ConfigurationComponentsList(@NotNull NetworkConfigurationScreen parentScreen, @NotNull final String header) {
         super(parentScreen);
-        this.configuration = configuration;
+
+        this.configurationScreen = parentScreen;
         this.components = new ArrayList<>();
+
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -52,6 +56,7 @@ public class ConfigurationComponentsList extends ApplicationPanel {
         JScrollPane scrollableList = new JScrollPane(componentsListWrapper);
         scrollableList.setPreferredSize(new Dimension(300, 300));
         scrollableList.setBorder(new MatteBorder(0,2,0,2, Colors.MAIN_BACKGROUND_ACCENT));
+        scrollableList.getVerticalScrollBar().setUnitIncrement(15);
         scrollableList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         grid2.add(scrollableList);
 
@@ -63,16 +68,21 @@ public class ConfigurationComponentsList extends ApplicationPanel {
         return componentsListWrapper;
     }
 
-    public void setComponentList(@NotNull NetworkConfiguration configuration, @NotNull NetworkComponentList componentList) {
+    public void setComponentList(@NotNull NetworkComponentList componentList) {
+        componentsListWrapper.removeAll(); // First clear all current components
+
         if (!componentList.isEmpty()) {
             for (NetworkComponent component : componentList.getComponents()) {
-                componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
+                componentsListWrapper.add(new NetworkConfigurationComponent(this, configurationScreen.getConfiguration(), component));
             }
         }
+
+        componentsListWrapper.revalidate();
+        componentsListWrapper.repaint();
     }
 
     public void addComponent(@NotNull NetworkComponent component) {
-        componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
+        componentsListWrapper.add(new NetworkConfigurationComponent(this, configurationScreen.getConfiguration(), component));
         components.add(component);
 
         componentsListWrapper.revalidate();

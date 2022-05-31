@@ -27,7 +27,7 @@ public class HomeScreen extends ApplicationScreen {
         this.add(titleLabel);
         SwingUtils.addVerticalSpacer(this, 15);
 
-        SwingUtils.addButton(this, "Network Configurations", null, 350, 50, this::actionOpenNetworkConfigurations);
+        SwingUtils.addButton(this, "Network Configurations", null, 350, 50, this::actionOpenNetworkConfigurationsMenu);
         SwingUtils.addVerticalSpacer(this, 10);
 
         SwingUtils.addButton(this, "Network Components", null, 350, 50, this::actionOpenViewNetworkComponents);
@@ -53,8 +53,8 @@ public class HomeScreen extends ApplicationScreen {
      *
      * @param event The {@link ActionEvent}.
      */
-    private void actionOpenNetworkConfigurations(final ActionEvent event) {
-        window.openScreen("network-configurations");
+    private void actionOpenNetworkConfigurationsMenu(final ActionEvent event) {
+        window.openScreen("network-configurations-menu");
     }
 
     /**

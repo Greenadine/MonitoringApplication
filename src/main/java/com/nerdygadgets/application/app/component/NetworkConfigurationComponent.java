@@ -2,7 +2,7 @@ package com.nerdygadgets.application.app.component;
 
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.PanelComponent;
-import com.nerdygadgets.application.app.screen.ViewNetworkConfigurationScreen;
+import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
@@ -60,6 +60,7 @@ public class NetworkConfigurationComponent extends PanelComponent {
         switch (component.getType()) {
             case FIREWALL:
                 configuration.setFirewall(null);
+                break;
             case DATABASE:
                 configuration.removeDatabase(component);
                 break;
@@ -67,7 +68,7 @@ public class NetworkConfigurationComponent extends PanelComponent {
                 configuration.removeWebserver(component);
         }
 
-        ((ViewNetworkConfigurationScreen) parentPanel.parentScreen).setConfiguration(configuration);
+        ((NetworkConfigurationScreen) parentPanel.parentScreen).setConfiguration(configuration);
     }
 
     @Override
