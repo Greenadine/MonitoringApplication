@@ -59,8 +59,8 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
         centerWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
-        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers");
-        databasesComponentsList = new ConfigurationComponentsList(this, "Databases");
+        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers", configuration);
+        databasesComponentsList = new ConfigurationComponentsList(this, "Databases", configuration);
         componentWrapper.add(databasesComponentsList);
         componentWrapper.add(webserversComponentsList);
 

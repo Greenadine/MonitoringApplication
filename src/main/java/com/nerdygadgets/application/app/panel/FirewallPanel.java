@@ -17,6 +17,7 @@ import java.awt.*;
 public class FirewallPanel extends ApplicationPanel {
 
     private JPanel firewallContentPanel;
+    private NetworkComponent firewall;
 
     public FirewallPanel(@NotNull ApplicationScreen parentScreen) {
         super(parentScreen);
@@ -56,6 +57,11 @@ public class FirewallPanel extends ApplicationPanel {
 
     public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final NetworkComponent firewall) {
         firewallContentPanel.add(new NetworkConfigurationComponent(this, configuration, firewall));
+        this.firewall = firewall;
+    }
+
+    public NetworkComponent getFirewall(){
+        return firewall;
     }
 
     @Override

@@ -23,7 +23,6 @@ public class MainWindow extends ApplicationWindow {
         registerScreen("view-network-configuration", new ViewNetworkConfigurationScreen(this));
         registerScreen("create-network-configuration", new CreateNetworkConfigurationScreen(this));
         registerScreen("view-network-components", new ViewNetworkComponentsScreen(this));
-        registerScreen("add-network-component", new AddNetworkComponentScreen(this));
         registerScreen("network-monitor", new NetworkMonitorScreen(this));
 
         // Open home screen and make window visible

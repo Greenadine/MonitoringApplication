@@ -3,8 +3,11 @@ package com.nerdygadgets.application.app.screen;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
+import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.NetworkConfigurationUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -12,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 /**
  * A {@link JPanel} for creating new {@link NetworkConfiguration}s.
@@ -26,9 +30,11 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
     private final FirewallPanel firewallPanel;
     private final ConfigurationComponentsList databasesComponentsList;
     private final ConfigurationComponentsList webserversComponentsList;
+    private final NetworkConfiguration configuration;
 
     public CreateNetworkConfigurationScreen(@NotNull final ApplicationWindow window) {
         super(window);
+        this.configuration = new NetworkConfiguration();
 
         // Configure screen
         this.setLayout(new BorderLayout());
@@ -61,8 +67,8 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         contentWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
-        databasesComponentsList = new ConfigurationComponentsList(this, "Databases");
-        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers");
+        databasesComponentsList = new ConfigurationComponentsList(this, "Databases", configuration);
+        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers", configuration);
         componentWrapper.add(databasesComponentsList);
         componentWrapper.add(webserversComponentsList);
 
@@ -92,6 +98,7 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
         // Create save button
         JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(this::actionSave);
         buttonsPanel.add(saveButton);
     }
 
@@ -99,6 +106,43 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
 
     private void actionReturn(ActionEvent event) {
         window.openScreen("network-configurations");
+    }
+
+    private void actionSave(ActionEvent event) {
+        if (firewallPanel.getFirewall() == null) {
+            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set an firewall for the configuration");
+            return;
+        }
+
+        if (databasesComponentsList.getComponentsList().isEmpty()) {
+            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set at least one database");
+            return;
+        }
+
+        if (webserversComponentsList.getComponentsList().isEmpty()) {
+            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set at least one webserver");
+            return;
+        }
+
+        configuration.setFirewall(firewallPanel.getFirewall());
+        for (NetworkComponent database: databasesComponentsList.getComponentsList()){
+            configuration.addDatabase(database);
+        }
+
+        for (NetworkComponent webserver: webserversComponentsList.getComponentsList()){
+            configuration.addDatabase(webserver);
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select a saving location");
+
+        int userSelection = fileChooser.showSaveDialog(window);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            NetworkConfigurationUtils.serialize(configuration, fileToSave);
+            System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+        }
     }
 
     @Override

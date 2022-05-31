@@ -3,6 +3,8 @@ package com.nerdygadgets.application.util;
 import com.google.common.primitives.Longs;
 import com.nerdygadgets.application.Main;
 import com.nerdygadgets.application.model.NetworkComponent;
+import com.nerdygadgets.application.util.database.ConnectionToDatabase;
+import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,9 +19,7 @@ public final class Utils {
      * Export a resource embedded into the jar file to the local file path.
      *
      * @param resourceName ie.: "/SmartLibrary.dll"
-     *
      * @return The path to the exported resource.
-     *
      */
     @SuppressWarnings("ConstantConditions")
     static public String exportResource(String resourceName) throws Exception {
@@ -29,7 +29,7 @@ public final class Utils {
 
         try {
             stream = Main.class.getResourceAsStream(resourceName); //note that each / is a directory down in the "jar tree" been the jar the root of the tree
-            if(stream == null) {
+            if (stream == null) {
                 throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
             }
 
@@ -52,7 +52,6 @@ public final class Utils {
      * Returns an {@code array} containing the IDs of the provided {@code Collection} of {@link NetworkComponent}s.
      *
      * @param networkComponents The {@code Collection} containing the {@code NetworkComponent}s.
-     *
      * @return An {@code array} containing the IDs of the provided {@code Collection} of {@code NetworkComponent}s.
      */
     public static long[] getComponentIds(Collection<? extends NetworkComponent> networkComponents) {
@@ -69,14 +68,13 @@ public final class Utils {
      * Returns an {@code ArrayList} containing the databases with the provided IDs.
      *
      * @param ids The {@code array} of IDs.
-     *
      * @return An {@code ArrayList} containing the databases with the provided IDs.
      */
     public static ArrayList<NetworkComponent> getDatabasesById(long[] ids) {
         ArrayList<NetworkComponent> databases = new ArrayList<>();
 
         for (long id : ids) {
-            // TODO get databases by ID from database
+            databases.add(new GetDataFromDatabase().getDatabase(id));
         }
 
         return databases;
@@ -86,14 +84,13 @@ public final class Utils {
      * Returns an {@code ArrayList} containing the webservers with the provided IDs.
      *
      * @param ids The {@code array} of IDs.
-     *
      * @return An {@code ArrayList} containing the {@code Webserver}s with the provided IDs.
      */
     public static ArrayList<NetworkComponent> getWebserversById(long[] ids) {
         ArrayList<NetworkComponent> webservers = new ArrayList<>();
 
         for (long id : ids) {
-            // TODO get webservers by ID from database
+            webservers.add(new GetDataFromDatabase().getWebserver(id));
         }
 
         return webservers;

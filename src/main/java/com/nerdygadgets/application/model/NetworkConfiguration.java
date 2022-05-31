@@ -16,6 +16,12 @@ public class NetworkConfiguration {
     private final NetworkComponentList databases;
     private final NetworkComponentList webservers;
 
+    public NetworkConfiguration(){
+        this.name = "";
+        this.databases = new NetworkComponentList();
+        this.webservers = new NetworkComponentList();
+    }
+
     public NetworkConfiguration(@NotNull final String name, @NotNull final NetworkComponent firewall) {
         this(name, firewall, new NetworkComponentList(), new NetworkComponentList());
     }

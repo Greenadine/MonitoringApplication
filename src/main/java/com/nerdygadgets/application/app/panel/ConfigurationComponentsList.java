@@ -13,14 +13,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ConfigurationComponentsList extends ApplicationPanel {
 
     private final JPanel componentsListWrapper;
+    private final NetworkConfiguration configuration;
+    private final ArrayList<NetworkComponent> components;
 
-    public ConfigurationComponentsList(@NotNull ApplicationScreen parentScreen, @NotNull final String header) {
+    public ConfigurationComponentsList(@NotNull ApplicationScreen parentScreen, @NotNull final String header, @NotNull final NetworkConfiguration configuration) {
         super(parentScreen);
-
+        this.configuration = configuration;
+        this.components = new ArrayList<>();
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -65,6 +69,15 @@ public class ConfigurationComponentsList extends ApplicationPanel {
                 componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
             }
         }
+    }
+
+    public void addComponent(@NotNull NetworkComponent component) {
+        componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
+        components.add(component);
+    }
+
+    public ArrayList<NetworkComponent> getComponentsList() {
+        return components;
     }
 
     @Override
