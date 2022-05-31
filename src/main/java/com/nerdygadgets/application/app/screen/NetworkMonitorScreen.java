@@ -2,6 +2,7 @@ package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.app.panel.NewSystemMonitorPanel;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
 import com.nerdygadgets.application.app.window.MainWindow;
@@ -32,7 +33,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         this.add(monitorPanels, BorderLayout.CENTER);
 
         monitorPanels.add(new SystemMonitorPanel(this, "This System"));
-
+        monitorPanels.add(new NewSystemMonitorPanel(this, "Test"));
     }
 
     public void startMonitoringSystems() {
@@ -40,6 +41,8 @@ public class NetworkMonitorScreen extends ApplicationScreen {
             if (panel instanceof SystemMonitorPanel) {
                 ((SystemMonitorPanel) panel).startMonitoringSystemStatus();
             }
+
+
         }
     }
 
