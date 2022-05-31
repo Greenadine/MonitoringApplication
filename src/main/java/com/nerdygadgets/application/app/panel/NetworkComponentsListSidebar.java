@@ -2,8 +2,10 @@ package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.model.component.Database;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
+import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,6 +16,7 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
     private final JScrollPane databasesList;
     private final JScrollPane webserversList;
     private final JScrollPane firewallsList;
+    private final JPanel databasesWrapper;
 
     public NetworkComponentsListSidebar(@NotNull ApplicationScreen parentScreen) {
         super(parentScreen);
@@ -25,15 +28,17 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
         // Create and add databases list
         JPanel databasePanel = new JPanel();
         databasePanel.setBackground(Colors.MAIN_BACKGROUND);
-
         databasePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         JLabel databasesLabel = new JLabel("Databases");
         databasesLabel.setFont(Fonts.MAIN_SIDEBAR_HEADER);
         databasePanel.add(databasesLabel);
         this.add(databasePanel);
 
-        JPanel databasesWrapper = new JPanel();
+        databasesWrapper = new JPanel();
         databasesWrapper.setLayout(new BoxLayout(databasesWrapper, BoxLayout.Y_AXIS));
+
+        getDataOutOfDatabase();
+
         databasesList = new JScrollPane(databasesWrapper);
         databasesList.setPreferredSize(new Dimension(100, 50));
         databasesList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -71,6 +76,14 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
         firewallsList.setPreferredSize(new Dimension(100, 50));
         firewallsList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(firewallsList);
+    }
+
+    public void getDataOutOfDatabase() {
+        GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
+        for (Database database: databaseConnection.getDatabaseFromDatabase()) {
+            JLabel databaseName = new JLabel(database.getName());
+            databasesWrapper.add(databaseName);
+        }
     }
 
     @Override
