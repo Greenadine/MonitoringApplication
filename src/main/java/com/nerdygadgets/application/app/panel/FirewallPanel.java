@@ -4,7 +4,7 @@ import com.nerdygadgets.application.app.component.NetworkConfigurationComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.Firewall;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,7 @@ public class FirewallPanel extends ApplicationPanel {
         firewallContentPanel.add(firewallName);
     }
 
-    public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final Firewall firewall) {
+    public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final NetworkComponent firewall) {
         firewallContentPanel.add(new NetworkConfigurationComponent(this, configuration, firewall));
     }
 

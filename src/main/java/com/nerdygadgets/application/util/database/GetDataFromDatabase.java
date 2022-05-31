@@ -1,8 +1,7 @@
 package com.nerdygadgets.application.util.database;
 
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.model.ComponentType;
+import com.nerdygadgets.application.model.NetworkComponent;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,9 +18,9 @@ public class GetDataFromDatabase
 
 
 
-    public ArrayList<Firewall> getFirewallFromDatabase()
+    public ArrayList<NetworkComponent> getFirewallFromDatabase()
     {
-        ArrayList<Firewall> firewallArrayList = new ArrayList<>();
+        ArrayList<NetworkComponent> firewallArrayList = new ArrayList<>();
         try
         {
             Connection connection = ConnectionToDatabase.DatabaseConnection();
@@ -39,7 +38,7 @@ public class GetDataFromDatabase
                 ip = resultSet.getString("ip");
                 subnetmask = resultSet.getString("subnetmask");
 
-                Firewall firewall = new Firewall(id, name, availability, price, ip, subnetmask);
+                NetworkComponent firewall = new NetworkComponent(id, ComponentType.FIREWALL, name, availability, price, ip, subnetmask);
                 firewallArrayList.add(firewall);
             }
 
@@ -50,9 +49,9 @@ public class GetDataFromDatabase
         return firewallArrayList;
     }
 
-    public ArrayList<Webserver> getWebserverFromDatabase()
+    public ArrayList<NetworkComponent> getWebserverFromDatabase()
     {
-        ArrayList<Webserver> webserverArrayList = new ArrayList<>();
+        ArrayList<NetworkComponent> webserverArrayList = new ArrayList<>();
         try
         {
             Connection connection = ConnectionToDatabase.DatabaseConnection();
@@ -70,7 +69,7 @@ public class GetDataFromDatabase
                 ip = resultSet.getString("ip");
                 subnetmask = resultSet.getString("subnetmask");
 
-                Webserver webserver = new Webserver(id, name, availability, price, ip, subnetmask);
+                NetworkComponent webserver = new NetworkComponent(id, ComponentType.WEBSERVER, name, availability, price, ip, subnetmask);
                 webserverArrayList.add(webserver);
             }
 
@@ -81,9 +80,9 @@ public class GetDataFromDatabase
         return webserverArrayList;
     }
 
-    public ArrayList<Database> getDatabaseFromDatabase()
+    public ArrayList<NetworkComponent> getDatabaseFromDatabase()
     {
-        ArrayList<Database> databaseArrayList = new ArrayList<>();
+        ArrayList<NetworkComponent> databaseArrayList = new ArrayList<>();
         try
         {
             Connection connection = ConnectionToDatabase.DatabaseConnection();;
@@ -100,7 +99,7 @@ public class GetDataFromDatabase
                 ip = resultSet.getString("ip");
                 subnetmask = resultSet.getString("subnetmask");
 
-                Database database = new Database(id, name, availability, price, ip, subnetmask);
+                NetworkComponent database = new NetworkComponent(id, ComponentType.DATABASE, name, availability, price, ip, subnetmask);
                 databaseArrayList.add(database);
             }
 

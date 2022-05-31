@@ -4,9 +4,7 @@ import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import org.jetbrains.annotations.NotNull;
 
@@ -128,34 +126,34 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
     }
 
     /**
-     * Populates the {@link Database}s list in the sidebar with the given {@code Collection} of {@code Database}s.
+     * Populates the databases list in the sidebar with the given {@code Collection} of databases.
      *
-     * @param databases A {@code Collection} of {@code Database} to populate the sidebar with.
+     * @param databases A {@code Collection} of databases to populate the sidebar with.
      */
-    public void populateDatabases(Collection<Database> databases) {
-        for (Database database : databases) {
+    public void populateDatabases(Collection<NetworkComponent> databases) {
+        for (NetworkComponent database : databases) {
             // TODO add all databases to sidebar
         }
     }
 
     /**
-     * Populates the {@link Webserver}s list in the sidebar with the given {@code Collection} of {@code Webserver}s.
+     * Populates the webservers list in the sidebar with the given {@code Collection} of webservers.
      *
      * @param webservers A {@code Collection} of {@code Webservers} to populate the sidebar with.
      */
-    public void populateWebservers(Collection<Webserver> webservers) {
-        for (Webserver webserver : webservers) {
+    public void populateWebservers(Collection<NetworkComponent> webservers) {
+        for (NetworkComponent webserver : webservers) {
             // TODO add all webservers to sidebar
         }
     }
 
     /**
-     * Populates the {@link Firewall}s list in the sidebar with the given {@code Collection} of {@code Firewall}s.
+     * Populates the firewall {@link NetworkComponent} list in the sidebar with the given {@code Collection} of firewalls.
      *
-     * @param firewalls A {@code Collection} of {@code Firewall} to populate the sidebar with.
+     * @param firewalls A {@code Collection} of firewall {@code NetworkComponents} to populate the sidebar with.
      */
-    public void populateFirewalls(Collection<Firewall> firewalls) {
-        for (Firewall firewall : firewalls) {
+    public void populateFirewalls(Collection<NetworkComponent> firewalls) {
+        for (NetworkComponent firewall : firewalls) {
             // TODO add all firewalls to sidebar
         }
     }

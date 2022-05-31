@@ -4,12 +4,7 @@ import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
 import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.SwingUtils;
-import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

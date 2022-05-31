@@ -2,9 +2,7 @@ package com.nerdygadgets.application.util;
 
 import com.google.common.primitives.Longs;
 import com.nerdygadgets.application.Main;
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.model.NetworkComponent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,34 +66,34 @@ public final class Utils {
     }
 
     /**
-     * Returns an {@code ArrayList} containing the {@link Database}s with the provided IDs.
+     * Returns an {@code ArrayList} containing the databases with the provided IDs.
      *
      * @param ids The {@code array} of IDs.
      *
-     * @return An {@code ArrayList} containing the {@code Database}s with the provided IDs.
+     * @return An {@code ArrayList} containing the databases with the provided IDs.
      */
-    public static ArrayList<Database> getDatabasesById(long[] ids) {
-        ArrayList<Database> databases = new ArrayList<>();
+    public static ArrayList<NetworkComponent> getDatabasesById(long[] ids) {
+        ArrayList<NetworkComponent> databases = new ArrayList<>();
 
         for (long id : ids) {
-            // TODO get databases by id
+            // TODO get databases by ID from database
         }
 
         return databases;
     }
 
     /**
-     * Returns an {@code ArrayList} containing the {@link Webserver}s with the provided IDs.
+     * Returns an {@code ArrayList} containing the webservers with the provided IDs.
      *
      * @param ids The {@code array} of IDs.
      *
      * @return An {@code ArrayList} containing the {@code Webserver}s with the provided IDs.
      */
-    public static ArrayList<Webserver> getWebserversById(long[] ids) {
-        ArrayList<Webserver> webservers = new ArrayList<>();
+    public static ArrayList<NetworkComponent> getWebserversById(long[] ids) {
+        ArrayList<NetworkComponent> webservers = new ArrayList<>();
 
         for (long id : ids) {
-            // TODO get webservers by id
+            // TODO get webservers by ID from database
         }
 
         return webservers;

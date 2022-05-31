@@ -1,16 +1,15 @@
 package com.nerdygadgets.application.json;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.nerdygadgets.application.model.NetworkComponentList;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.NetworkComponent;
-import com.nerdygadgets.application.model.component.Webserver;
+import com.nerdygadgets.application.model.NetworkComponent;
+import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Utils;
 
 import java.io.IOException;
@@ -26,15 +25,55 @@ public class NetworkConfigurationDeserializer extends StdDeserializer<NetworkCon
         ObjectMapper mapper = (ObjectMapper) p.getCodec();
         JsonNode node = mapper.readTree(p);
 
+        if (!node.has("name")
+                || !node.has("firewall")
+                || !node.has("databases")
+                || !node.has("webservers")) {
+            throw new IOException("This file is not a valid network configuration.");
+        }
+
+        // Check if name is valid
+        if (!node.get("name").isTextual()) {
+            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
+            return null;
+        }
+
         final String name = node.get("name").textValue();
-        final String ip = node.get("ip").textValue();
-        final String subnet = node.get("subnet").textValue();
-        final Firewall firewall = (Firewall) mapper.readValue(node.get("firewall").traverse(mapper), NetworkComponent.class);
+
+        // Check if firewall is valid
+        if (!node.get("firewall").isObject()) {
+            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
+            return null;
+        }
+
+        // Check if firewall is valid
+        NetworkComponent firewall;
+
+        try {
+            firewall = mapper.readValue(node.get("firewall").traverse(mapper), NetworkComponent.class);
+        } catch (DatabindException ex) {
+            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
+            return null;
+        }
+
+        // Check if array of database IDs is valid
+        // TODO maybe also check if array is an array of longs
+        if (!node.get("databases").isArray()) {
+            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
+            return null;
+        }
 
         final long[] databaseIds = mapper.readValue(node.get("databases").traverse(), long[].class);
-        final NetworkComponentList<Database> databases = new NetworkComponentList<>(Utils.getDatabasesById(databaseIds));
+        NetworkComponentList databases = new NetworkComponentList(Utils.getDatabasesById(databaseIds));
+
+        // Check if array of webserver IDs is valid
+        if (!node.get("webservers").isArray()) {
+            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
+            return null;
+        }
+
         final long[] webserverIds = mapper.readValue(node.get("webservers").traverse(), long[].class);
-        final NetworkComponentList<Webserver> webservers = new NetworkComponentList<>(Utils.getWebserversById(webserverIds));
+        NetworkComponentList webservers = new NetworkComponentList(Utils.getWebserversById(webserverIds));
 
         return new NetworkConfiguration(name, firewall, databases, webservers);
     }

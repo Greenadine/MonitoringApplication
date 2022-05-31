@@ -1,6 +1,5 @@
 package com.nerdygadgets.application.model;
 
-import com.nerdygadgets.application.model.component.NetworkComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -9,19 +8,17 @@ import java.util.Optional;
 /**
  * A {@code NetworkComponentList} is an extension upon the {@link ArrayList} that adds some functionality to easily retrieve information of a collection of {@link NetworkComponent}s of the same type.
  *
- * @param <T> The type of {@code NetworkComponent} contained within the {@code NetworkComponentList}.
- *
  * @author Kevin Zuman
  */
-public class NetworkComponentList<T extends NetworkComponent> {
+public class NetworkComponentList {
 
-    private final ArrayList<T> networkComponents;
+    private final ArrayList<NetworkComponent> networkComponents;
 
     public NetworkComponentList() {
         this(new ArrayList<>());
     }
 
-    public NetworkComponentList(final ArrayList<T> networkComponents) {
+    public NetworkComponentList(final ArrayList<NetworkComponent> networkComponents) {
         this.networkComponents = networkComponents;
     }
 
@@ -30,7 +27,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
      *
      * @return an {@link ArrayList} containing all the {@link NetworkComponent}s within the list.
      */
-    public ArrayList<T> getComponents() {
+    public ArrayList<NetworkComponent> getComponents() {
         return networkComponents;
     }
 
@@ -48,7 +45,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
      *
      * @param networkComponent the {@link NetworkComponent} to add.
      */
-    public void addComponent(@NotNull final T networkComponent) {
+    public void addComponent(@NotNull final NetworkComponent networkComponent) {
         this.networkComponents.add(networkComponent);
     }
 
@@ -57,7 +54,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
      *
      * @param networkComponent The {@code NetworkComponent}.
      */
-    public void removeComponent(@NotNull final T networkComponent) {
+    public void removeComponent(@NotNull final NetworkComponent networkComponent) {
         this.networkComponents.remove(networkComponent);
     }
 
@@ -68,7 +65,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
      *
      * @return the {@link NetworkComponent} within the list with the given ID.
      */
-    public Optional<T> getComponentById(final long id) {
+    public Optional<NetworkComponent> getComponentById(final long id) {
         return networkComponents.stream().filter(networkComponent -> networkComponent.getId() == id).findFirst();
     }
 
@@ -80,7 +77,7 @@ public class NetworkComponentList<T extends NetworkComponent> {
     public double getJointAvailability() {
         double jointDowntime = 1;
 
-        for (T networkComponent : networkComponents) {
+        for (NetworkComponent networkComponent : networkComponents) {
             jointDowntime *= 1 - networkComponent.getAvailability();
         }
 

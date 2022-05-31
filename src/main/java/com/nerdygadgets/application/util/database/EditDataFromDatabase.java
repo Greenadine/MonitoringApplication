@@ -1,13 +1,6 @@
 package com.nerdygadgets.application.util.database;
 
-//import com.nerdygadgets.application.model.component.ComponentType;
-import com.nerdygadgets.application.model.component.NetworkComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Objects;
+//import com.nerdygadgets.application.model.ComponentType;
 
 public final class EditDataFromDatabase {
 

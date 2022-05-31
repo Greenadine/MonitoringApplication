@@ -1,10 +1,6 @@
 package com.nerdygadgets.application.util.database;
 
-import com.nerdygadgets.application.model.component.NetworkComponent;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import com.nerdygadgets.application.model.NetworkComponent;
 
 public class PutDataInDatabase
 {

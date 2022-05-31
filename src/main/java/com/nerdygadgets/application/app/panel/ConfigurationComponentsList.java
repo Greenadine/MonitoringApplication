@@ -5,7 +5,7 @@ import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.model.NetworkComponentList;
 import com.nerdygadgets.application.model.NetworkConfiguration;
-import com.nerdygadgets.application.model.component.NetworkComponent;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
@@ -59,9 +59,9 @@ public class ConfigurationComponentsList extends ApplicationPanel {
         return componentsListWrapper;
     }
 
-    public <T extends NetworkComponent> void setComponentList(@NotNull NetworkConfiguration configuration, @NotNull NetworkComponentList<T> componentList) {
+    public void setComponentList(@NotNull NetworkConfiguration configuration, @NotNull NetworkComponentList componentList) {
         if (!componentList.isEmpty()) {
-            for (T component : componentList.getComponents()) {
+            for (NetworkComponent component : componentList.getComponents()) {
                 componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
             }
         }

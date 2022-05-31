@@ -1,13 +1,10 @@
 package com.nerdygadgets.application.model;
 
-import com.nerdygadgets.application.model.component.Database;
-import com.nerdygadgets.application.model.component.Firewall;
-import com.nerdygadgets.application.model.component.Webserver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A {@code NetworkConfiguration} is a collection of a {@link Firewall} and one or more {@link Database}s and {@link Webserver}s that make up an entire network.
+ * A {@code NetworkConfiguration} is a collection of a firewall and one or more databases and webservers that make up an entire network.
  *
  * @author Kevin Zuman
  */
@@ -15,16 +12,16 @@ public class NetworkConfiguration {
 
     private final String name;
 
-    private Firewall firewall;
-    private final NetworkComponentList<Database> databases;
-    private final NetworkComponentList<Webserver> webservers;
+    private NetworkComponent firewall;
+    private final NetworkComponentList databases;
+    private final NetworkComponentList webservers;
 
-    public NetworkConfiguration(@NotNull final String name, @NotNull final Firewall firewall) {
-        this(name, firewall, new NetworkComponentList<>(), new NetworkComponentList<>());
+    public NetworkConfiguration(@NotNull final String name, @NotNull final NetworkComponent firewall) {
+        this(name, firewall, new NetworkComponentList(), new NetworkComponentList());
     }
 
-    public NetworkConfiguration(@NotNull final String name, @Nullable final Firewall firewall,
-                                @NotNull final NetworkComponentList<Database> databases, @NotNull final NetworkComponentList<Webserver> webservers) {
+    public NetworkConfiguration(@NotNull final String name, @Nullable final NetworkComponent firewall,
+                                @NotNull final NetworkComponentList databases, @NotNull final NetworkComponentList webservers) {
         this.name = name;
         this.firewall = firewall;
         this.databases = databases;
@@ -41,100 +38,117 @@ public class NetworkConfiguration {
     }
 
     /**
-     * Gets the {@link Firewall} configured for the network.
+     * Gets the firewall configured for the network.
      *
-     * @return The {@code NetworkConfiguration}'s {@link Firewall}.
+     * @return The {@code NetworkConfiguration}'s firewall.
      */
-    public Firewall getFirewall() {
+    public NetworkComponent getFirewall() {
         return firewall;
     }
 
     /**
-     * Sets the {@link Firewall} configured for the network.
+     * Sets the firewall configured for the network.
      *
-     * @param firewall The {@code Firewall}.
+     * @param firewall The firewall.
      */
-    public void setFirewall(@Nullable final Firewall firewall) {
-        this.firewall = firewall;
+    public void setFirewall(@Nullable final NetworkComponent firewall) {
+        if (firewall != null) {
+            if (firewall.getType() != ComponentType.FIREWALL) {
+                throw new IllegalArgumentException("Provided component is not a firewall.");
+            }
+            this.firewall = firewall;
+        }
     }
 
     /**
-     * Gets a {@link NetworkComponentList} containing all the {@link Database}s configured for the network.
+     * Gets a {@link NetworkComponentList} containing all the databases configured for the network.
      *
-     * @return The {@code NetworkConfiguration}'s {@code Database}s.
+     * @return The {@code NetworkConfiguration}'s databases.
      */
-    public NetworkComponentList<Database> getDatabases() {
+    public NetworkComponentList getDatabases() {
         return databases;
     }
 
     /**
-     * Adds a {@link Database} to the list of {@code Database}s.
+     * Adds a database to the list of databases.
      *
-     * @param database The {@code Database} to add.
+     * @param database The database to add.
      */
-    public void addDatabase(@NotNull final Database database) {
+    public void addDatabase(@NotNull final NetworkComponent database) {
+        if (database.getType() != ComponentType.DATABASE) {
+            throw new IllegalArgumentException("Provided component is not a database.");
+        }
         this.databases.addComponent(database);
     }
 
     /**
-     * Removes a {@link Database} from the list of {@code Database}s.
+     * Removes a database from the list of databases.
      *
-     * @param database The {@code Database} to remove.
+     * @param database The database to remove.
      */
-    public void removeDatabase(@NotNull final Database database) {
+    public void removeDatabase(@NotNull final NetworkComponent database) {
+        if (database.getType() != ComponentType.DATABASE) {
+            throw new IllegalArgumentException("Provided component is not a database.");
+        }
         this.databases.removeComponent(database);
     }
 
     /**
-     * Gets a {@link NetworkComponentList} containing all the {@link Webserver}s configured for the network.
+     * Gets a {@link NetworkComponentList} containing all the webservers configured for the network.
      *
-     * @return the {@code NetworkConfiguration}'s {@link Webserver}s.
+     * @return the {@code NetworkConfiguration}'s webservers.
      */
-    public NetworkComponentList<Webserver> getWebservers() {
+    public NetworkComponentList getWebservers() {
         return webservers;
     }
 
     /**
-     * Adds a {@link Webserver} to the list of {@code Webserver}s.
+     * Adds a webserver to the list of webservers.
      *
      * @param webserver The {@code Webserver} to add.
      */
-    public void addWebserver(@NotNull final Webserver webserver) {
+    public void addWebserver(@NotNull final NetworkComponent webserver) {
+        if (webserver.getType() != ComponentType.WEBSERVER) {
+            throw new IllegalArgumentException("Provided component is not a webserver.");
+        }
         this.webservers.addComponent(webserver);
     }
 
     /**
-     * Removes a {@link Webserver} from the list of {@code Webserver}s.
+     * Removes a webserver from the list of webserves.
      *
-     * @param webserver The {@code Webserver} to remove.
+     * @param webserver The webserver to remove.
      */
-    public void removeWebserver(@NotNull final Webserver webserver) {
+    public void removeWebserver(@NotNull final NetworkComponent webserver) {
+        if (webserver.getType() != ComponentType.WEBSERVER) {
+            throw new IllegalArgumentException("Provided component is not a webserver.");
+        }
         this.webservers.removeComponent(webserver);
     }
 
     /**
-     * Gets the joint availability of the network's {@link Firewall}, {@link Database}s and {@link Webserver}s.
+     * Gets the joint availability of the network's firewall, databases and webservers.
      *
-     * @return the availability of the entire {@code NetworkConfiguration}.
+     * @return The availability of the entire {@code NetworkConfiguration}.
      */
     public double getAvailability() {
         if (firewall == null && databases.isEmpty() && webservers.isEmpty()) {
             return 0;
         }
-        return (firewall != null ? firewall.getAvailability() : 1)
-                * (databases.isEmpty() ? 1 : databases.getJointAvailability())
-                * (webservers.isEmpty() ? 1 : webservers.getJointAvailability());
+        return (firewall != null ? firewall.getAvailability() : 0)
+                * (databases.isEmpty() ? 0 : databases.getJointAvailability())
+                * (webservers.isEmpty() ? 0 : webservers.getJointAvailability());
     }
 
     /**
-     * Gets the sum of the {@code Network}'s {@link Firewall}s'-, {@link Database}s'- and {@link Webserver}s' prices.
+     * Gets the sum of the {@link NetworkConfiguration}'s firewalls'-, databases'- and webservers' prices.
      *
-     * @return the price of the entire {@code NetworkConfiguration}.
+     * @return The price of the entire {@code NetworkConfiguration}.
      */
     public double getPrice() {
         if (firewall == null && databases.isEmpty() && webservers.isEmpty()) {
             return 0;
         }
-        return (firewall != null ? firewall.getPrice() : 1) + databases.getTotalPrice() + webservers.getTotalPrice();
+        return (firewall != null ? firewall.getPrice() : 0) + databases.getTotalPrice() + webservers.getTotalPrice();
     }
 }
