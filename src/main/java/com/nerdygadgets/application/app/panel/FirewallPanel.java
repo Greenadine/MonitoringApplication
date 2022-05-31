@@ -23,7 +23,7 @@ public class FirewallPanel extends ApplicationPanel {
         super(parentScreen);
         // Configure panel
         this.setLayout(new GridLayout(1,2));
-        this.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
+        this.setPreferredSize(new Dimension(100, 50));
 
         // Populate panel
         addFirewallHeader();
@@ -58,6 +58,9 @@ public class FirewallPanel extends ApplicationPanel {
     public void setFirewall(@NotNull final NetworkConfiguration configuration, @NotNull final NetworkComponent firewall) {
         firewallContentPanel.add(new NetworkConfigurationComponent(this, configuration, firewall));
         this.firewall = firewall;
+
+        firewallContentPanel.revalidate();
+        firewallContentPanel.repaint();
     }
 
     public NetworkComponent getFirewall(){

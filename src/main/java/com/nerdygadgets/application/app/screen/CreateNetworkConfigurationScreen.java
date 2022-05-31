@@ -1,5 +1,6 @@
 package com.nerdygadgets.application.app.screen;
 
+
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -43,18 +44,9 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         // Populate screen
         this.add(new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50, this::actionReturn), BorderLayout.PAGE_START);
 
-        // Create sidebar
-        sidebar = new NetworkComponentsListSidebar(this);
-//        sidebar.setPreferredSize(new Dimension(150, 500));
-        this.add(sidebar, BorderLayout.LINE_START);
-
-        JLabel label1 = new JLabel("Test1");
-        label1.setBorder(new MatteBorder(5, 5, 5, 5, Color.GREEN));
-
         // Create center wrapper
         JPanel contentWrapperPanel = new JPanel();
         contentWrapperPanel.setLayout(new BorderLayout());
-
         this.add(contentWrapperPanel, BorderLayout.CENTER);
 
         // Firewall panel
@@ -71,6 +63,12 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         webserversComponentsList = new ConfigurationComponentsList(this, "Webservers", configuration);
         componentWrapper.add(databasesComponentsList);
         componentWrapper.add(webserversComponentsList);
+
+
+        // Create sidebar
+        sidebar = new NetworkComponentsListSidebar(this, configuration, firewallPanel, databasesComponentsList, webserversComponentsList);
+//        sidebar.setPreferredSize(new Dimension(150, 500));
+        this.add(sidebar, BorderLayout.LINE_START);
 
         // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();
@@ -130,12 +128,15 @@ public class CreateNetworkConfigurationScreen extends ApplicationScreen {
         }
 
         for (NetworkComponent webserver: webserversComponentsList.getComponentsList()){
-            configuration.addDatabase(webserver);
+            configuration.addWebserver(webserver);
         }
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select a saving location");
-
+        final FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("Network Configuration Files (.json)", "json");
+        fileChooser.addChoosableFileFilter(extensionFilter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelection = fileChooser.showSaveDialog(window);
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {

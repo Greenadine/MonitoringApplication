@@ -16,10 +16,11 @@ import java.util.Collection;
 
 public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
+    private final NetworkComponentsListSidebar sidebar;
     private NetworkConfiguration configuration;
 
     private final ScreenHeaderPanel screenHeaderPanel;
-    private final NetworkComponentsListSidebar sidebar;
+//    private final NetworkComponentsListSidebar sidebar;
 
     private FirewallPanel firewallPanel;
     private ConfigurationComponentsList databasesComponentsList;
@@ -28,46 +29,44 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
     public ViewNetworkConfigurationScreen(@NotNull final ApplicationWindow window) {
         super(window);
+
         // Configure screen
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // Populate screen
-        screenHeaderPanel = new ScreenHeaderPanel(this, "", 1250, 50, this::actionReturn);
+        screenHeaderPanel = new ScreenHeaderPanel(this, "New Network Configuration", 1250, 50, this::actionReturn);
         this.add(screenHeaderPanel, BorderLayout.PAGE_START);
 
-        // Create sidebar
-        sidebar = new NetworkComponentsListSidebar(this);
-        this.add(sidebar, BorderLayout.LINE_START);
-
-        populateCenter();
-    }
-
-    private void populateCenter() {
-        // Create and add center wrapper panel
-        JPanel centerWrapperPanel = new JPanel();
-        centerWrapperPanel.setLayout(new BorderLayout());
-        this.add(centerWrapperPanel, BorderLayout.CENTER);
+        // Create center wrapper
+        JPanel contentWrapperPanel = new JPanel();
+        contentWrapperPanel.setLayout(new BorderLayout());
+        this.add(contentWrapperPanel, BorderLayout.CENTER);
 
         // Firewall panel
         firewallPanel = new FirewallPanel(this);
-        centerWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
+        contentWrapperPanel.add(firewallPanel, BorderLayout.PAGE_START);
 
         // Create component list wrapper
         JPanel componentWrapper = new JPanel();
         componentWrapper.setLayout(new GridLayout(1, 2));
-        centerWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
+        contentWrapperPanel.add(componentWrapper, BorderLayout.CENTER);
 
         // Configuration components list panels
-        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers", configuration);
         databasesComponentsList = new ConfigurationComponentsList(this, "Databases", configuration);
+        webserversComponentsList = new ConfigurationComponentsList(this, "Webservers", configuration);
         componentWrapper.add(databasesComponentsList);
         componentWrapper.add(webserversComponentsList);
+
+        // Create sidebar
+        sidebar = new NetworkComponentsListSidebar(this, configuration, firewallPanel, databasesComponentsList, webserversComponentsList);
+//        sidebar.setPreferredSize(new Dimension(150, 500));
+        this.add(sidebar, BorderLayout.LINE_START);
 
         // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();
         pageEndWrapperPanel.setLayout(new BoxLayout(pageEndWrapperPanel, BoxLayout.Y_AXIS));
-        centerWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
+        contentWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
 
         // Configuration data panel
         configurationDataPanel = new ConfigurationDataPanel(this);
@@ -90,6 +89,7 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
         // Create save button
         JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(this::actionSave);
         buttonsPanel.add(saveButton);
     }
 
@@ -105,6 +105,10 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
             webserversComponentsList.onHideImpl();
             configurationDataPanel.onHideImpl();
         }
+
+//        this.add(new JLabel("Kanker1"), BorderLayout.PAGE_START);
+//        this.add(new JLabel("Kanker2"), BorderLayout.CENTER);
+
 
         this.configuration = configuration;
 
@@ -162,6 +166,10 @@ public class ViewNetworkConfigurationScreen extends ApplicationScreen {
 
     private void actionReturn(ActionEvent event) {
         window.openScreen("network-configurations");
+    }
+
+    private void actionSave(ActionEvent event) {
+        // TODO
     }
 
     @Override

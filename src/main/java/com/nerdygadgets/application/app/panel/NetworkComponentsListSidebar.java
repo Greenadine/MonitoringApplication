@@ -1,8 +1,10 @@
 package com.nerdygadgets.application.app.panel;
 
+import com.nerdygadgets.application.app.component.NetworkComponentSidebarEntry;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.model.NetworkComponent;
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import com.nerdygadgets.application.util.database.GetDataFromDatabase;
@@ -16,9 +18,21 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
     private final JPanel databaseList;
     private final JPanel webserversList;
     private final JPanel firewallList;
+    private final NetworkConfiguration configuration;
 
-    public NetworkComponentsListSidebar(@NotNull ApplicationScreen parentScreen) {
+    private final FirewallPanel configurationFirewall;
+    private final ConfigurationComponentsList configurationDatabases;
+    private final ConfigurationComponentsList configurationWebservers;
+
+    public NetworkComponentsListSidebar(@NotNull ApplicationScreen parentScreen, @NotNull NetworkConfiguration configuration,
+                                        @NotNull FirewallPanel configurationFirewall, @NotNull ConfigurationComponentsList configurationDatabases,
+                                        @NotNull ConfigurationComponentsList configurationWebservers) {
         super(parentScreen);
+
+        this.configuration = configuration;
+        this.configurationFirewall = configurationFirewall;
+        this.configurationDatabases = configurationDatabases;
+        this.configurationWebservers = configurationWebservers;
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -82,22 +96,34 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
     public void getDatabases() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent database : databaseConnection.getDatabaseFromDatabase()) {
-            databaseList.add(new JLabel(database.getName()));
+            databaseList.add(new NetworkComponentSidebarEntry(this, database, configuration));
         }
     }
 
     public void getWebservers() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent webserver : databaseConnection.getWebserverFromDatabase()) {
-            webserversList.add(new JLabel(webserver.getName()));
+            webserversList.add(new NetworkComponentSidebarEntry(this, webserver, configuration));
         }
     }
 
     public void getFirewalls() {
         GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
         for (NetworkComponent firewall : databaseConnection.getFirewallFromDatabase()) {
-            firewallList.add(new JLabel(firewall.getName()));
+            firewallList.add(new NetworkComponentSidebarEntry(this, firewall, configuration));
         }
+    }
+
+    public FirewallPanel getConfigurationFirewall() {
+        return configurationFirewall;
+    }
+
+    public ConfigurationComponentsList getConfigurationDatabases() {
+        return configurationDatabases;
+    }
+
+    public ConfigurationComponentsList getConfigurationWebservers() {
+        return configurationWebservers;
     }
 
     @Override

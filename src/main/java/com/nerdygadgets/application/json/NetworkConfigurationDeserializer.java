@@ -11,6 +11,7 @@ import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Utils;
+import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 
 import java.io.IOException;
 
@@ -41,7 +42,7 @@ public class NetworkConfigurationDeserializer extends StdDeserializer<NetworkCon
         final String name = node.get("name").textValue();
 
         // Check if firewall is valid
-        if (!node.get("firewall").isObject()) {
+        if (!node.get("firewall").isInt()) {
             ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
             return null;
         }
@@ -49,12 +50,8 @@ public class NetworkConfigurationDeserializer extends StdDeserializer<NetworkCon
         // Check if firewall is valid
         NetworkComponent firewall;
 
-        try {
-            firewall = mapper.readValue(node.get("firewall").traverse(mapper), NetworkComponent.class);
-        } catch (DatabindException ex) {
-            ApplicationUtils.showPopupErrorMessage("Could not load network configuration from file", "The selected JSON-file does not contain a valid network configuration.");
-            return null;
-        }
+        firewall = new GetDataFromDatabase().getFirewallById(node.get("firewall").asLong());
+        // TODO first check if the firewall with given ID exist
 
         // Check if array of database IDs is valid
         // TODO maybe also check if array is an array of longs

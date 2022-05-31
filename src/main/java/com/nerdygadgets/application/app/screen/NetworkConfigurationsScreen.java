@@ -65,11 +65,6 @@ public class NetworkConfigurationsScreen extends ApplicationScreen {
             final File selected = chooser.getSelectedFile();
             NetworkConfiguration configuration = NetworkConfigurationUtils.deserialize(selected);
 
-            if (configuration == null) {
-                ApplicationUtils.showPopupErrorMessage("An error has occurred", "Failed to load network configuration from file.");
-                return;
-            }
-
             // Display configuration on screen, and open screen
             ((ViewNetworkConfigurationScreen) window.getScreen("view-network-configuration")).setConfiguration(configuration);
             window.openScreen("view-network-configuration");

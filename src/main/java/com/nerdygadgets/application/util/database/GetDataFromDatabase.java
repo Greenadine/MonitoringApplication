@@ -109,16 +109,16 @@ public class GetDataFromDatabase {
             preparedStmt.execute();
             ResultSet resultSet = preparedStmt.getResultSet();
             if (resultSet == null) return null;
-            id = Long.parseLong(resultSet.getString("id"));
-            name = resultSet.getString("name");
-            availability = Double.parseDouble(resultSet.getString("availability"));
-            price = Double.parseDouble(resultSet.getString("price"));
-            ip = resultSet.getString("ip");
-            subnetmask = resultSet.getString("subnetmask");
-            connection.close();
-            return new NetworkComponent(id, ComponentType.DATABASE, name, availability, price, ip, subnetmask);
-
-
+            if (resultSet.next()){
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnetmask");
+                connection.close();
+                return new NetworkComponent(id, ComponentType.DATABASE, name, availability, price, ip, subnetmask);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,16 +137,44 @@ public class GetDataFromDatabase {
             preparedStmt.execute();
             ResultSet resultSet = preparedStmt.getResultSet();
             if (resultSet == null) return null;
-            id = Long.parseLong(resultSet.getString("id"));
-            name = resultSet.getString("name");
-            availability = Double.parseDouble(resultSet.getString("availability"));
-            price = Double.parseDouble(resultSet.getString("price"));
-            ip = resultSet.getString("ip");
-            subnetmask = resultSet.getString("subnetmask");
-            connection.close();
-            return new NetworkComponent(id, ComponentType.WEBSERVER, name, availability, price, ip, subnetmask);
+            if (resultSet.next()){
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnetmask");
+                connection.close();
+                return new NetworkComponent(id, ComponentType.WEBSERVER, name, availability, price, ip, subnetmask);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    public NetworkComponent getFirewallById(long id) {
+        try {
+            Connection connection = ConnectionToDatabase.DatabaseConnection();
 
+            String sql = "SELECT * FROM firewall WHERE id = ?";
+
+            PreparedStatement preparedStmt = connection.prepareStatement(sql);
+            preparedStmt.setLong(1, id);
+
+            preparedStmt.execute();
+            ResultSet resultSet = preparedStmt.getResultSet();
+            if (resultSet == null) return null;
+            if (resultSet.next()){
+                id = Long.parseLong(resultSet.getString("id"));
+                name = resultSet.getString("name");
+                availability = Double.parseDouble(resultSet.getString("availability"));
+                price = Double.parseDouble(resultSet.getString("price"));
+                ip = resultSet.getString("ip");
+                subnetmask = resultSet.getString("subnetmask");
+                connection.close();
+                return new NetworkComponent(id, ComponentType.FIREWALL, name, availability, price, ip, subnetmask);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

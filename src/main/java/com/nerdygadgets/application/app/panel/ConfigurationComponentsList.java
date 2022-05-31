@@ -74,6 +74,9 @@ public class ConfigurationComponentsList extends ApplicationPanel {
     public void addComponent(@NotNull NetworkComponent component) {
         componentsListWrapper.add(new NetworkConfigurationComponent(this, configuration, component));
         components.add(component);
+
+        componentsListWrapper.revalidate();
+        componentsListWrapper.repaint();
     }
 
     public ArrayList<NetworkComponent> getComponentsList() {
