@@ -32,6 +32,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         this.add(monitorPanels, BorderLayout.CENTER);
 
         monitorPanels.add(new SystemMonitorPanel(this, "This System"));
+
     }
 
     public void startMonitoringSystems() {

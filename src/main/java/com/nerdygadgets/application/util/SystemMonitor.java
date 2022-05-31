@@ -201,6 +201,159 @@ public class SystemMonitor {
         return disks;
     }
 
+    public static String testing() throws  PowerShellScriptException {
+        final String command = null;
+        // command = "ssh student@192.168.1.2 'sar 1 -u' | ConvertFrom-String -Delimiter ' ' | Select-Object p42";
+        // ssh student@192.168.1.2 'sar 1 1 -u' | ConvertFrom-String -Delimiter ' ' | Select-Object p42  //cpu
+        // ssh student@192.168.1.2 df / | ConvertFrom-String -Delimiter ' ' | Select-Object p3, p7, p9 //disk in total,free,in use %
+        // ssh student@192.168.1.2 uptime -p                                                           //uptime in week,day,hours,minutes
+        // ssh admin@192.168.1.1 top | ConvertFrom-String -Delimiter ' ' | Select-Object p14 -skip 2 -first 1
+        // ssh admin@192.168.1.1 uptime                                                                   //uptime in week,day,hours,minutes
+        // ssh admin@192.168.1.1 df / | ConvertFrom-String -Delimiter ' ' | Select-Object p3, p5, p9      //disk in total,free,in use %
+        final ProcessOutput processOutput = executePowerShellCommand(command);
+        final BufferedReader psOut = processOutput.getOutput();
+        final BufferedReader pserr = processOutput.getErrors();
+
+/* voor ssh student@192.168.1.2 uptime -p
+        String a=psOut.readLine();
+        a = a.replaceAll("[,]","");
+        int indexOfSpace = a.indexOf(' ');
+        if (indexOfSpace!= -1){
+            a= a.substring(indexOfSpace+1);
+        }
+        System.out.println(a);//later return
+*/
+        String line = null;
+        try {
+            while ((line = psOut.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
+
+                }
+                final String[] strArr = line.split(" ");
+                for (String partOfLine:strArr) {
+                    if (partOfLine.matches("[0-9]+")){
+                        System.out.println(partOfLine);
+                    }
+
+                }
+
+                System.out.println(line);
+
+            }
+        }catch (IOException ex) {
+            Logger.error(ex, "Failed to retrieve last boot-up time of system at address '%s'.");
+        }
+        return line;
+    }
+
+    public static String getDiskInfo()throws PowerShellScriptException{
+        final String command;
+        command = "ssh student@192.168.1.2 df / | ConvertFrom-String -Delimiter “ “ | Select-Object p3, p7, p9";
+
+        final String[] commandWords = command.split(" ");
+        for (String word:commandWords) {
+            if (word.equals("student@192.168.1.2")||word.equals("student@192.168.1.3")){
+
+            }else if(word.equals("student@192.168.1.4")||word.equals("student@192.168.1.5")){
+
+            }else if(word.equals("student@192.168.1.1")){
+
+            }else{
+                System.out.println("Cant find server");
+            }
+        }
+
+        final ProcessOutput processOutput = executePowerShellCommand(command);
+        final BufferedReader psOut = processOutput.getOutput();
+        final BufferedReader pserr = processOutput.getErrors();
+
+        String line = null;
+        try {
+            while ((line = psOut.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
+
+                }
+                final String[] strArr = line.split(" ");
+                final String[] finalStrArr = null;
+                int count = 0;
+                for (String partOfLine:strArr) {
+                    if (partOfLine.matches("[0-9]+")){
+                        finalStrArr[count] = partOfLine;
+                        final float diskFreeSpace = Long.parseLong(strArr[1]) / 1024f;
+                        final String diskName = "root";
+                        final float diskTotalSpace = Long.parseLong(strArr[0]) / 1024f;
+                        new DiskResult(diskName, diskTotalSpace, diskFreeSpace);
+                        count++;
+                    }
+
+                }
+            }
+        }catch (IOException ex) {
+            Logger.error(ex, "Failed to retrieve last boot-up time of system at address '%s'.");
+        }
+        return line;
+    }
+    public static int getCpuInfo()throws PowerShellScriptException{
+        final String command;
+        int cpu = 0;
+        command = "ssh student@192.168.1.2 'sar 1 1 -u' | ConvertFrom-String -Delimiter ' ' | Select-Object p42";
+
+        final ProcessOutput processOutput = executePowerShellCommand(command);
+        final BufferedReader psOut = processOutput.getOutput();
+        final BufferedReader pserr = processOutput.getErrors();
+        try {
+            cpu = Integer.parseInt(psOut.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/*        String line = null;
+        try {
+            while ((line = psOut.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
+
+                }
+                final String[] strArr = line.split(" ");
+
+                for (String partOfLine : strArr) {
+                    if (partOfLine.matches("[0-9]+")){
+                        cpu = Integer.parseInt(partOfLine);
+                    }
+                }
+            }
+
+        }catch (IOException ex) {
+            Logger.error(ex, "Failed to retrieve last boot-up time of system at address '%s'.");
+        }*/
+        return cpu;
+    }
+
+    public static String getUptimeInfo() throws PowerShellScriptException {
+        final String command;
+        command = "ssh student@192.168.1.2 uptime -p";
+        final ProcessOutput processOutput = executePowerShellCommand(command);
+        final BufferedReader psOut = processOutput.getOutput();
+        final BufferedReader pserr = processOutput.getErrors();
+        String a= null;
+        try {
+            a = psOut.readLine();
+        } catch (IOException exc) {
+            exc.printStackTrace();
+        }
+
+        a = a.replaceAll("[,]","");
+        int indexOfSpace = a.indexOf(' ');
+        if (indexOfSpace!= -1){
+            a= a.substring(indexOfSpace+1);
+        }
+        return a;//later return
+
+    }
     /**
      * Executes the given PowerShell command, and returns the results.
      *
@@ -215,12 +368,26 @@ public class SystemMonitor {
             final Process process = Runtime.getRuntime().exec(new String[] { "powershell.exe", command});
             final BufferedReader psOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
             final BufferedReader psErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
             return new ProcessOutput(psOut, psErr);
         } catch (Exception ex) {
             throw new PowerShellScriptException(ex);
         }
     }
+/*
+     * Executes a given SSH command, and returns the results.
+     *
+     * @param command The command to execute.
+     *
+     * @return A {@link ProcessOutput} containing both the regular output, as well as the error output from executing the command.
+     **//*
+    private static ProcessOutput executeSshCommand(final String command) throws IOException {
+        final Process process = Runtime.getRuntime().exec(new String[] { "ssh myhost", command });
+        final BufferedReader psOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        final BufferedReader psErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+        return new ProcessOutput(psOut, psErr);
+
+    }*/
 
     private static class ProcessOutput {
 

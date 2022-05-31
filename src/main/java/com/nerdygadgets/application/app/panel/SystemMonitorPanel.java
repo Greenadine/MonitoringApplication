@@ -6,6 +6,7 @@ import com.nerdygadgets.application.app.component.LineGraphComponent;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.exception.PowerShellScriptException;
 import com.nerdygadgets.application.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -312,6 +314,11 @@ public class SystemMonitorPanel extends ApplicationPanel {
         public void run() {
             if (systemAddress != null) {
                 SystemMonitor.getCpuLoad(systemAddress, systemUsername, systemPassword).ifPresent(cpuUsageGraphPanel::appendValue);
+/*                try {
+                    cpuUsageGraphPanel.appendValue(SystemMonitor.getCpuInfo());
+                } catch (PowerShellScriptException e) {
+                    e.printStackTrace();
+                }*///todo HIER CPU nog
             } else {
                 SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
             }
@@ -337,7 +344,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
             // Set uptime
             if (lastBootUpTime != null) {
                 final Duration duration = Duration.between(lastBootUpTime, Instant.now());
-                systemUptimeValue.setText(formatDuration(duration));
+                systemUptimeValue.setText(formatDuration(duration));///////////////////////////////////////////////////////////////////todo HIER IS uptime
             }
         }
 
