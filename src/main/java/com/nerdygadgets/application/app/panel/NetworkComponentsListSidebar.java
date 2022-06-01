@@ -2,13 +2,12 @@ package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.app.component.NetworkComponentSidebarEntry;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
-import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
+import com.nerdygadgets.application.model.ComponentType;
 import com.nerdygadgets.application.model.NetworkComponent;
-import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.DatabaseUtils;
 import com.nerdygadgets.application.util.Fonts;
-import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -90,22 +89,19 @@ public class NetworkComponentsListSidebar extends ApplicationPanel {
     }
 
     public void getDatabases() {
-        GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
-        for (NetworkComponent database : databaseConnection.getDatabaseFromDatabase()) {
+        for (NetworkComponent database : DatabaseUtils.getComponents(ComponentType.DATABASE)) {
             databaseList.add(new NetworkComponentSidebarEntry(this, database, configurationScreen.getConfiguration()));
         }
     }
 
     public void getWebservers() {
-        GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
-        for (NetworkComponent webserver : databaseConnection.getWebserverFromDatabase()) {
+        for (NetworkComponent webserver : DatabaseUtils.getComponents(ComponentType.WEBSERVER)) {
             webserversList.add(new NetworkComponentSidebarEntry(this, webserver, configurationScreen.getConfiguration()));
         }
     }
 
     public void getFirewalls() {
-        GetDataFromDatabase databaseConnection = new GetDataFromDatabase();
-        for (NetworkComponent firewall : databaseConnection.getFirewallFromDatabase()) {
+        for (NetworkComponent firewall : DatabaseUtils.getComponents(ComponentType.FIREWALL)) {
             firewallList.add(new NetworkComponentSidebarEntry(this, firewall, configurationScreen.getConfiguration()));
         }
     }

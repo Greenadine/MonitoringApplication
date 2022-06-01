@@ -7,6 +7,7 @@ import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.Logger;
 import com.nerdygadgets.application.util.NetworkConfigurationUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class NetworkConfigurationScreen extends ApplicationScreen {
@@ -169,7 +171,7 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
     private void actionSave(ActionEvent event) {
         // Check if a firewall has been set for the configuration
         if (firewallPanel.getFirewall() == null) {
-            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set an firewall for the configuration");
+            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set a firewall for the configuration");
             return;
         }
 
@@ -202,7 +204,14 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
             }
 
             configuration.setName(saveLocation.getName().substring(0, saveLocation.getName().length() - 5));
-            NetworkConfigurationUtils.serialize(configuration, saveLocation);
+
+            try {
+                NetworkConfigurationUtils.serialize(configuration, saveLocation);
+                window.openScreen("home");
+                ApplicationUtils.showPopupInfoMessage("Configuration saved", String.format("The configuration has been saved to '%s'.", saveLocation.getAbsolutePath()));
+            } catch (IOException ex) {
+                ApplicationUtils.showPopupErrorMessage("Failed to save configuration", "An error has occurred while attempting to save configuration. This is likely due to insufficient privileges at the designated save location.");
+            }
         }
     }
 

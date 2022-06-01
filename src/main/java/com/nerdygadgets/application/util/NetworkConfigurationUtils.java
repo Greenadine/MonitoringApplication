@@ -25,12 +25,8 @@ public final class NetworkConfigurationUtils {
      *
      * @param configuration The {@code NetworkConfiguration}.
      */
-    public static void serialize(@NotNull final NetworkConfiguration configuration, @NotNull final File file) {
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, configuration);
-        } catch (IOException ex) {
-            Logger.error(ex, "Failed to serialize and save network configuration to '%s'.", file.getAbsolutePath());
-        }
+    public static void serialize(@NotNull final NetworkConfiguration configuration, @NotNull final File file) throws IOException {
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, configuration);
     }
 
     /**

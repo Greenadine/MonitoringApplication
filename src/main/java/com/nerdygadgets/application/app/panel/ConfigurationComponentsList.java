@@ -2,10 +2,8 @@ package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.app.component.NetworkConfigurationComponent;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
-import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkComponentList;
-import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;

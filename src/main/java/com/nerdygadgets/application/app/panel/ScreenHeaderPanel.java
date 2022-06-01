@@ -25,7 +25,7 @@ public class ScreenHeaderPanel extends ApplicationPanel {
 
     private JLabel titleLabel;
 
-    public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String screenName, final int width, final int height, final ActionListener returnAction) {
+    public ScreenHeaderPanel(@NotNull ApplicationScreen screen, @NotNull final String title, final int width, final int height, final ActionListener returnAction) {
         super(screen);
         this.width = width;
 
@@ -37,7 +37,7 @@ public class ScreenHeaderPanel extends ApplicationPanel {
 
         createReturnButton(returnAction); // Create and add return button
         SwingUtils.addVerticalSeparator(this); // Add separator
-        createTitle(screenName);
+        createTitle(title);
     }
 
     private void createReturnButton(ActionListener returnAction) {
@@ -63,6 +63,9 @@ public class ScreenHeaderPanel extends ApplicationPanel {
     public void setTitle(String title) {
         titleLabel.setText(title);
         titleLabel.setBorder(new EmptyBorder(5,5, 5, width / 2 - 6 * title.length()));
+
+        this.repaint();
+        this.revalidate();
     }
 
     @Override

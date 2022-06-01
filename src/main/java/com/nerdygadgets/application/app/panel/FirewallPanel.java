@@ -10,7 +10,6 @@ import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
@@ -44,8 +43,10 @@ public class FirewallPanel extends ApplicationPanel {
 
     private void addFirewallContent() {
         JPanel firewallContentWrapper = new JPanel();
+        firewallContentWrapper.setAlignmentX(LEFT_ALIGNMENT);
         firewallContentWrapper.setBorder(new MatteBorder(-10,0,2,0,Colors.MAIN_BACKGROUND_ACCENT));
         firewallContentPanel = new JPanel();
+        firewallContentPanel.setAlignmentX(LEFT_ALIGNMENT);
 
         firewallContentWrapper.add(firewallContentPanel);
         this.add(firewallContentWrapper);

@@ -3,13 +3,13 @@ package com.nerdygadgets.application.app.component;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.PanelComponent;
 import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
-import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.model.NetworkComponent;
+import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.Colors;
+import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -18,35 +18,27 @@ public class NetworkConfigurationComponent extends PanelComponent {
     private final NetworkConfiguration configuration;
     private final NetworkComponent component;
 
-    private final JLabel componentName;
-    private final JButton removeBtn;
-
-    public NetworkConfigurationComponent(@NotNull final ApplicationPanel parentPanel, @NotNull final NetworkConfiguration configuration, @NotNull final NetworkComponent component) {
+    public NetworkConfigurationComponent(@NotNull final ApplicationPanel parentPanel, @NotNull final NetworkConfiguration configuration,
+                                         @NotNull final NetworkComponent component) {
         super(parentPanel);
 
         this.configuration = configuration;
         this.component = component;
 
-        JPanel wrapper = new JPanel();
-        wrapper.setLayout(new BorderLayout());
-        wrapper.setPreferredSize(new Dimension(200, 50));
-        wrapper.setBorder(new EmptyBorder(0,0,6,0));
-        wrapper.setBackground(Colors.MAIN_TABLE_HEADER);
+        // Configure panel
+        this.setAlignmentY(TOP_ALIGNMENT);
 
-        componentName = new JLabel(component.getName());
-        componentName.setBorder(new EmptyBorder(0,5, 0, 0));
-        wrapper.add(componentName, BorderLayout.CENTER);
+        // Create button
+        WrappedJButton button = new WrappedJButton(component.getName(), SwingUtils.getIconFromResource("remove.png"));
+        button.getButton().setPreferredSize(new Dimension(400, 35));
+        button.getButton().addActionListener(this::actionOnRemove);
+        button.getButton().setBackground(Colors.MAIN_BACKGROUND_ACCENT);
+        button.getButton().setHorizontalAlignment(SwingConstants.LEFT);
+        button.getButton().setVerticalTextPosition(SwingConstants.CENTER);
+        button.getButton().setIconTextGap(10);
+        this.add(button);
 
-        JPanel buttonWrapperPanel = new JPanel();
-        buttonWrapperPanel.setBackground(Colors.MAIN_TABLE_HEADER);
-
-        removeBtn = new JButton("-");
-        removeBtn.addActionListener(this::actionOnRemove);
-        removeBtn.setAlignmentX(LEFT_ALIGNMENT);
-        buttonWrapperPanel.add(removeBtn);
-        wrapper.add(buttonWrapperPanel, BorderLayout.LINE_END);
-
-        this.add(wrapper);
+        this.setMaximumSize(this.getPreferredSize());
     }
 
     /* Button actions */
@@ -58,14 +50,9 @@ public class NetworkConfigurationComponent extends PanelComponent {
      */
     private void actionOnRemove(ActionEvent event) {
         switch (component.getType()) {
-            case FIREWALL:
-                configuration.setFirewall(null);
-                break;
-            case DATABASE:
-                configuration.removeDatabase(component);
-                break;
-            case WEBSERVER:
-                configuration.removeWebserver(component);
+            case FIREWALL -> configuration.setFirewall(null);
+            case DATABASE -> configuration.removeDatabase(component);
+            case WEBSERVER -> configuration.removeWebserver(component);
         }
 
         ((NetworkConfigurationScreen) parentPanel.parentScreen).setConfiguration(configuration);

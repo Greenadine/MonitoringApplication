@@ -1,16 +1,14 @@
 package com.nerdygadgets.application.util;
 
-import com.nerdygadgets.application.Main;
 import com.nerdygadgets.application.exception.DatabaseException;
 import com.nerdygadgets.application.model.ComponentType;
 import com.nerdygadgets.application.model.NetworkComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Properties;
 
 public final class DatabaseUtils {
@@ -19,19 +17,21 @@ public final class DatabaseUtils {
 
     static {
         Properties databaseProperties = new Properties();
+        File propertiesFile = new File("database.properties");
 
-        try (InputStream is = Main.class.getResourceAsStream("database.properties")) {
+        // TODO check if properties file already exists, and if not copy file from jar into current folder
 
-            databaseProperties.load(is);
-        } catch (IOException ex) {
-            Logger.error(ex, "Failed to load database properties.");
-        }
+//        try (InputStream is = Main.class.getResourceAsStream("database.properties")) {
+//            databaseProperties.load(is);
+//        } catch (IOException ex) {
+//            Logger.error(ex, "Failed to load database properties.");
+//        }
 
-        HOST = databaseProperties.getProperty("host", "145.44.235.121");
+        HOST = databaseProperties.getProperty("host", "localhost");
         PORT = databaseProperties.getProperty("port", "3306");
         DATABASE = databaseProperties.getProperty("database", "nerdygadgets");
-        USER = databaseProperties.getProperty("user", "myuser");
-        PASSWORD = databaseProperties.getProperty("password", "mypass");
+        USER = databaseProperties.getProperty("user", "root");
+        PASSWORD = databaseProperties.getProperty("password", "");
     }
 
     /**
@@ -43,7 +43,7 @@ public final class DatabaseUtils {
      */
     private static Connection newConnection() throws DatabaseException {
         try {
-            return DriverManager.getConnection("jdbc:sqlite://" + HOST + ":" + PORT + "/" + DATABASE, USER, PASSWORD);
+            return DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE, USER, PASSWORD);
         } catch (SQLException ex) {
             throw new DatabaseException(ex, "Failed to establish connection with database '%s' at host '%s'. Please check credentials in 'databases.properties'.", DATABASE, HOST);
         }
