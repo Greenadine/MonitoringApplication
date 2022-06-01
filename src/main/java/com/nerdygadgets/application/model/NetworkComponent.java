@@ -17,17 +17,27 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
     protected final String name;
     protected final double availability;
     protected final double price;
-    protected final double score;
     protected final String ip;
     protected final String subnetMask;
 
-    public NetworkComponent(final long id, @NotNull final ComponentType type, @NotNull final String name, final double availability, final double price, @NotNull final String ip, @NotNull final String subnetMask) {
+    public NetworkComponent(@NotNull final ComponentType type, @NotNull final String name, final double availability,
+                            final double price, @NotNull final String ip, @NotNull final String subnetMask) {
+        this.id = -1;
+        this.type = type;
+        this.name = name;
+        this.availability = availability;
+        this.price = price;
+        this.ip = ip;
+        this.subnetMask = subnetMask;
+    }
+
+    public NetworkComponent(final long id, @NotNull final ComponentType type, @NotNull final String name, final double availability,
+                            final double price, @NotNull final String ip, @NotNull final String subnetMask) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.availability = availability;
         this.price = price;
-        this.score = availability * (1 / price);
         this.ip = ip;
         this.subnetMask = subnetMask;
     }
@@ -83,7 +93,7 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
      * @return The {@code NetworkComponent}'s score.
      */
     public double getScore() {
-        return score;
+        return availability * (1 / price);
     }
 
     /**
@@ -104,16 +114,6 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
         return subnetMask;
     }
 
-    /**
-     * Gets the {@link Image} representing the {@code NetworkComponent}.
-     *
-     * @return The {@code NetworkComponent}'s image.
-     */
-    public Image getImage() {
-        // TODO get image representing the component's type, maybe put this in ComponentType instead of here
-        return null;
-    }
-
     @Override
     public String toString() {
         return String.format(Locale.US, "%s (ID: %d)\n- IP: %s\n- Subnet: %s\n- Availability: %.2f\n- Price: %.2f", name, id, ip, subnetMask, availability, price);
@@ -121,6 +121,6 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
 
     @Override
     public int compareTo(NetworkComponent other) {
-        return (int) (this.score - other.score);
+        return (int) (this.getScore() - other.getScore());
     }
 }

@@ -3,7 +3,7 @@ package com.nerdygadgets.application.app.component;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.PanelComponent;
 import com.nerdygadgets.application.app.panel.networkcomponents.NetworkComponentDetailsPanel;
-import com.nerdygadgets.application.model.component.NetworkComponent;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class NetworkComponentsEntry extends PanelComponent {
 
     private final NetworkComponentDetailsPanel detailsPanel;
 
-    public <T extends NetworkComponent> NetworkComponentsEntry(@NotNull ApplicationPanel parentPanel, @NotNull final T component, @NotNull final NetworkComponentDetailsPanel detailsPanel) {
+    public NetworkComponentsEntry(@NotNull ApplicationPanel parentPanel, @NotNull final NetworkComponent component, @NotNull final NetworkComponentDetailsPanel detailsPanel) {
         super(parentPanel);
 
         // Configure panel
@@ -27,7 +27,7 @@ public class NetworkComponentsEntry extends PanelComponent {
 
         // Create button
         WrappedJButton button = new WrappedJButton(component.getName());
-        button.setPreferredSize(new Dimension(290, 35));
+        button.getButton().setPreferredSize(new Dimension(280, 35));
         button.getButton().addActionListener(this::actionShowDetails);
         button.getButton().setBackground(Colors.NETWORK_COMPONENTS_LIST_ENTRY_BACKGROUND);
         this.add(button);

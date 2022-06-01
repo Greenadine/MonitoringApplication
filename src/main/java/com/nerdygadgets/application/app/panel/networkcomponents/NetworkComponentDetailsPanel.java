@@ -5,14 +5,8 @@ import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.dialog.EditNetworkComponentDialog;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
-import com.nerdygadgets.application.app.screen.NewViewNetworkComponentsScreen;
-import com.nerdygadgets.application.model.component.*;
-import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Fonts;
-import com.nerdygadgets.application.util.Logger;
-import com.nerdygadgets.application.util.SwingUtils;
-import com.nerdygadgets.application.util.database.EditDataFromDatabase;
-import com.nerdygadgets.application.util.database.RemoveDataFromDatabase;
+import com.nerdygadgets.application.model.NetworkComponent;
+import com.nerdygadgets.application.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -24,8 +18,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Locale;
 
-public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener
-{
+public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener {
 
     private NetworkComponent component;
 
@@ -61,7 +54,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         headerPanel.add(componentNamePanel);
 
         this.componentName = new JLabel("(No component selected)", SwingConstants.CENTER);
-        componentName.setFont(Fonts.MAIN_SIDEBAR_TITLE);
+        componentName.setFont(Fonts.MAIN_SIDEBAR_HEADER);
         componentNamePanel.add(this.componentName, BorderLayout.CENTER);
 
         // Add ID panel under header
@@ -137,7 +130,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         deleteComponentButton = new WrappedJButton("Delete", SwingUtils.getIconFromResource("delete.png"));
         deleteComponentButton.getButton().addActionListener(this::actionDeleteComponent);
         deleteComponentButton.getButton().setEnabled(false);
-        deleteComponentButton.getButton().setBorder(new EmptyBorder(10, 15, 10, 15));
+        deleteComponentButton.getButton().setBorder(new EmptyBorder(10, 20, 10, 20));
         deleteComponentButton.setBorder(new MatteBorder(2, 2, 2, 2, Colors.MAIN_BACKGROUND_ACCENT));
         buttonsWrapperPanel.add(deleteComponentButton);
 
@@ -150,7 +143,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         buttonsWrapperPanel.add(editComponentButton);
     }
 
-    public <T extends NetworkComponent> void displayComponent(@NotNull final T component) {
+    public void displayComponent(@NotNull final NetworkComponent component) {
         this.component = component;
 
         // Set values to display component details
@@ -169,55 +162,21 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     /* Button actions */
 
     private void actionDeleteComponent(ActionEvent event) {
-        RemoveDataFromDatabase.deleteFromDatabase(component.getId(), component.getType().name().toLowerCase());
+        DatabaseUtils.deleteComponent(component);
         parentScreen.onClose();
         parentScreen.onOpen();
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void actionEditComponent(ActionEvent event)
-    {
+    private void actionEditComponent(ActionEvent event) {
         EditNetworkComponentDialog editNetworkComponentDialog = new EditNetworkComponentDialog(true, component.getName(), component.getPrice(), component.getAvailability(), component.getIp(), component.getSubnetMask());
-        NetworkComponent componentDialoog = null;
-        try
-        {
-            if(editNetworkComponentDialog.getComponent() == null){
-                System.out.println("object is leeg");
-            }
-            else {
-                try
-                {
-                    componentDialoog = editNetworkComponentDialog.getComponent();
-                } catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
+        NetworkComponent dialogComponent = editNetworkComponentDialog.getComponent();
 
+        if (dialogComponent != null) {
+            DatabaseUtils.updateComponent(dialogComponent);
 
-
-                try {
-                    switch (componentDialoog.getType()) {
-                        case DATABASE:
-                            EditDataFromDatabase.editComponent(new Database(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-                            break;
-                        case FIREWALL:
-                            EditDataFromDatabase.editComponent(new Firewall(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-                            break;
-                        case WEBSERVER:
-                            EditDataFromDatabase.editComponent(new Webserver(component.getId(), componentDialoog.getName(), componentDialoog.getAvailability(), componentDialoog.getPrice(), componentDialoog.getIp(), componentDialoog.getSubnetMask()));
-                    }
-                } catch (IOException ex) {
-                    Logger.error(ex, "Failed to edit component in database.");
-                }
-            }
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
+            parentScreen.onClose();
+            parentScreen.onOpen();
         }
-        parentScreen.onClose();
-        parentScreen.onOpen();
-
-
     }
 
     @Override
@@ -241,8 +200,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     }
 
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
 
     }
 }

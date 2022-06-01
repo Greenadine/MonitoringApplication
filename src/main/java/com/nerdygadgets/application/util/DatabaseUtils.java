@@ -190,9 +190,11 @@ public final class DatabaseUtils {
      */
     public static void updateComponent(@NotNull final NetworkComponent component) {
         Connection connection = newConnection();
-        String query = String.format("UPDATE %s SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ?;", component.getType().getTableName());
 
         try {
+            String query = String.format("UPDATE %s SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ? WHERE id = ?", component.getType().getTableName());
+            System.out.println(query);
+
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, component.getName());
             statement.setDouble(2, component.getAvailability());
@@ -200,6 +202,8 @@ public final class DatabaseUtils {
             statement.setString(4, component.getIp());
             statement.setString(5, component.getSubnetMask());
             statement.setLong(6, component.getId());
+
+            System.out.println(statement.getParameterMetaData().getParameterCount());
 
             statement.execute();
         } catch (SQLException ex) {

@@ -3,6 +3,7 @@ package com.nerdygadgets.application.app.screen;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
+import com.nerdygadgets.application.app.panel.NetworkComponentsListSidebar;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Colors;

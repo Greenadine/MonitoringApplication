@@ -25,11 +25,11 @@ public class WrappedJButton extends JPanel implements ApplicationComponent {
     }
 
     public WrappedJButton(@NotNull final String name, @Nullable final Icon icon) {
-        //this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         button = new JButton(name, icon);
         this.add(button);
-//        this.add(button, BorderLayout.CENTER);
+        this.add(button, BorderLayout.CENTER);
     }
 
     /**

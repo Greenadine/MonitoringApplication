@@ -4,10 +4,6 @@ import com.nerdygadgets.application.app.screen.*;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.util.SwingUtils;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.io.IOException;
-
 public class MainWindow extends ApplicationWindow {
 
     public MainWindow() {

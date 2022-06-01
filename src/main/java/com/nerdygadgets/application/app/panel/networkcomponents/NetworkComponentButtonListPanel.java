@@ -4,7 +4,7 @@ import com.nerdygadgets.application.app.component.NetworkComponentsEntry;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
-import com.nerdygadgets.application.model.component.NetworkComponent;
+import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.Fonts;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public class NetworkComponentButtonListPanel extends ApplicationPanel {
         headerPanel.setBackground(Colors.MAIN_BACKGROUND);
         headerPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
         headerPanel.setBorder(new MatteBorder(2, 2, 2, 2, Colors.MAIN_BACKGROUND_ACCENT));
-        headerPanel.getLabel().setFont(Fonts.MAIN_SIDEBAR_TITLE);
+        headerPanel.getLabel().setFont(Fonts.MAIN_SIDEBAR_HEADER);
         this.add(headerPanel, BorderLayout.PAGE_START);
 
         // Create scrollable list panel
@@ -45,7 +45,7 @@ public class NetworkComponentButtonListPanel extends ApplicationPanel {
         this.add(scrollPane, BorderLayout.CENTER);
     }
 
-    public <T extends NetworkComponent> void addComponent(T component) {
+    public void addComponent(NetworkComponent component) {
         NetworkComponentsEntry componentButton = new NetworkComponentsEntry(this, component, detailsPanel);
         listPanel.add(componentButton);
         listPanel.revalidate();
@@ -55,7 +55,6 @@ public class NetworkComponentButtonListPanel extends ApplicationPanel {
     public void clear() {
         listPanel.removeAll();
     }
-
 
     @Override
     public void onShowImpl() {
