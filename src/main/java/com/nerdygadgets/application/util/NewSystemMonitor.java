@@ -335,10 +335,26 @@ public final class NewSystemMonitor {
                 processOutput = executePowerShellCommand(command);
             final BufferedReader psOut = processOutput.getOutput();
             final BufferedReader pserr = processOutput.getErrors();
-                systemMonitorPanel.appendCpuValueToGraph(Integer.parseInt(psOut.readLine()));;
+                String line = null;
+                    while ((line = psOut.readLine()) != null) {
+                        line = line.trim();
+                        if (line.isEmpty()) {
+                            continue;
+
+                        }
+                        final String[] strArr = line.split(" ");
+
+                        for (String partOfLine : strArr) {
+                            if (partOfLine.matches("[0-9]+")){
+                                systemMonitorPanel.appendCpuValueToGraph(Integer.parseInt(partOfLine));
+                            }
+                        }
+                    }
+
             } catch (IOException | PowerShellScriptException e) {
                 e.printStackTrace();
             }
+
         }
     }
     /**
