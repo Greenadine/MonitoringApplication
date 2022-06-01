@@ -96,14 +96,14 @@ public class SystemMonitorPanel extends ApplicationPanel {
         // Create and add uptime label
         final WrappedJLabel systemUptimeLabel = new WrappedJLabel("Uptime", SwingConstants.LEFT);
         systemUptimeLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
-        systemUptimeLabel.getWrapperPanel().setBackground(Colors.MONITOR_VALUE_LABEL);
+        systemUptimeLabel.setBackground(Colors.MONITOR_VALUE_LABEL);
         systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
-        systemUptimeLabel.getWrapperPanel().setAlignmentX(LEFT_ALIGNMENT);
+        systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.anchor = GridBagConstraints.WEST;
-        systemInformationPanel.add(systemUptimeLabel.getWrapperPanel(), constraints);
+        systemInformationPanel.add(systemUptimeLabel, constraints);
 
         // Create and add uptime value label
         systemUptimeValue = new WrappedJLabel("Loading...", SwingConstants.RIGHT);
@@ -114,7 +114,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         constraints.gridy = 0;
         constraints.weightx = 3;
         constraints.anchor = GridBagConstraints.EAST;
-        systemInformationPanel.add(systemUptimeValue.getWrapperPanel(), constraints);
+        systemInformationPanel.add(systemUptimeValue, constraints);
     }
 
     /**
@@ -122,9 +122,9 @@ public class SystemMonitorPanel extends ApplicationPanel {
      */
     private void addCpuUsageGraph() {
         // Add header
-        final JLabel cpuUsageHeader = new WrappedJLabel("CPU Load", SwingUtils.getIconFromResource("cpu.png"));
-        cpuUsageHeader.setFont(Fonts.MONITOR_SUBTITLE);
-        cpuUsageHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
+        final WrappedJLabel cpuUsageHeader = new WrappedJLabel("CPU Load", SwingUtils.getIconFromResource("cpu.png"));
+        cpuUsageHeader.getLabel().setFont(Fonts.MONITOR_SUBTITLE);
+        cpuUsageHeader.setBackground(Colors.MAIN_BACKGROUND);
         this.add(cpuUsageHeader);
 
         // Add graph
@@ -223,7 +223,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         }
 
         systemNameLabel.setIcon(SwingUtils.getIconFromResource("status-neutral.png")); // Set status icon to neutral
-        systemUptimeValue.setText("Loading...");
+        systemUptimeValue.getLabel().setText("Loading...");
     }
 
     /**
@@ -287,7 +287,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
             systemNameLabel.setIcon(SwingUtils.getIconFromResource(String.format("status-%s.png", onlineStatus ? "online" : previousOnlineStatus ? "warning" : "offline")));
 
             if (!onlineStatus) {
-                systemUptimeValue.setText("Can't be reached");
+                systemUptimeValue.getLabel().setText("Can't be reached");
 
                 addEmptyDisksTable("Can't be reached");
                 // TODO maybe send some kind of warning for the system being offline, for example through email?
@@ -331,7 +331,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
             // Set uptime
             if (lastBootUpTime != null) {
                 final Duration duration = Duration.between(lastBootUpTime, Instant.now());
-                systemUptimeValue.setText(formatDuration(duration));
+                systemUptimeValue.getLabel().setText(formatDuration(duration));
             }
         }
 

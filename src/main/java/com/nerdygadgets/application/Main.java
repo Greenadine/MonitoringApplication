@@ -9,6 +9,10 @@ import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Logger;
 
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Main {
 
@@ -16,6 +20,7 @@ public class Main {
     public static SettingsWindow settingsWindow;
 
     public static void main(String[] args) {
+
         // Attempt to set application theme, and create windows
         try {
             UIManager.setLookAndFeel(new FlatOneDarkIJTheme());

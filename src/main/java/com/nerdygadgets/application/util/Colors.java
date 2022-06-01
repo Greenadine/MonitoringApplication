@@ -14,6 +14,9 @@ public final class Colors {
     public static final Color MAIN_HEADER = MAIN_BACKGROUND;
     public static final Color MAIN_HEADER_ACCENT = MAIN_BACKGROUND_ACCENT;
 
+    /* View network components screen colors */
+    public static final Color NETWORK_COMPONENTS_LIST_ENTRY_BACKGROUND = MAIN_BACKGROUND_ACCENT;
+
     /* Monitoring panel colors */
     public static final Color MONITOR_BACKGROUND = MAIN_BACKGROUND;
     public static final Color MONITOR_BACKGROUND_ACCENT = MAIN_BACKGROUND_ACCENT;

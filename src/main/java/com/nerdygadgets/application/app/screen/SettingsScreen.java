@@ -24,7 +24,7 @@ public class SettingsScreen extends ApplicationScreen {
         final WrappedJLabel titleLabel = new WrappedJLabel("Settings");
         titleLabel.setFont(Fonts.MAIN_TITLE);
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-        this.add(titleLabel.getWrapperPanel());
+        this.add(titleLabel);
         SwingUtils.addVerticalSpacer(this, 15);
 
         this.add(new SettingsPanel(this)); // Add settings panel
