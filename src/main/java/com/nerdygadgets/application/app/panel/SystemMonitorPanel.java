@@ -37,7 +37,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
     private JLabel systemNameLabel;
     private WrappedJLabel systemUptimeValue;
     private LineGraphComponent cpuUsageGraphPanel;
-    private JPanel disksTableContentPanel;
+    public JPanel disksTableContentPanel;
 
     private ScheduledFuture<?> uptimeUpdater;
     private ScheduledFuture<?> cpuUsageUpdater;
@@ -263,7 +263,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         // Update CPU usage at a 1-second interval
         cpuUsageUpdater = Scheduler.scheduleAtFixedRate(new CpuUsageUpdater(), 0, 1);
         // Update disk(s) information at a 5-minute interval
-        disksUpdater = Scheduler.scheduleAtFixedRate(new DisksUpdater(), 0, 300);
+        disksUpdater = Scheduler.scheduleAtFixedRate(new DisksUpdater(), 5, 300);
     }
 
     @Override
@@ -408,7 +408,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
                     removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
 
                     disksTableContentPanel = new JPanel();
-                    disksTableContentPanel.setLayout(new GridLayout(1, 4));
+                    disksTableContentPanel.setLayout(new GridLayout());
                     disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
                     disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
                     addComponent(disksTableContentPanel);

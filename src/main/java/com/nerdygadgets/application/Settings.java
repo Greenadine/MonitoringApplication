@@ -70,7 +70,7 @@ public final class Settings {
         settings.setProperty("background-monitoring", String.valueOf(value));
 
         // If background monitoring has been enabled after previously being disabled, start monitoring the systems in the background
-        if (isBackgroundMonitoringEnabled()) {
+/*        if (isBackgroundMonitoringEnabled()) {
             ((NetworkMonitorScreen) Main.mainWindow.getScreen("network-monitor")).startMonitoringSystems();
         } else {
             Main.mainWindow.getCurrentScreen().ifPresent(currentScreen -> {
@@ -78,7 +78,7 @@ public final class Settings {
                     ((NetworkMonitorScreen) Main.mainWindow.getScreen("network-monitor")).stopMonitoringSystems();
                 }
             });
-        }
+        }*/
 
         save();
     }

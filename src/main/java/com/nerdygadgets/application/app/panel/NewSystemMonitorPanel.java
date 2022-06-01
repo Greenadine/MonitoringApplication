@@ -5,23 +5,20 @@ import com.nerdygadgets.application.app.component.LineGraphComponent;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
-import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Fonts;
-import com.nerdygadgets.application.util.SwingUtils;
-import com.nerdygadgets.application.util.SystemMonitor;
+import com.nerdygadgets.application.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.Instant;
+import java.util.ArrayList;
 
 public class NewSystemMonitorPanel extends ApplicationPanel {
 
     private WrappedJLabel systemNameLabel;
     private WrappedJLabel systemUptimeValue;
     private LineGraphComponent cpuUsageGraphPanel;
-    private JPanel disksTableContentPanel;
+    public JPanel disksTableContentPanel;
 
     private boolean previousOnlineStatus; // TODO
     private boolean onlineStatus;
@@ -50,6 +47,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
         systemNameLabel = new WrappedJLabel(systemName);
         systemNameLabel.getWrapperPanel().setBackground(Colors.MONITOR_BACKGROUND);
         systemNameLabel.setFont(Fonts.MONITOR_TITLE);
+        systemNameLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(systemNameLabel);
     }
 
@@ -107,6 +105,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
         final WrappedJLabel disksHeader = new WrappedJLabel("Storage Drives", SwingUtils.getIconFromResource("storage-drive.png"));
         disksHeader.getWrapperPanel().setBackground(Colors.MONITOR_BACKGROUND);
         disksHeader.setFont(Fonts.MONITOR_SUBTITLE);
+        disksHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(disksHeader);
 
         /* Create and populate table header panel */
@@ -162,6 +161,15 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
         disksTableContentPanel.add(placeholderLabel);
     }
 
+    /**
+     * Gets the name of the system.
+     *
+     * @return The name of the system.
+     */
+    public String getSystemName() {
+        return systemNameLabel.getText();
+    }
+
     /* Panel management methods */
 
     /**
@@ -185,31 +193,34 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
     /**
      * Adds the information about a storage disk to the table.
      *
-     * @param disk The disk.
+     * The disk.
      */
-    public void addDiskInformation(SystemMonitor.DiskResult disk) {
-        // Add disk name
-        final JLabel diskNameLabel = new JLabel(disk.getName());
-        diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-        disksTableContentPanel.add(diskNameLabel);
+    public void addDiskInformation(ArrayList<NewSystemMonitor.DiskResult> disks) {
 
-        // Add disk total space
-        final JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", disk.getTotalSpace()), SwingConstants.RIGHT);
-        diskTotalSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-        diskTotalSpaceLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
-        disksTableContentPanel.add(diskTotalSpaceLabel);
+        for (NewSystemMonitor.DiskResult disk : disks) {
+            // Add disk name
+            final JLabel diskNameLabel = new JLabel(disk.getName());
+            diskNameLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+            disksTableContentPanel.add(diskNameLabel);
 
-        // Add disk free space
-        final JLabel diskFreeSpaceLabel = new JLabel(String.format("%.2f GB", disk.getFreeSpace()), SwingConstants.RIGHT);
-        diskFreeSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-        disksTableContentPanel.add(diskFreeSpaceLabel);
+            // Add disk total space
+            final JLabel diskTotalSpaceLabel = new JLabel(String.format("%.2f GB", disk.getTotalSpace()), SwingConstants.RIGHT);
+            diskTotalSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+            diskTotalSpaceLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
+            disksTableContentPanel.add(diskTotalSpaceLabel);
 
-        // Add disk space in use
-        final JLabel diskSpaceInUseLabel = new JLabel(String.format("%.2f%%", 100 - (disk.getFreeSpace() / disk.getTotalSpace() * 100)), SwingConstants.RIGHT);
-        diskSpaceInUseLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
-        disksTableContentPanel.add(diskSpaceInUseLabel);
+            // Add disk free space
+            final JLabel diskFreeSpaceLabel = new JLabel(String.format("%.2f GB", disk.getFreeSpace()), SwingConstants.RIGHT);
+            diskFreeSpaceLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+            disksTableContentPanel.add(diskFreeSpaceLabel);
 
-        Main.mainWindow.pack(); // Resize window
+            // Add disk space in use
+            final JLabel diskSpaceInUseLabel = new JLabel(String.format("%.2f%%", 100 - (disk.getFreeSpace() / disk.getTotalSpace() * 100)), SwingConstants.RIGHT);
+            diskSpaceInUseLabel.setFont(Fonts.MONITOR_TABLE_CONTENT);
+            disksTableContentPanel.add(diskSpaceInUseLabel);
+
+            Main.mainWindow.pack(); // Resize window
+        }
     }
 
     @Override

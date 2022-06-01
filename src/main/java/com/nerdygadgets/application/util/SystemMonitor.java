@@ -1,9 +1,14 @@
 package com.nerdygadgets.application.util;
 
+import com.nerdygadgets.application.app.panel.NewSystemMonitorPanel;
+import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
 import com.nerdygadgets.application.exception.PowerShellScriptException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -283,9 +288,9 @@ public class SystemMonitor {
                 for (String partOfLine:strArr) {
                     if (partOfLine.matches("[0-9]+")){
                         finalStrArr[count] = partOfLine;
-                        final float diskFreeSpace = Long.parseLong(strArr[1]) / 1024f;
+                        final float diskFreeSpace = Long.parseLong(finalStrArr[1]) / 1024f;
                         final String diskName = "root";
-                        final float diskTotalSpace = Long.parseLong(strArr[0]) / 1024f;
+                        final float diskTotalSpace = Long.parseLong(finalStrArr[0]) / 1024f;
                         new DiskResult(diskName, diskTotalSpace, diskFreeSpace);
                         count++;
                     }
@@ -435,6 +440,13 @@ public class SystemMonitor {
 
         public float getFreeSpace() {
             return freeSpace;
+        }
+    }
+    private class DiskUpdater implements Runnable{
+
+        @Override
+        public void run() {
+            final ArrayList<SystemMonitor.DiskResult> sshDisks = getLocalDisks();
         }
     }
 }
