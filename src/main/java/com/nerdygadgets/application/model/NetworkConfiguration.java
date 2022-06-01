@@ -10,14 +10,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class NetworkConfiguration {
 
-    private final String name;
+    private String name;
 
     private NetworkComponent firewall;
     private final NetworkComponentList databases;
     private final NetworkComponentList webservers;
 
-    public NetworkConfiguration(){
-        this.name = "";
+    public NetworkConfiguration(String name){
+        this.name = name;
         this.databases = new NetworkComponentList();
         this.webservers = new NetworkComponentList();
     }
@@ -41,6 +41,15 @@ public class NetworkConfiguration {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the name of the network configuration.
+     *
+     * @param name The new name of the network configuration.
+     */
+    public void setName(@NotNull final String name) {
+        this.name = name;
     }
 
     /**

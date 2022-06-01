@@ -77,7 +77,7 @@ public class NetworkConfigurationsMenuScreen extends ApplicationScreen {
      */
     private void actionCreateNewConfiguration(ActionEvent event) {
         // Pass an empty network configuration to the screen, and open the screen
-        ((NetworkConfigurationScreen) window.getScreen("network-configuration")).setConfiguration(new NetworkConfiguration());
+        ((NetworkConfigurationScreen) window.getScreen("network-configuration")).setConfiguration(new NetworkConfiguration("Create New Configuration"));
         window.openScreen("network-configuration");
     }
 

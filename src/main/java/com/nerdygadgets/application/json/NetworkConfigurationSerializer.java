@@ -17,13 +17,8 @@ public class NetworkConfigurationSerializer extends StdSerializer<NetworkConfigu
     @Override
     public void serialize(NetworkConfiguration networkConfiguration, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-
         gen.writeStringField("name", networkConfiguration.getName());
         gen.writeNumberField("firewall", networkConfiguration.getFirewall().getId());
-
-
-
-
         gen.writeObjectField("databases", Utils.getComponentIds(networkConfiguration.getDatabases().getComponents()));
         gen.writeObjectField("webservers", Utils.getComponentIds(networkConfiguration.getWebservers().getComponents()));
 

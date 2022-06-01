@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Arrays;
 
 public class NetworkConfigurationScreen extends ApplicationScreen {
 
@@ -194,8 +195,14 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
         int userSelection = fileChooser.showSaveDialog(window);
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = new File(fileChooser.getSelectedFile().getAbsolutePath() + ".json");
-            NetworkConfigurationUtils.serialize(configuration, fileToSave);
+            File saveLocation = new File(fileChooser.getSelectedFile().getAbsolutePath());
+
+            if (!saveLocation.getAbsolutePath().endsWith(".json")) {
+                saveLocation = new File(saveLocation.getAbsolutePath() + ".json");
+            }
+
+            configuration.setName(saveLocation.getName().substring(0, saveLocation.getName().length() - 5));
+            NetworkConfigurationUtils.serialize(configuration, saveLocation);
         }
     }
 
