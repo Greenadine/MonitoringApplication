@@ -1,6 +1,5 @@
 package com.nerdygadgets.application.app.component;
 
-import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.PanelComponent;
 import com.nerdygadgets.application.app.panel.NetworkComponentsListSidebar;
 import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
@@ -60,7 +59,7 @@ public class NetworkComponentSidebarEntry extends PanelComponent {
             }
             case FIREWALL -> {
                 if (configuration.getFirewall() != null) {
-                    ApplicationUtils.showPopupInfoMessage("Configuration Already Has a Firewall", "First remove the current firewall before adding a new one.");
+                    ApplicationUtils.showPopupInfoDialog("Configuration Already Has a Firewall", "First remove the current firewall before adding a new one.");
                 } else {
                     configuration.setFirewall(component);
                     sidebar.getConfigurationFirewall().setFirewall(configuration, component);

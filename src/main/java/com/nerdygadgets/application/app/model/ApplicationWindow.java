@@ -22,10 +22,6 @@ public abstract class ApplicationWindow extends JFrame {
     private final Map<String, ApplicationScreen> applicationScreens;
     protected ApplicationScreen currentScreen;
 
-    public ApplicationWindow() {
-        this(null);
-    }
-
     public ApplicationWindow(@Nullable final String title) {
         this.setTitle(title);
 

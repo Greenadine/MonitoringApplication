@@ -24,16 +24,16 @@ public class Main {
         } catch (DatabaseException ex) {
             Logger.error(ex, ex.getMessage());
 
-            ApplicationUtils.showPopupErrorMessage("Failed to reach database", "This could be due to connection issues, invalidly defined database host and credentials, or due to technical issues with the database. " +
+            ApplicationUtils.showPopupErrorDialog("Failed to reach database", "This could be due to connection issues, invalidly defined database host and credentials, or due to technical issues with the database. " +
                     "Please check the database information defined in the 'database.properties' file.");
         } catch (DisplayComponentException ex) {
             Logger.error(ex, "An exception has occurred when displaying a component.");
 
             try {
                 mainWindow.openScreen("home"); // Attempt to return to home screen
-                ApplicationUtils.showPopupErrorMessage("An error has occurred", "There was an error while displaying a panel.\n\nError message: " + ex.getMessage());
+                ApplicationUtils.showPopupErrorDialog("An error has occurred", "There was an error while displaying a panel.\n\nError message: " + ex.getMessage());
             } catch (Exception ex1) {
-                ApplicationUtils.showPopupErrorMessage("Fatal error", "An unknown issue is preventing the application from functioning. Please report this issue to management.");
+                ApplicationUtils.showPopupErrorDialog("Fatal error", "An unknown issue is preventing the application from functioning. Please report this issue to management.");
                 System.exit(100);
             }
         }
@@ -42,9 +42,9 @@ public class Main {
 
             try {
                 mainWindow.openScreen("home"); // Attempt to return to home screen
-                ApplicationUtils.showPopupErrorMessage("An unexpected error has occurred", "Please try again later. If this issue persists, please report this issue to management.");
+                ApplicationUtils.showPopupErrorDialog("An unexpected error has occurred", "Please try again later. If this issue persists, please report this issue to management.");
             } catch (Exception ex1) {
-                ApplicationUtils.showPopupErrorMessage("Fatal error", "An unknown issue is preventing the application from functioning. Please report this issue to management.");
+                ApplicationUtils.showPopupErrorDialog("Fatal error", "An unknown issue is preventing the application from functioning. Please report this issue to management.");
                 System.exit(100);
             }
         }

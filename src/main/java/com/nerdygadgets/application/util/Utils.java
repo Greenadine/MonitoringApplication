@@ -2,9 +2,8 @@ package com.nerdygadgets.application.util;
 
 import com.google.common.primitives.Longs;
 import com.nerdygadgets.application.Main;
+import com.nerdygadgets.application.model.ComponentType;
 import com.nerdygadgets.application.model.NetworkComponent;
-import com.nerdygadgets.application.util.database.ConnectionToDatabase;
-import com.nerdygadgets.application.util.database.GetDataFromDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,10 +18,9 @@ public final class Utils {
      * Export a resource embedded into the jar file to the local file path.
      *
      * @param resourceName ie.: "/SmartLibrary.dll"
-     * @return The path to the exported resource.
      */
-    @SuppressWarnings("ConstantConditions")
-    static public String exportResource(String resourceName) throws Exception {
+    @SuppressWarnings({"ConstantConditions"})
+    static public void exportResource(String resourceName) throws Exception {
         InputStream stream = null;
         OutputStream resStreamOut = null;
         String jarFolder;
@@ -44,8 +42,6 @@ public final class Utils {
             stream.close();
             resStreamOut.close();
         }
-
-        return jarFolder + resourceName;
     }
 
     /**
@@ -74,7 +70,7 @@ public final class Utils {
         ArrayList<NetworkComponent> databases = new ArrayList<>();
 
         for (long id : ids) {
-            databases.add(new GetDataFromDatabase().getDatabase(id));
+            databases.add(DatabaseUtils.getComponentById(ComponentType.DATABASE, id));
         }
 
         return databases;
@@ -90,7 +86,7 @@ public final class Utils {
         ArrayList<NetworkComponent> webservers = new ArrayList<>();
 
         for (long id : ids) {
-            webservers.add(new GetDataFromDatabase().getWebserver(id));
+            webservers.add(DatabaseUtils.getComponentById(ComponentType.WEBSERVER, id));
         }
 
         return webservers;

@@ -13,7 +13,7 @@ public final class ApplicationUtils {
      * @param title The title.
      * @param message The message.
      */
-    public static void showPopupInfoMessage(@NotNull final String title, @NotNull final String message) {
+    public static void showPopupInfoDialog(@NotNull final String title, @NotNull final String message) {
         JOptionPane.showMessageDialog(Main.mainWindow, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -23,7 +23,17 @@ public final class ApplicationUtils {
      * @param title The title.
      * @param message The message.
      */
-    public static void showPopupErrorMessage(@NotNull final String title, @NotNull final String message) {
+    public static void showPopupErrorDialog(@NotNull final String title, @NotNull final String message) {
         JOptionPane.showMessageDialog(Main.mainWindow, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Shows a confirmation popup screen with the provided title message
+     *
+     * @param title The title
+     * @param message The message
+     */
+    public static int showConfirmationDialog(@NotNull final String title, @NotNull final String message) {
+        return JOptionPane.showConfirmDialog(Main.mainWindow, message, title, JOptionPane.YES_NO_OPTION);
     }
 }

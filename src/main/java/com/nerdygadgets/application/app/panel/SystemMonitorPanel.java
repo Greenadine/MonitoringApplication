@@ -1,7 +1,6 @@
 package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.Main;
-import com.nerdygadgets.application.Settings;
 import com.nerdygadgets.application.app.component.LineGraphComponent;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
@@ -65,11 +64,6 @@ public class SystemMonitorPanel extends ApplicationPanel {
         addSystemStatus();
         addCpuUsageGraph();
         addStorageDisksInformation();
-
-        // Schedule uptime updater & system status checker at 1-minute intervals
-        if (Settings.isBackgroundMonitoringEnabled()) {
-            // TODO when implementing setting
-        }
     }
 
     /**

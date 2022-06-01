@@ -2,6 +2,7 @@ package com.nerdygadgets.application.app.window;
 
 import com.nerdygadgets.application.app.screen.*;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
+import com.nerdygadgets.application.util.SwingUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,12 +10,12 @@ import java.io.IOException;
 
 public class MainWindow extends ApplicationWindow {
 
-    public MainWindow() throws IOException {
+    public MainWindow() {
         super("NerdyGadgets Network Application");
 
         // Configure window
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setIconImage(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/assets/icons/app.png"))).getImage());
+        this.setIconImage(SwingUtils.getIconFromResource("app.png").getImage());
         this.setResizable(false);
 
         // Create and register screens

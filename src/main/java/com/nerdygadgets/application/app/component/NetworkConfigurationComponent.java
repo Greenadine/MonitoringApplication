@@ -5,6 +5,7 @@ import com.nerdygadgets.application.app.model.PanelComponent;
 import com.nerdygadgets.application.app.screen.NetworkConfigurationScreen;
 import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
+import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Colors;
 import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
@@ -49,13 +50,15 @@ public class NetworkConfigurationComponent extends PanelComponent {
      * @param event The {@link ActionEvent}.
      */
     private void actionOnRemove(ActionEvent event) {
-        switch (component.getType()) {
-            case FIREWALL -> configuration.setFirewall(null);
-            case DATABASE -> configuration.removeDatabase(component);
-            case WEBSERVER -> configuration.removeWebserver(component);
+        int result = ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to remove the component from the configuration?");
+        if (result == 0){
+            switch (component.getType()) {
+                case FIREWALL -> configuration.setFirewall(null);
+                case DATABASE -> configuration.removeDatabase(component);
+                case WEBSERVER -> configuration.removeWebserver(component);
+            }
+            ((NetworkConfigurationScreen) parentPanel.parentScreen).setConfiguration(configuration);
         }
-
-        ((NetworkConfigurationScreen) parentPanel.parentScreen).setConfiguration(configuration);
     }
 
     @Override

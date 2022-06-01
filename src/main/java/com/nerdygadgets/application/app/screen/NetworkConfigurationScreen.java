@@ -3,11 +3,9 @@ package com.nerdygadgets.application.app.screen;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.*;
-import com.nerdygadgets.application.model.NetworkComponent;
 import com.nerdygadgets.application.model.NetworkConfiguration;
 import com.nerdygadgets.application.util.ApplicationUtils;
 import com.nerdygadgets.application.util.Colors;
-import com.nerdygadgets.application.util.Logger;
 import com.nerdygadgets.application.util.NetworkConfigurationUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +16,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class NetworkConfigurationScreen extends ApplicationScreen {
 
@@ -39,7 +36,9 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        // Populate screen
+        // --- Populate screen ---
+
+        // Add header
         screenHeaderPanel = new ScreenHeaderPanel(this, "(Network Configuration Name)", 1250, 50, this::actionReturn);
         this.add(screenHeaderPanel, BorderLayout.PAGE_START);
 
@@ -63,11 +62,11 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
         componentListsWrapper.add(databaseList);
         componentListsWrapper.add(webserverList);
 
-        // create sidebar
+        // Create sidebar
         sidebar = new NetworkComponentsListSidebar(this);
         this.add(sidebar, BorderLayout.LINE_START);
 
-        // create configuration data wrapper
+        // Create configuration data wrapper
         JPanel pageEndWrapperPanel = new JPanel();
         pageEndWrapperPanel.setLayout(new BoxLayout(pageEndWrapperPanel, BoxLayout.Y_AXIS));
         centerWrapperPanel.add(pageEndWrapperPanel, BorderLayout.PAGE_END);
@@ -162,7 +161,10 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
      * Returns to the network configuration menu.
      */
     private void actionReturn(ActionEvent event) {
-        window.openScreen("network-configurations-menu");
+        int result = ApplicationUtils.showConfirmationDialog("Are you sure you want to leave?", "Are you sure you want to leave without saving?");
+        if (result == 0){
+            window.openScreen("network-configurations-menu");
+        }
     }
 
     /**
@@ -170,20 +172,20 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
      */
     private void actionSave(ActionEvent event) {
         // Check if a firewall has been set for the configuration
-        if (firewallPanel.getFirewall() == null) {
-            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set a firewall for the configuration");
+        if (configuration.getFirewall() == null) {
+            ApplicationUtils.showPopupErrorDialog("Invalid configuration", "Please set a firewall for the configuration");
             return;
         }
 
         // Check whether there are any databases set for the configuration
-        if (databaseList.getComponentsList().isEmpty()) {
-            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set at least one database");
+        if (configuration.getDatabases().isEmpty()) {
+            ApplicationUtils.showPopupErrorDialog("Invalid configuration", "Please set at least one database.");
             return;
         }
 
         // Check whether there are any webservers set for the configuration
-        if (webserverList.getComponentsList().isEmpty()) {
-            ApplicationUtils.showPopupErrorMessage("Invalid configuration", "Please set at least one webserver");
+        if (configuration.getWebservers().isEmpty()) {
+            ApplicationUtils.showPopupErrorDialog("Invalid configuration", "Please set at least one webserver.");
             return;
         }
 
@@ -207,10 +209,10 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
 
             try {
                 NetworkConfigurationUtils.serialize(configuration, saveLocation);
-                window.openScreen("home");
-                ApplicationUtils.showPopupInfoMessage("Configuration saved", String.format("The configuration has been saved to '%s'.", saveLocation.getAbsolutePath()));
+                ApplicationUtils.showPopupInfoDialog("Configuration saved", String.format("The configuration has been saved to '%s'.", saveLocation.getAbsolutePath()));
+                window.openScreen("network-configurations-menu");
             } catch (IOException ex) {
-                ApplicationUtils.showPopupErrorMessage("Failed to save configuration", "An error has occurred while attempting to save configuration. This is likely due to insufficient privileges at the designated save location.");
+                ApplicationUtils.showPopupErrorDialog("Failed to save configuration", "An error has occurred while attempting to save configuration. This is likely due to insufficient privileges at the designated save location.");
             }
         }
     }
