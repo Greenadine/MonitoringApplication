@@ -25,12 +25,17 @@ public class NetworkMonitorScreen extends ApplicationScreen {
 
         monitorPanels.setLayout(new FlowLayout(FlowLayout.LEFT));
         this.add(monitorPanels, BorderLayout.CENTER);
-        monitorPanels.add(new SystemMonitorPanel(this, "This System"));
+       //monitorPanels.add(new SystemMonitorPanel(this, "This System"));
         addMonitorPanels();
     }
 
     private void addMonitorPanels() {
         // Create content panel
+        NewSystemMonitorPanel localHost = new NewSystemMonitorPanel(this, "This system");
+        NewSystemMonitor.monitorLocalhostUptime(localHost);
+        NewSystemMonitor.monitorLocalhostCpuUsage(localHost);
+        NewSystemMonitor.monitorLocalhostDisks(localHost);
+
         NewSystemMonitorPanel testMonitorPanel = new NewSystemMonitorPanel(this, "Webserver 1");
         NewSystemMonitor.monitorWebserverUptime(testMonitorPanel, "", "", "");
         NewSystemMonitor.monitorWebserverCpuUsage(testMonitorPanel,"", "", "");
@@ -41,6 +46,7 @@ public class NetworkMonitorScreen extends ApplicationScreen {
         NewSystemMonitor.monitorDatabaseCpuUsage(Database1,"", "", "");
         NewSystemMonitor.monitorDatabaseDisks(Database1, "","","");
 
+        monitorPanels.add(localHost);
         monitorPanels.add(testMonitorPanel);
         monitorPanels.add(Database1);
     }

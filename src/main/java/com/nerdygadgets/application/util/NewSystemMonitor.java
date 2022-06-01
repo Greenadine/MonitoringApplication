@@ -1,5 +1,6 @@
 package com.nerdygadgets.application.util;
 
+import com.nerdygadgets.application.Main;
 import com.nerdygadgets.application.app.panel.NewSystemMonitorPanel;
 import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
 import com.nerdygadgets.application.exception.PowerShellScriptException;
@@ -99,37 +100,7 @@ public final class NewSystemMonitor {
          *
          * @return A {@code String} with days, hours and minutes between the last boot-up time, and now.
          */
-        private String formatDuration(Duration duration) {
-            final StringJoiner joiner = new StringJoiner(" ");
 
-            final String str = DurationFormatUtils.formatDuration(duration.toMillis(), "d' days 'H' hours 'm' minutes'");
-            String[] strArr = str.split("\\s+");
-
-            try {
-                final int days = Integer.parseInt(strArr[0]);
-                if (days > 0) {
-                    joiner.add(days + " days");
-                }
-
-                final int hours = Integer.parseInt(strArr[2]);
-                if (hours > 0) {
-                    joiner.add(hours + " hours");
-                }
-
-                final int minutes = Integer.parseInt(strArr[4]);
-                if (minutes > 0) {
-                    joiner.add(minutes + " minutes");
-                }
-            } catch (NumberFormatException ex) {
-                Logger.error(ex, "Failed to format system uptime.");
-            }
-
-            String result = joiner.toString();
-            result = StringUtils.replaceOnce(result, " 1 minutes", " 1 minute");
-            result = StringUtils.replaceOnce(result, " 1 hours", " 1 hour");
-            result = StringUtils.replaceOnce(result, "1 days", " 1 day");
-            return result;
-        }
     }
     /**
      * Schedule MonitorWebserverCpuUsage at fixed rate
@@ -337,6 +308,7 @@ public final class NewSystemMonitor {
             final BufferedReader pserr = processOutput.getErrors();
                 String line = null;
                     while ((line = psOut.readLine()) != null) {
+
                         line = line.trim();
                         if (line.isEmpty()) {
                             continue;
@@ -446,6 +418,28 @@ public final class NewSystemMonitor {
 
         @Override
         public void run() {
+            try {
+                final String command;
+                command = "ssh admin@192.168.1.1 uptime | ConvertFrom-String -Delimiter ' ' | Select-Object p4, p6";
+
+                final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
+                final BufferedReader psOut = processOutput.getOutput();
+                final BufferedReader pserr = processOutput.getErrors();
+                String a = null;
+                try {
+                    a = psOut.readLine();
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+
+                a = a.replaceAll("[,]", "");
+                int indexOfSpace = a.indexOf(' ');
+                if (indexOfSpace != -1) {
+                    systemMonitorPanel.setUptimeValue(a.substring(indexOfSpace + 1));
+                }
+            } catch (PowerShellScriptException e) {
+                e.printStackTrace();
+            }
 
         }
     }
@@ -502,6 +496,172 @@ public final class NewSystemMonitor {
         }
     }
     /**-------------------------------------------------------*/
+    /**----------localhost------------------------------------*/
+    public static void monitorLocalhostUptime(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+        Scheduler.scheduleAtFixedRate(new MonitorLocalhostUptime(systemMonitorPanel), 0, 60);
+    }
+    public static class MonitorLocalhostUptime implements Runnable {
+        private final NewSystemMonitorPanel systemMonitorPanel;
+        public MonitorLocalhostUptime(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+            this.systemMonitorPanel = systemMonitorPanel;
+        }
+
+        @Override
+        public void run() {
+            final String command = "wmic path Win32_OperatingSystem get LastBootUpTime";
+
+            try {
+                final ProcessOutput processOutput = executePowerShellCommand(command);
+
+                final BufferedReader psOut = processOutput.getOutput();
+
+                try {
+                    String line;
+                    while ((line = psOut.readLine()) != null) {
+                        line = line.trim();
+                        if (line.isEmpty()) {
+                            continue;
+                        }
+
+                        final String[] strArr = line.split("\\.");
+
+                        if (strArr.length == 2 && Pattern.compile("\\d{14}").matcher(strArr[0]).matches()) {
+                            try {
+                                // Convert output to Instant
+                                final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+                                Instant lastBootUptime = dateFormat.parse(strArr[0]).toInstant();
+                                final Duration duration = Duration.between(lastBootUptime, Instant.now());
+
+                                systemMonitorPanel.setUptimeValue(formatDuration(duration));
+
+                            } catch (ParseException ex) {
+                                Logger.error(ex, "Failed to parse last boot-up time '%s' into Instant.", strArr[0]);
+                            }
+                        }
+                    }
+
+                    processOutput.close();
+                } catch (IOException ex) {
+                    Logger.error(ex, "Failed to retrieve last boot-up time of system at address.");
+                }
+
+            } catch (PowerShellScriptException ex) {
+                Logger.error(ex, "Failed to update uptime for webserver '%s'.", systemMonitorPanel.getSystemName());
+            }
+        }
+        }
+    /**
+     * Schedule MonitorWebserverCpuUsage at fixed rate
+     * getting cpu by WMIC command and putting value in the visual graph.
+     */
+    public static void monitorLocalhostCpuUsage(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+        Scheduler.scheduleAtFixedRate(new MonitorLocalhostCpuUsage(systemMonitorPanel), 0, 1);
+    }
+    public static class MonitorLocalhostCpuUsage implements Runnable {
+        private final NewSystemMonitorPanel systemMonitorPanel;
+
+        public MonitorLocalhostCpuUsage(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+            this.systemMonitorPanel = systemMonitorPanel;
+        }
+        @Override
+        public void run() {
+                try {
+                    final String command;
+                    //command  = String.format("wmic /node:%s /user:%s /password:%s CPU get LoadPercentage", address, user, password);
+                    command  = "wmic CPU get LoadPercentage";
+
+                    final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
+                    final BufferedReader psOut = processOutput.getOutput();
+
+                    try {
+                        String line;
+                        while ((line = psOut.readLine()) != null) {
+                            line = line.trim();
+                            if (line.isEmpty()) {
+                                continue;
+                            }
+
+                            // If the line only consists of digits, parse it into an int
+                            if (Pattern.compile("\\d+").matcher(line).matches()) {
+                                systemMonitorPanel.appendCpuValueToGraph(Integer.parseInt(line));
+                                break;
+                            }
+                        }
+
+                        processOutput.close();
+                    } catch (IOException ex) {
+                        Logger.error(ex, "Failed to retrieve CPU load of system at address .");
+                    }
+                } catch (PowerShellScriptException ex) {
+                    Logger.error(ex, "Failed to run PowerShell command for retrieving CPU load of system at address .");
+                }
+        }
+    }
+    /**
+     * Schedule MonitorWebserverCpuUsage at fixed rate
+     * getting cpu by WMIC command and putting value in the visual graph.
+     */
+    public static void monitorLocalhostDisks(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+        Scheduler.scheduleAtFixedRate(new MonitorLocalhostDisks(systemMonitorPanel), 0, 300);
+    }
+    public static class MonitorLocalhostDisks implements Runnable {
+        private final NewSystemMonitorPanel systemMonitorPanel;
+
+
+        public MonitorLocalhostDisks(@NotNull final NewSystemMonitorPanel systemMonitorPanel) {
+            this.systemMonitorPanel = systemMonitorPanel;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // We have to first remove and then re-add the component for it to update
+
+
+                final String command;
+                //command  = String.format("wmic /node:%s /user:%s /password:%s LogicalDisk get Name,Size,FreeSpace", address, user, password);
+                command  = "wmic LogicalDisk get Name,Size,FreeSpace";
+
+                final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
+                final BufferedReader psOut = processOutput.getOutput();
+                final ArrayList<NewSystemMonitor.DiskResult> disks = new ArrayList<>();
+                removeComponent(systemMonitorPanel);
+                addComponent(systemMonitorPanel);
+                try {
+                    String line;
+                    boolean skipFirst = true;
+
+                    while ((line = psOut.readLine()) != null) {
+                        line = line.trim();
+                        if (line.isEmpty()) {
+                            continue;
+                        }
+                        if (skipFirst) {
+                            skipFirst = false; // Skip first line, as this always contains a header
+                            continue;
+                        }
+                        final String[] strArr = line.split("\\s+");
+                        final float diskFreeSpace = Long.parseLong(strArr[0]) / 1073741824f;
+                        final String diskName = strArr[1].trim();
+                        final float diskTotalSpace = Long.parseLong(strArr[2]) / 1073741824f;
+                        disks.add(new DiskResult(diskName, diskTotalSpace, diskFreeSpace));
+                    }
+                    systemMonitorPanel.addDiskInformation(disks);
+                    ((GridLayout) systemMonitorPanel.disksTableContentPanel.getLayout()).setRows(disks.size());
+
+                    processOutput.close();
+                } catch (IOException ex) {
+                    Logger.error(ex, "Failed to retrieve storage disks of system at address .");
+                }
+            } catch (PowerShellScriptException ex) {
+                Logger.error(ex, "Failed to run PowerShell command for retrieving disk(s) information of system at address.");
+            }
+
+        }
+
+        }
+
+    /**---------------------------------------------------------*/
 
         private static ProcessOutput executePowerShellCommand(final String command) throws PowerShellScriptException {
         try {
@@ -584,6 +744,37 @@ public final class NewSystemMonitor {
     protected static void removeComponent(NewSystemMonitorPanel systemMonitorPanel) {
         systemMonitorPanel.disksTableContentPanel.removeAll();
         systemMonitorPanel.remove(systemMonitorPanel.disksTableContentPanel);
+    }
+    private static String formatDuration(Duration duration) {
+        final StringJoiner joiner = new StringJoiner(" ");
+
+        final String str = DurationFormatUtils.formatDuration(duration.toMillis(), "d' days 'H' hours 'm' minutes'");
+        String[] strArr = str.split("\\s+");
+
+        try {
+            final int days = Integer.parseInt(strArr[0]);
+            if (days > 0) {
+                joiner.add(days + " days");
+            }
+
+            final int hours = Integer.parseInt(strArr[2]);
+            if (hours > 0) {
+                joiner.add(hours + " hours");
+            }
+
+            final int minutes = Integer.parseInt(strArr[4]);
+            if (minutes > 0) {
+                joiner.add(minutes + " minutes");
+            }
+        } catch (NumberFormatException ex) {
+            Logger.error(ex, "Failed to format system uptime.");
+        }
+
+        String result = joiner.toString();
+        result = StringUtils.replaceOnce(result, " 1 minutes", " 1 minute");
+        result = StringUtils.replaceOnce(result, " 1 hours", " 1 hour");
+        result = StringUtils.replaceOnce(result, "1 days", " 1 day");
+        return result;
     }
 
 }
