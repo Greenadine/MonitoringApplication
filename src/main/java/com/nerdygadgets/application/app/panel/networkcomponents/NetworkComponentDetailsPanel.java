@@ -190,7 +190,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
 
     private void actionEditComponent(ActionEvent event) {
         if (defaultComponentNames.contains(component.getName())) {
-            ApplicationUtils.showPopupErrorDialog("Permission Denied", "You are not permitted to delete this component.");
+            ApplicationUtils.showPopupErrorDialog("Permission Denied", "You are not permitted to edit this component.");
             return;
         }
 
