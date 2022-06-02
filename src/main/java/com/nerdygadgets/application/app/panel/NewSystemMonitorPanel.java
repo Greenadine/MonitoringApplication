@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NewSystemMonitorPanel extends ApplicationPanel {
 
@@ -195,7 +197,10 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
      *
      * The disk.
      */
-    public void addDiskInformation(ArrayList<NewSystemMonitor.DiskResult> disks) {
+    public void addDisksInformation(List<NewSystemMonitor.DiskResult> disks) {
+        disksTableContentPanel.removeAll();
+
+        disksTableContentPanel.setLayout(new GridLayout(disks.size(), 4)); // Adjust table layout to accommodate disk count
 
         for (NewSystemMonitor.DiskResult disk : disks) {
             // Add disk name

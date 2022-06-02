@@ -414,7 +414,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
                     addComponent(disksTableContentPanel);
                     firstRun = false;
 
-                    ((GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
+                   //(GridLayout) disksTableContentPanel.getLayout()).setRows(disks.size()); // Set amount of rows equal to amount of disks
                 } else {
                     disksTableContentPanel.removeAll();
                 }

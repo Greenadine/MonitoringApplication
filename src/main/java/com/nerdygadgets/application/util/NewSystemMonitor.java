@@ -2,12 +2,10 @@ package com.nerdygadgets.application.util;
 
 import com.nerdygadgets.application.Main;
 import com.nerdygadgets.application.app.panel.NewSystemMonitorPanel;
-import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
 import com.nerdygadgets.application.exception.PowerShellScriptException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
@@ -50,8 +49,8 @@ public final class NewSystemMonitor {
 
         @Override
         public void run() {
-            //final String command = String.format("wmic /node:%s /user:%s /password:%s path Win32_OperatingSystem get LastBootUpTime", address, user, password);
-            final String command = "wmic path Win32_OperatingSystem get LastBootUpTime";
+            final String command = String.format("wmic /node:%s /user:%s /password:%s path Win32_OperatingSystem get LastBootUpTime", address, user, password);
+            //final String command = "wmic path Win32_OperatingSystem get LastBootUpTime";
 
             try {
                 final ProcessOutput processOutput = executePowerShellCommand(command);
@@ -93,14 +92,6 @@ public final class NewSystemMonitor {
             }
         }
 
-        /**
-         * Formats the {@link Duration} between the last boot-up time and now, into days, hours and minutes.
-         *
-         * @param duration The {@code Duration} between the last boot-up time, and now.
-         *
-         * @return A {@code String} with days, hours and minutes between the last boot-up time, and now.
-         */
-
     }
     /**
      * Schedule MonitorWebserverCpuUsage at fixed rate
@@ -128,8 +119,8 @@ public final class NewSystemMonitor {
         public void run() {
             try {
                 final String command;
-                //command  = String.format("wmic /node:%s /user:%s /password:%s CPU get LoadPercentage", address, user, password);
-                command  = "wmic  CPU get LoadPercentage";
+                command  = String.format("wmic /node:%s /user:%s /password:%s CPU get LoadPercentage", address, user, password);
+                //command  = "wmic  CPU get LoadPercentage";
 
                 final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
                 final BufferedReader psOut = processOutput.getOutput();
@@ -186,8 +177,8 @@ public final class NewSystemMonitor {
 
 
                 final String command;
-                //command  = String.format("wmic /node:%s /user:%s /password:%s LogicalDisk get Name,Size,FreeSpace", address, user, password);
-                command  = "wmic LogicalDisk get Name,Size,FreeSpace";
+                command  = String.format("wmic /node:%s /user:%s /password:%s LogicalDisk get Name,Size,FreeSpace", address, user, password);
+                //command  = "wmic LogicalDisk get Name,Size,FreeSpace";
 
                 final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
                 final BufferedReader psOut = processOutput.getOutput();
@@ -213,8 +204,7 @@ public final class NewSystemMonitor {
                         final float diskTotalSpace = Long.parseLong(strArr[2]) / 1073741824f;
                         disks.add(new DiskResult(diskName, diskTotalSpace, diskFreeSpace));
                     }
-                    systemMonitorPanel.addDiskInformation(disks);
-                    ((GridLayout) systemMonitorPanel.disksTableContentPanel.getLayout()).setRows(disks.size());
+                    systemMonitorPanel.addDisksInformation(disks);
 
                     processOutput.close();
                 } catch (IOException ex) {
@@ -318,7 +308,7 @@ public final class NewSystemMonitor {
 
                         for (String partOfLine : strArr) {
                             if (partOfLine.matches("[0-9]+")){
-                                systemMonitorPanel.appendCpuValueToGraph(Integer.parseInt(partOfLine));
+                                systemMonitorPanel.appendCpuValueToGraph(100-Integer.parseInt(partOfLine));
                             }
                         }
                     }
@@ -334,7 +324,7 @@ public final class NewSystemMonitor {
      * getting cpu by WMIC command and putting value in the visual graph.
      */
     public static void monitorDatabaseDisks(@NotNull final NewSystemMonitorPanel systemMonitorPanel, @NotNull final String address, @NotNull final String user, @NotNull final String password) {
-        Scheduler.scheduleAtFixedRate(new MonitorDatabaseDisks(systemMonitorPanel, address, user, password), 0, 300);
+        Scheduler.scheduleAtFixedRate(new MonitorDatabaseDisks(systemMonitorPanel, address, user, password), 0, 5);
     }
     public static class MonitorDatabaseDisks implements Runnable {
         private final NewSystemMonitorPanel systemMonitorPanel;
@@ -352,45 +342,48 @@ public final class NewSystemMonitor {
 
         @Override
         public void run() {
-            final String command;
-            command = "ssh student@192.168.1.2 df / | ConvertFrom-String -Delimiter “ “ | Select-Object p3, p7, p9";
+            final ArrayList<NewSystemMonitor.DiskResult> disks = new ArrayList<>();
 
             try {
+                final String command;
+                command = "ssh student@192.168.1.2 df / | ConvertFrom-String -Delimiter ' ' | Select-Object p3, p7";
                 final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
                 final BufferedReader psOut = processOutput.getOutput();
-                final BufferedReader pserr = processOutput.getErrors();
-                final ArrayList<NewSystemMonitor.DiskResult> disks = new ArrayList<>();
-                removeComponent(systemMonitorPanel);
-                addComponent(systemMonitorPanel);
 
-                String line = null;
+                String line;
 
-                while ((line = psOut.readLine()) != null) {
-                    line = line.trim();
+                while (((line = psOut.readLine()) != null)){
+                   line = line.trim();
                     if (line.isEmpty()) {
                         continue;
-
                     }
-                    final String[] strArr = line.split(" ");
-                    final String[] finalStrArr = null;
+
+                    String[] strArr = line.split(" ");
                     int count = 0;
-                    for (String partOfLine:strArr) {
-                        if (partOfLine.matches("[0-9]+")){
-                            finalStrArr[count] = partOfLine;
-                            final float diskFreeSpace = Long.parseLong(finalStrArr[1]) / 1024f;
-                            final String diskName = "root";
-                            final float diskTotalSpace = Long.parseLong(finalStrArr[0]) / 1024f;
-                            disks.add(new NewSystemMonitor.DiskResult(diskName, diskTotalSpace, diskFreeSpace));
+
+                    float totalSpace = 0;
+                    float freeSpace = 0;
+
+                    for (String outputLine : strArr) {
+                        if (outputLine.matches("\\d++")) {
+                            if (count == 0) {
+                                totalSpace = Integer.parseInt(outputLine);
+                            } else {
+                                freeSpace = Integer.parseInt(outputLine);
+                            }
                             count++;
                         }
                     }
-                    systemMonitorPanel.addDiskInformation(disks);
-                    ((GridLayout) systemMonitorPanel.disksTableContentPanel.getLayout()).setRows(disks.size());
+
+                    disks.clear();
+                    disks.add(new DiskResult("/", totalSpace / 1024f / 1024f, freeSpace / 1024f / 1024f));
+//                    systemMonitorPanel.addDisksInformation(Collections.singletonList(new DiskResult("Test", 420, 69)));
                 }
             }catch (IOException | PowerShellScriptException | NullPointerException ex) {
-                Logger.error(ex, "Failed to retrieve last boot-up time of system at address '%s'.");
+                Logger.error(ex, "Failed to retrieve disk(s) information through SSH.");
             }
 
+            systemMonitorPanel.addDisksInformation(disks);
         }
     }
     /** ---------------------------------------------------------*/
@@ -415,30 +408,52 @@ public final class NewSystemMonitor {
             this.user = user;
             this.password = password;
         }
+        private void addDisks(ArrayList<DiskResult> disks) {
+            systemMonitorPanel.addDisksInformation(disks);
+
+        }
 
         @Override
         public void run() {
+
             try {
                 final String command;
-                command = "ssh admin@192.168.1.1 uptime | ConvertFrom-String -Delimiter ' ' | Select-Object p4, p6";
+                command = "ssh admin@192.168.1.1 uptime | ConvertFrom-String -Delimiter ' ' | Select-Object p5, p8";
 
                 final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
                 final BufferedReader psOut = processOutput.getOutput();
                 final BufferedReader pserr = processOutput.getErrors();
                 String a = null;
-                try {
-                    a = psOut.readLine();
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                String line = null;
 
-                a = a.replaceAll("[,]", "");
-                int indexOfSpace = a.indexOf(' ');
-                if (indexOfSpace != -1) {
-                    systemMonitorPanel.setUptimeValue(a.substring(indexOfSpace + 1));
-                }
+                while (((line = psOut.readLine()) != null)){
+                    line = line.trim();
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+                    String[] strArr = line.split(" ");
+                    int count = 0;
+
+                    float days = 0;
+                    float freeSpace = 0;
+
+                    for (String outputLine : strArr) {
+                        if (outputLine.matches("[0-9]+")) {
+                                days = Integer.parseInt(outputLine);
+                                systemMonitorPanel.setUptimeValue((int)days+" days");
+                            }
+
+
+                        }
+                    }
+
+
+
+
             } catch (PowerShellScriptException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
         }
@@ -448,7 +463,7 @@ public final class NewSystemMonitor {
      * getting cpu by WMIC command and putting value in the visual graph.
      */
     public static void monitorPfsenseCpuUsage(@NotNull final NewSystemMonitorPanel systemMonitorPanel, @NotNull final String address, @NotNull final String user, @NotNull final String password) {
-        Scheduler.scheduleAtFixedRate(new MonitorPfsenseCpuUsage(systemMonitorPanel, address, user, password), 0, 60);
+        Scheduler.scheduleAtFixedRate(new MonitorPfsenseCpuUsage(systemMonitorPanel, address, user, password), 0, 1);
     }
     public static class MonitorPfsenseCpuUsage implements Runnable {
         private final NewSystemMonitorPanel systemMonitorPanel;
@@ -466,7 +481,36 @@ public final class NewSystemMonitor {
 
         @Override
         public void run() {
+            final String command;
+            command = "ssh admin@192.168.1.1 top | ConvertFrom-String -Delimiter ' ' | Select-Object p14 -skip 2 -first 1";
+            final ProcessOutput processOutput;
+            try {
+                processOutput = executePowerShellCommand(command);
+                final BufferedReader psOut = processOutput.getOutput();
+                final BufferedReader pserr = processOutput.getErrors();
+                String line = null;
+                while ((line = psOut.readLine()) != null) {
+                    line = line.trim();
+                    if (line.isEmpty()) {
+                        continue;
 
+                    }
+                    final String[] strArr = line.split(" ");
+
+                    for (String partOfLine : strArr) {
+                        if (partOfLine.contains("%")){
+                            final String[] strArr1 = partOfLine.split(" ");
+                            String output =strArr[0].replace("%", "");
+                            Double output1 = Double.parseDouble(output);
+                            long output2 = Math.round(output1);
+                            systemMonitorPanel.appendCpuValueToGraph(100-(int)output2);
+
+                        }
+                    }
+                }
+            } catch (IOException | PowerShellScriptException e) {
+                e.printStackTrace();
+            }
         }
     }
     /**
@@ -474,7 +518,7 @@ public final class NewSystemMonitor {
      * getting cpu by WMIC command and putting value in the visual graph.
      */
     public static void monitorPfsenseDisks(@NotNull final NewSystemMonitorPanel systemMonitorPanel, @NotNull final String address, @NotNull final String user, @NotNull final String password) {
-        Scheduler.scheduleAtFixedRate(new MonitorPfsenseDisks(systemMonitorPanel, address, user, password), 0, 60);
+        Scheduler.scheduleAtFixedRate(new MonitorPfsenseDisks(systemMonitorPanel, address, user, password), 0, 300);
     }
     public static class MonitorPfsenseDisks implements Runnable {
         private final NewSystemMonitorPanel systemMonitorPanel;
@@ -492,7 +536,48 @@ public final class NewSystemMonitor {
 
         @Override
         public void run() {
+            final ArrayList<NewSystemMonitor.DiskResult> disks = new ArrayList<>();
 
+            try {
+                final String command;
+                command = "ssh admin@192.168.1.1 df / | ConvertFrom-String -Delimiter ' ' | Select-Object p3, p5";
+                final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
+                final BufferedReader psOut = processOutput.getOutput();
+
+                String line;
+
+                while (((line = psOut.readLine()) != null)){
+                    line = line.trim();
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+
+                    String[] strArr = line.split(" ");
+                    int count = 0;
+
+                    float totalSpace = 0;
+                    float freeSpace = 0;
+
+                    for (String outputLine : strArr) {
+                        if (outputLine.matches("\\d++")) {
+                            if (count == 0) {
+                                totalSpace = Integer.parseInt(outputLine);
+                            } else {
+                                freeSpace = Integer.parseInt(outputLine);
+                            }
+                            count++;
+                        }
+                    }
+
+                    disks.clear();
+                    disks.add(new DiskResult("/", totalSpace / 1024f / 1024f, freeSpace / 1024f / 1024f));
+//                    systemMonitorPanel.addDisksInformation(Collections.singletonList(new DiskResult("Test", 420, 69)));
+                }
+            }catch (IOException | PowerShellScriptException | NullPointerException ex) {
+                Logger.error(ex, "Failed to retrieve disk(s) information through SSH.");
+            }
+
+            systemMonitorPanel.addDisksInformation(disks);
         }
     }
     /**-------------------------------------------------------*/
@@ -625,8 +710,7 @@ public final class NewSystemMonitor {
                 final NewSystemMonitor.ProcessOutput processOutput = executePowerShellCommand(command);
                 final BufferedReader psOut = processOutput.getOutput();
                 final ArrayList<NewSystemMonitor.DiskResult> disks = new ArrayList<>();
-                removeComponent(systemMonitorPanel);
-                addComponent(systemMonitorPanel);
+
                 try {
                     String line;
                     boolean skipFirst = true;
@@ -640,15 +724,16 @@ public final class NewSystemMonitor {
                             skipFirst = false; // Skip first line, as this always contains a header
                             continue;
                         }
+
                         final String[] strArr = line.split("\\s+");
                         final float diskFreeSpace = Long.parseLong(strArr[0]) / 1073741824f;
                         final String diskName = strArr[1].trim();
                         final float diskTotalSpace = Long.parseLong(strArr[2]) / 1073741824f;
                         disks.add(new DiskResult(diskName, diskTotalSpace, diskFreeSpace));
+                        break;
                     }
-                    systemMonitorPanel.addDiskInformation(disks);
-                    ((GridLayout) systemMonitorPanel.disksTableContentPanel.getLayout()).setRows(disks.size());
 
+                    systemMonitorPanel.addDisksInformation(disks);
                     processOutput.close();
                 } catch (IOException ex) {
                     Logger.error(ex, "Failed to retrieve storage disks of system at address .");
@@ -704,7 +789,7 @@ public final class NewSystemMonitor {
         private final float totalSpace;
         private final float freeSpace;
 
-        private DiskResult(final String name, final float totalSpace, final float freeSpace) {
+        public DiskResult(final String name, final float totalSpace, final float freeSpace) {
             this.name = name;
             this.totalSpace = totalSpace;
             this.freeSpace = freeSpace;
@@ -726,7 +811,7 @@ public final class NewSystemMonitor {
      *
      * The {@code Component}.
      */
-    protected static void addComponent(NewSystemMonitorPanel systemMonitorPanel) {
+    private static void addComponent(NewSystemMonitorPanel systemMonitorPanel) {
 
         systemMonitorPanel.disksTableContentPanel = new JPanel();
         systemMonitorPanel.disksTableContentPanel.setLayout(new GridLayout());
@@ -741,10 +826,18 @@ public final class NewSystemMonitor {
      *
      *  The {@code Component}.
      */
-    protected static void removeComponent(NewSystemMonitorPanel systemMonitorPanel) {
+    private static void removeComponent(NewSystemMonitorPanel systemMonitorPanel) {
         systemMonitorPanel.disksTableContentPanel.removeAll();
         systemMonitorPanel.remove(systemMonitorPanel.disksTableContentPanel);
     }
+
+    /**
+     * Formats the {@link Duration} between the last boot-up time and now, into days, hours and minutes.
+     *
+     * @param duration The {@code Duration} between the last boot-up time, and now.
+     *
+     * @return A {@code String} with days, hours and minutes between the last boot-up time, and now.
+     */
     private static String formatDuration(Duration duration) {
         final StringJoiner joiner = new StringJoiner(" ");
 
@@ -771,9 +864,9 @@ public final class NewSystemMonitor {
         }
 
         String result = joiner.toString();
-        result = StringUtils.replaceOnce(result, " 1 minutes", " 1 minute");
-        result = StringUtils.replaceOnce(result, " 1 hours", " 1 hour");
-        result = StringUtils.replaceOnce(result, "1 days", " 1 day");
+        result = result.replaceFirst(" 1 minutes", " 1 minute");
+        result = result.replaceFirst(" 1 hours", " 1 hour");
+        result = result.replaceFirst("$1 days", " 1 day");
         return result;
     }
 
