@@ -1,1 +1,0 @@
-wmic path Win32_OperatingSystem get LastBootUpTime
