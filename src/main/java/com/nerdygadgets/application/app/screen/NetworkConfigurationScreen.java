@@ -89,6 +89,7 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
 
         // Create optimize button
         JButton optimizeButton = new JButton("Optimize");
+        optimizeButton.addActionListener(this::actionOptimize);
         buttonsPanel.add(optimizeButton);
 
         // Create save button
@@ -133,13 +134,6 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
         dataPanel.update();
     }
 
-    /**
-     * Updates the screen to accommodate any changes made to the network configuration.
-     */
-    public void update() {
-        setConfiguration(configuration);
-    }
-
     public NetworkConfiguration getConfiguration() {
         return configuration;
     }
@@ -162,10 +156,16 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
      * Returns to the network configuration menu.
      */
     private void actionReturn(ActionEvent event) {
-        int result = ApplicationUtils.showConfirmationDialog("Are you sure you want to leave?", "Are you sure you want to leave? Make sure you have first saved the configuration before returning.");
-        if (result == 0){
+        if (ApplicationUtils.showConfirmationDialog("Are you sure you want to leave?", "Are you sure you want to leave? Make sure you have first saved the configuration before returning.")) {
             window.openScreen("network-configurations-menu");
         }
+    }
+
+    /**
+     * Optimizes the configuration to the cheapest possible configuration with the desired availability.
+     */
+    private void actionOptimize(ActionEvent event) {
+        ApplicationUtils.showPopupInfoDialog("Work In Progress", "This feature is still being worked on. Please try again later.");
     }
 
     /**

@@ -33,7 +33,7 @@ public final class ApplicationUtils {
      * @param title The title
      * @param message The message
      */
-    public static int showConfirmationDialog(@NotNull final String title, @NotNull final String message) {
-        return JOptionPane.showConfirmDialog(Main.mainWindow, message, title, JOptionPane.YES_NO_OPTION);
+    public static boolean showConfirmationDialog(@NotNull final String title, @NotNull final String message) {
+        return JOptionPane.showConfirmDialog(Main.mainWindow, message, title, JOptionPane.YES_NO_OPTION) == 0;
     }
 }

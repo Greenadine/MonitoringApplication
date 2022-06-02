@@ -50,8 +50,7 @@ public class NetworkConfigurationComponent extends PanelComponent {
      * @param event The {@link ActionEvent}.
      */
     private void actionOnRemove(ActionEvent event) {
-        int result = ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to remove the component from the configuration?");
-        if (result == 0){
+        if (ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to remove the component from the configuration?")) {
             switch (component.getType()) {
                 case FIREWALL -> configuration.setFirewall(null);
                 case DATABASE -> configuration.removeDatabase(component);

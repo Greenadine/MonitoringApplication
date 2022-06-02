@@ -15,6 +15,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener {
@@ -31,8 +32,19 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     private final WrappedJButton deleteComponentButton;
     private final WrappedJButton editComponentButton;
 
+    private ArrayList<String> defaultComponentNames = new ArrayList<>();
+
     public NetworkComponentDetailsPanel(@NotNull ApplicationScreen parentScreen) {
         super(parentScreen);
+
+        this.defaultComponentNames = new ArrayList<>();
+        this.defaultComponentNames.add("pfSense");
+        this.defaultComponentNames.add("HAL9001DB");
+        this.defaultComponentNames.add("HAL9002DB");
+        this.defaultComponentNames.add("HAL9003DB");
+        this.defaultComponentNames.add("HAL9001W");
+        this.defaultComponentNames.add("HAL9002W");
+        this.defaultComponentNames.add("HAL9003W");
 
         // Configure panel
         this.setLayout(new BorderLayout());
@@ -161,9 +173,12 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     /* Button actions */
 
     private void actionDeleteComponent(ActionEvent event) {
-        int result = ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to delete this component? This cannot be undone.");
+        if (defaultComponentNames.contains(component.getName())) {
+            ApplicationUtils.showPopupErrorDialog("Permission Denied", "You are not permitted to delete this component.");
+            return;
+        }
 
-        if (result == 0) {
+        if (ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to delete this component? This cannot be undone.")) {
             DatabaseUtils.deleteComponent(component);
 
             parentScreen.onClose();
