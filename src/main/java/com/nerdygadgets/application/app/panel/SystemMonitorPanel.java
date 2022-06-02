@@ -1,10 +1,12 @@
 package com.nerdygadgets.application.app.panel;
 
 import com.nerdygadgets.application.Main;
+import com.nerdygadgets.application.Settings;
 import com.nerdygadgets.application.app.component.LineGraphComponent;
 import com.nerdygadgets.application.app.component.WrappedJLabel;
 import com.nerdygadgets.application.app.model.ApplicationPanel;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
+import com.nerdygadgets.application.exception.PowerShellScriptException;
 import com.nerdygadgets.application.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
     private JLabel systemNameLabel;
     private WrappedJLabel systemUptimeValue;
     private LineGraphComponent cpuUsageGraphPanel;
-    private JPanel disksTableContentPanel;
+    public JPanel disksTableContentPanel;
 
     private ScheduledFuture<?> uptimeUpdater;
     private ScheduledFuture<?> cpuUsageUpdater;
@@ -95,9 +98,9 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         // Create and add uptime label
         final WrappedJLabel systemUptimeLabel = new WrappedJLabel("Uptime", SwingConstants.LEFT);
-        systemUptimeLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
+        systemUptimeLabel.getLabel().setFont(Fonts.MONITOR_LABEL_BOLD);
         systemUptimeLabel.setBackground(Colors.MONITOR_VALUE_LABEL);
-        systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
+        systemUptimeLabel.getLabel().setAlignmentX(LEFT_ALIGNMENT);
         systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -107,7 +110,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
 
         // Create and add uptime value label
         systemUptimeValue = new WrappedJLabel("Loading...", SwingConstants.RIGHT);
-        systemUptimeValue.setFont(Fonts.MONITOR_LABEL);
+        systemUptimeValue.getLabel().setFont(Fonts.MONITOR_LABEL);
         systemUptimeValue.setBackground(Colors.MONITOR_TABLE_CONTENT);
         systemUptimeValue.setAlignmentX(RIGHT_ALIGNMENT);
         constraints.gridx = 1;
@@ -124,7 +127,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
         // Add header
         final WrappedJLabel cpuUsageHeader = new WrappedJLabel("CPU Load", SwingUtils.getIconFromResource("cpu.png"));
         cpuUsageHeader.getLabel().setFont(Fonts.MONITOR_SUBTITLE);
-        cpuUsageHeader.setBackground(Colors.MAIN_BACKGROUND);
+        cpuUsageHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(cpuUsageHeader);
 
         // Add graph
@@ -306,6 +309,11 @@ public class SystemMonitorPanel extends ApplicationPanel {
         public void run() {
             if (systemAddress != null) {
                 SystemMonitor.getCpuLoad(systemAddress, systemUsername, systemPassword).ifPresent(cpuUsageGraphPanel::appendValue);
+/*                try {
+                    cpuUsageGraphPanel.appendValue(SystemMonitor.getCpuInfo());
+                } catch (PowerShellScriptException e) {
+                    e.printStackTrace();
+                }*///todo HIER CPU nog
             } else {
                 SystemMonitor.getLocalCpuLoad().ifPresent(cpuUsageGraphPanel::appendValue);
             }
@@ -395,7 +403,7 @@ public class SystemMonitorPanel extends ApplicationPanel {
                     removeComponent(disksTableContentPanel); // We have to first remove and then re-add the component for it to update
 
                     disksTableContentPanel = new JPanel();
-                    disksTableContentPanel.setLayout(new GridLayout(1, 4));
+                    disksTableContentPanel.setLayout(new GridLayout(disks.size(), 4));
                     disksTableContentPanel.setBorder(new EmptyBorder(2, 5, 0, 5));
                     disksTableContentPanel.setBackground(Colors.MONITOR_TABLE_CONTENT);
                     addComponent(disksTableContentPanel);
