@@ -30,7 +30,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
 
         // Configure panel
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(0, 5, 5, 5));
+        this.setBorder(BorderFactory.createMatteBorder(0, 10, 10, 10, Colors.MAIN_BACKGROUND));
         this.setBackground(Colors.MAIN_BACKGROUND);
 
         // Populate panel
@@ -47,8 +47,8 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
      */
     private void addSystemName(final String systemName) {
         systemNameLabel = new WrappedJLabel(systemName);
-        systemNameLabel.getWrapperPanel().setBackground(Colors.MONITOR_BACKGROUND);
-        systemNameLabel.setFont(Fonts.MONITOR_TITLE);
+        systemNameLabel.setBackground(Colors.MONITOR_BACKGROUND);
+        systemNameLabel.getLabel().setFont(Fonts.MONITOR_TITLE);
         systemNameLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(systemNameLabel);
     }
@@ -66,28 +66,29 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
 
         // Create and add uptime label
         final WrappedJLabel systemUptimeLabel = new WrappedJLabel("Uptime", SwingConstants.LEFT);
-        systemUptimeLabel.setFont(Fonts.MONITOR_LABEL_BOLD);
-        systemUptimeLabel.getWrapperPanel().setBackground(Colors.MONITOR_VALUE_LABEL);
+        systemUptimeLabel.getLabel().setFont(Fonts.MONITOR_LABEL_BOLD);
+        systemUptimeLabel.setBackground(Colors.MONITOR_VALUE_LABEL);
         systemUptimeLabel.setAlignmentX(LEFT_ALIGNMENT);
         constraints.weightx = 1;
         constraints.anchor = GridBagConstraints.WEST;
-        systemInformationPanel.add(systemUptimeLabel.getWrapperPanel(), constraints);
+        systemInformationPanel.add(systemUptimeLabel, constraints);
 
         // Create and add uptime value label
         systemUptimeValue = new WrappedJLabel("Loading...", SwingConstants.RIGHT);
-        systemUptimeValue.setFont(Fonts.MONITOR_LABEL);
-        systemUptimeValue.setBackground(Colors.MONITOR_TABLE_CONTENT);
+        systemUptimeValue.getLabel().setFont(Fonts.MONITOR_LABEL);
+        systemUptimeValue.getLabel().setBackground(Colors.MONITOR_TABLE_CONTENT);
         systemUptimeValue.setAlignmentX(RIGHT_ALIGNMENT);
         constraints.gridx = 1;
         constraints.weightx = 3;
         constraints.anchor = GridBagConstraints.EAST;
-        systemInformationPanel.add(systemUptimeValue.getWrapperPanel(), constraints);
+        systemInformationPanel.add(systemUptimeValue, constraints);
     }
 
     private void addCpuUsageGraph() {
         // Add header
         final WrappedJLabel cpuUsageHeader = new WrappedJLabel("CPU Load", SwingUtils.getIconFromResource("cpu.png"));
-        cpuUsageHeader.setFont(Fonts.MONITOR_SUBTITLE);
+        cpuUsageHeader.setBackground(Colors.MONITOR_BACKGROUND);
+        cpuUsageHeader.getLabel().setFont(Fonts.MONITOR_SUBTITLE);
         cpuUsageHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(cpuUsageHeader);
 
@@ -105,8 +106,8 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
     private void addStorageDisksInformationTable() {
         // Add header
         final WrappedJLabel disksHeader = new WrappedJLabel("Storage Drives", SwingUtils.getIconFromResource("storage-drive.png"));
-        disksHeader.getWrapperPanel().setBackground(Colors.MONITOR_BACKGROUND);
-        disksHeader.setFont(Fonts.MONITOR_SUBTITLE);
+        disksHeader.setBackground(Colors.MONITOR_BACKGROUND);
+        disksHeader.getLabel().setFont(Fonts.MONITOR_SUBTITLE);
         disksHeader.setBorder(new EmptyBorder(5, 0, 5, 0));
         this.add(disksHeader);
 
@@ -169,7 +170,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
      * @return The name of the system.
      */
     public String getSystemName() {
-        return systemNameLabel.getText();
+        return systemNameLabel.getLabel().getText();
     }
 
     /* Panel management methods */
@@ -180,7 +181,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
      * @param uptime The system's uptime.
      */
     public void setUptimeValue(@NotNull final String uptime) {
-        systemUptimeValue.setText(uptime);
+        systemUptimeValue.getLabel().setText(uptime);
     }
 
     /**
@@ -236,7 +237,7 @@ public class NewSystemMonitorPanel extends ApplicationPanel {
     @Override
     public void onHideImpl() {
         // Reset values & clear disks' information table
-        systemUptimeValue.setText("Loading...");
+        systemUptimeValue.getLabel().setText("Loading...");
         addEmptyDiskTable("Loading...");
     }
 }

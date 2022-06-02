@@ -31,10 +31,17 @@ public class WrappedJLabel extends JPanel {
         super();
 
         // Configure panel
-        this.setLayout(new BorderLayout());
+//        this.setLayout(new BorderLayout());
 
         // Create label
         label = new JLabel(text, imageIcon, horizontalAlignment);
+        this.add(label);
+//        this.add(label, BorderLayout.CENTER);
+    }
+
+    public void alignCenter() {
+        this.setLayout(new BorderLayout());
+        this.remove(label);
         this.add(label, BorderLayout.CENTER);
     }
 

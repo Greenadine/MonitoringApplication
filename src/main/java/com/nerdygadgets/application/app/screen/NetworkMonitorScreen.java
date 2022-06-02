@@ -21,13 +21,13 @@ public class NetworkMonitorScreen extends ApplicationScreen {
     public NetworkMonitorScreen(@NotNull final MainWindow window) {
         super(window);
         // Configure screen
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout(0, 5));
 
         // Create and add panels
         this.add(new ScreenHeaderPanel(this, "Network Monitor", 1150, 50, ApplicationActions::openHome), BorderLayout.PAGE_START);
 
         //monitorPanels.setLayout(new FlowLayout(FlowLayout.LEFT));
-        monitorPanels.setLayout(new GridLayout(0,3));
+        monitorPanels.setLayout(new GridLayout(0,3, 10, 15));
         this.add(monitorPanels, BorderLayout.CENTER);
         //monitorPanels.add(new SystemMonitorPanel(this, "This System"));
         addMonitorPanels();

@@ -89,6 +89,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         availabilityLabel.getLabel().setFont(Fonts.MAIN_SIDEBAR_PARAGRAPH);
         availabilityLabel.setBackground(Colors.MAIN_BACKGROUND_ACCENT);
         availabilityLabel.setBorder(new MatteBorder(0, 0, 2, 2, Colors.MAIN_BACKGROUND));
+        availabilityLabel.alignCenter();
         detailsPanel.add(availabilityLabel);
 
         componentAvailability = new JLabel("", SwingConstants.CENTER);
@@ -101,6 +102,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         priceLabel.getLabel().setFont(Fonts.MAIN_SIDEBAR_PARAGRAPH);
         priceLabel.setBackground(Colors.MAIN_BACKGROUND_ACCENT);
         priceLabel.setBorder(new MatteBorder(0, 0, 2, 2, Colors.MAIN_BACKGROUND));
+        priceLabel.alignCenter();
         detailsPanel.add(priceLabel);
 
         componentPrice = new JLabel("", SwingConstants.CENTER);
@@ -113,6 +115,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         ipLabel.getLabel().setFont(Fonts.MAIN_SIDEBAR_PARAGRAPH);
         ipLabel.setBackground(Colors.MAIN_BACKGROUND_ACCENT);
         ipLabel.setBorder(new MatteBorder(0, 0, 2, 2, Colors.MAIN_BACKGROUND));
+        ipLabel.alignCenter();
         detailsPanel.add(ipLabel);
 
         componentIp = new JLabel("", SwingConstants.CENTER);
@@ -125,6 +128,7 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
         subnetMaskLabel.getLabel().setFont(Fonts.MAIN_SIDEBAR_PARAGRAPH);
         subnetMaskLabel.setBackground(Colors.MAIN_BACKGROUND_ACCENT);
         subnetMaskLabel.setBorder(new MatteBorder(0, 0, 0, 2, Colors.MAIN_BACKGROUND));
+        subnetMaskLabel.alignCenter();
         detailsPanel.add(subnetMaskLabel);
 
         componentSubnetMask = new JLabel("", SwingConstants.CENTER);
