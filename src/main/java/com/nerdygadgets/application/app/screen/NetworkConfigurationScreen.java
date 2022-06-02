@@ -162,7 +162,7 @@ public class NetworkConfigurationScreen extends ApplicationScreen {
      * Returns to the network configuration menu.
      */
     private void actionReturn(ActionEvent event) {
-        int result = ApplicationUtils.showConfirmationDialog("Are you sure you want to leave?", "Are you sure you want to leave without saving?");
+        int result = ApplicationUtils.showConfirmationDialog("Are you sure you want to leave?", "Are you sure you want to leave? Make sure you have first saved the configuration before returning.");
         if (result == 0){
             window.openScreen("network-configurations-menu");
         }

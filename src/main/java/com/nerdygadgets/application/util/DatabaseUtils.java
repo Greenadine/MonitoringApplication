@@ -45,6 +45,8 @@ public final class DatabaseUtils {
         try {
             return DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE, USER, PASSWORD);
         } catch (SQLException ex) {
+            ApplicationUtils.showPopupErrorDialog("Failed to reach database", "This could be due to connection issues, invalidly defined database host and credentials, or due to technical issues with the database. " +
+                    "Please check the database information defined in the 'database.properties' file.");
             throw new DatabaseException(ex, "Failed to establish connection with database '%s' at host '%s'. Please check credentials in 'databases.properties'.", DATABASE, HOST);
         }
     }
@@ -85,6 +87,7 @@ public final class DatabaseUtils {
         try {
             connection.close();
         } catch (SQLException ex) {
+
             Logger.error(ex, "Failed to close connection to database.");
         }
 
@@ -134,12 +137,14 @@ public final class DatabaseUtils {
      *
      * @param component The {@code NetworkComponent} to insert.
      */
-    public static void insertComponent(@NotNull final NetworkComponent component) {
+    public static long insertComponent(@NotNull final NetworkComponent component) {
         Connection connection = newConnection();
         String query = String.format("INSERT INTO %s (name, availability, price, ip, subnetmask) ", component.getType().getTableName()) + "values (?,?,?,?,?);";
 
+        long id;
+
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, component.getName());
             statement.setDouble(2, component.getAvailability());
             statement.setDouble(3, component.getPrice());
@@ -147,6 +152,10 @@ public final class DatabaseUtils {
             statement.setString(5, component.getSubnetMask());
 
             statement.execute();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            generatedKeys.next();
+            id = generatedKeys.getInt(1);
         } catch (SQLException ex) {
             throw new DatabaseException(ex, "Failed to insert network component into database.");
         }
@@ -156,6 +165,8 @@ public final class DatabaseUtils {
         } catch (SQLException ex) {
             Logger.error(ex, "Failed to close connection to database.");
         }
+
+        return id;
     }
 
     /**
@@ -192,8 +203,7 @@ public final class DatabaseUtils {
         Connection connection = newConnection();
 
         try {
-            String query = String.format("UPDATE %s SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ? WHERE id = ?", component.getType().getTableName());
-            System.out.println(query);
+            String query = String.format("UPDATE %s SET name = ?, availability = ?, price = ?, ip = ?, subnetmask = ? WHERE id = ?;", component.getType().getTableName());
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, component.getName());
@@ -202,8 +212,6 @@ public final class DatabaseUtils {
             statement.setString(4, component.getIp());
             statement.setString(5, component.getSubnetMask());
             statement.setLong(6, component.getId());
-
-            System.out.println(statement.getParameterMetaData().getParameterCount());
 
             statement.execute();
         } catch (SQLException ex) {

@@ -12,13 +12,13 @@ import java.util.Locale;
  */
 public class NetworkComponent implements Comparable<NetworkComponent> {
 
-    protected final long id;
+    protected long id;
     protected final ComponentType type;
-    protected final String name;
-    protected final double availability;
-    protected final double price;
-    protected final String ip;
-    protected final String subnetMask;
+    protected String name;
+    protected double availability;
+    protected double price;
+    protected String ip;
+    protected String subnetMask;
 
     public NetworkComponent(@NotNull final ComponentType type, @NotNull final String name, final double availability,
                             final double price, @NotNull final String ip, @NotNull final String subnetMask) {
@@ -52,6 +52,15 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
     }
 
     /**
+     * Sets the ID of the {@code NetworkComponent}.
+     *
+     * @param id The new ID.
+     */
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    /**
      * Gets the {@link ComponentType} of the {@code NetworkComponent}.
      *
      * @return The {@code ComponentType} of the {@code NetworkComponent}.
@@ -69,6 +78,10 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Gets the availability of the {@code NetworkComponent} in fraction.
      *
@@ -78,6 +91,10 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
         return availability;
     }
 
+    public void setAvailability(double availability) {
+        this.availability = availability;
+    }
+
     /**
      * Gets the price of the {@code NetworkComponent}.
      *
@@ -85,6 +102,10 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
      */
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     /**
@@ -105,6 +126,10 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
         return ip;
     }
 
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     /**
      * Get the subnet mask of the {@code NetworkComponent}.
      *
@@ -112,6 +137,10 @@ public class NetworkComponent implements Comparable<NetworkComponent> {
      */
     public String getSubnetMask() {
         return subnetMask;
+    }
+
+    public void setSubnetMask(String subnetMask) {
+        this.subnetMask = subnetMask;
     }
 
     @Override

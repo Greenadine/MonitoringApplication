@@ -26,11 +26,6 @@ public class Main {
             UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
             mainWindow = new MainWindow();
             settingsWindow = new SettingsWindow();
-        } catch (DatabaseException ex) {
-            Logger.error(ex, ex.getMessage());
-
-            ApplicationUtils.showPopupErrorDialog("Failed to reach database", "This could be due to connection issues, invalidly defined database host and credentials, or due to technical issues with the database. " +
-                    "Please check the database information defined in the 'database.properties' file.");
         } catch (DisplayComponentException ex) {
             Logger.error(ex, "An exception has occurred when displaying a component.");
 

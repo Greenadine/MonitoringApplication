@@ -1,6 +1,7 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.dialog.AddComponentDialog;
+import com.nerdygadgets.application.app.dialog.NewAddComponentDialog;
 import com.nerdygadgets.application.app.model.ApplicationScreen;
 import com.nerdygadgets.application.app.model.ApplicationWindow;
 import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
@@ -76,27 +77,36 @@ public class ViewNetworkComponentsScreen extends ApplicationScreen implements Ac
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)  {
         // Retrieves component data from dialog and updates data in database
         AddComponentDialog addDialog = new AddComponentDialog(true);
 
-        try {
-            if (addDialog.getComponent() != null) {
-                try {
-                    NetworkComponent component = addDialog.getComponent();
-                    DatabaseUtils.updateComponent(component);
+        if (addDialog.getComponent() != null) {
+            NetworkComponent component = addDialog.getComponent();
+            long id = DatabaseUtils.insertComponent(component);
+            component.setId(id);
 
-                    switch (component.getType()) {
-                        case DATABASE -> databaseList.addComponent(component);
-                        case WEBSERVER -> webserverList.addComponent(component);
-                        case FIREWALL -> firewallList.addComponent(component);
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+            switch (component.getType()) {
+                case DATABASE -> databaseList.addComponent(component);
+                case WEBSERVER -> webserverList.addComponent(component);
+                case FIREWALL -> firewallList.addComponent(component);
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         }
+
+//        NewAddComponentDialog dialog = (NewAddComponentDialog) window.showDialog("component");
+//
+//        if (dialog.getComponent() != null) {
+//            NetworkComponent component = dialog.getComponent();
+//            DatabaseUtils.insertComponent(component);
+//
+//            System.out.println("1");
+//
+//            switch (component.getType()) {
+//                case DATABASE -> databaseList.addComponent(component);
+//                case WEBSERVER -> webserverList.addComponent(component);
+//                case FIREWALL -> firewallList.addComponent(component);
+//            }
+//            System.out.println("2");
+//        }
     }
 }

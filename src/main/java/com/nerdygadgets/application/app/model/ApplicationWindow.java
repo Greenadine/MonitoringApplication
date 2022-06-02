@@ -1,6 +1,8 @@
 package com.nerdygadgets.application.app.model;
 
 import com.nerdygadgets.application.exception.InvalidWindowScreenException;
+import com.nerdygadgets.application.util.AnnotationUtils;
+import com.nerdygadgets.application.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,10 +24,14 @@ public abstract class ApplicationWindow extends JFrame {
     private final Map<String, ApplicationScreen> applicationScreens;
     protected ApplicationScreen currentScreen;
 
+    private final Map<String, ApplicationDialog> applicationDialogs;
+
     public ApplicationWindow(@Nullable final String title) {
         this.setTitle(title);
+        this.setIconImage(SwingUtils.getIconFromResource("app.png").getImage());
 
         this.applicationScreens = new HashMap<>();
+        this.applicationDialogs = new HashMap<>();
 
         // Create and add content panel
         this.contentPanel = new JPanel();
@@ -65,7 +71,7 @@ public abstract class ApplicationWindow extends JFrame {
      */
     public void openScreen(@NotNull final String screenName, boolean hideWindow) {
         if (!applicationScreens.containsKey(screenName)) {
-            throw new InvalidWindowScreenException(getClass().getSimpleName(), screenName);
+            throw new IllegalArgumentException(String.format("Invalid screen name '%s'.", screenName));
         }
         ApplicationScreen applicationScreen = applicationScreens.get(screenName);
 
@@ -102,6 +108,71 @@ public abstract class ApplicationWindow extends JFrame {
      */
     public ApplicationScreen getScreen(final String identifier) {
         return applicationScreens.get(identifier);
+    }
+
+    /**
+     * Registers an {@link ApplicationDialog}.
+     *
+     * @param applicationDialog The {@code ApplicationDialog}.
+     */
+    public void registerDialog(@NotNull final ApplicationDialog applicationDialog) {
+        if (!AnnotationUtils.hasAnnotation(applicationDialog.getClass(), Identifier.class)) {
+            throw new IllegalStateException("Dialog not annotated with identifier.");
+        }
+
+        final String identifier = AnnotationUtils.getValue(applicationDialog.getClass(), Identifier.class);
+        if (applicationDialogs.containsKey(identifier)) {
+            throw new IllegalStateException(String.format("Duplicate dialog identifier '%s'.", identifier));
+        }
+
+        applicationDialogs.put(identifier, applicationDialog);
+    }
+
+    /**
+     * Shows the {@link ApplicationDialog} with the given unique identifier.
+     *
+     * @param dialogName The unique identifier of the {@code ApplicationDialog}.
+     */
+    public ApplicationDialog showDialog(@NotNull final String dialogName) {
+        if (!applicationDialogs.containsKey(dialogName)) {
+            throw new IllegalArgumentException(String.format("Invalid dialog name '%s'.", dialogName));
+        }
+
+        ApplicationDialog dialog = applicationDialogs.get(dialogName);
+        dialog.onShow();
+        dialog.setVisible(true);
+        return dialog;
+    }
+
+    /**
+     * Hides the {@link ApplicationDialog} with the given unique identifier.
+     *
+     * @param dialogName The unique identifier of the {@code ApplicationDialog}.
+     */
+    public void hideDialog(@NotNull final String dialogName) {
+        if (!applicationDialogs.containsKey(dialogName)) {
+            throw new IllegalArgumentException(String.format("Invalid dialog name '%s'.", dialogName));
+        }
+        hideDialog(applicationDialogs.get(dialogName));
+    }
+
+    /**
+     * Hides the provided {@link ApplicationDialog}.
+     *
+     * @param applicationDialog The {@code ApplicationDialog}.
+     */
+    public void hideDialog(@NotNull final ApplicationDialog applicationDialog) {
+        if (!AnnotationUtils.hasAnnotation(applicationDialog.getClass(), Identifier.class)) {
+            throw new IllegalStateException("Dialog not annotated with identifier.");
+        }
+
+        final String identifier = AnnotationUtils.getValue(applicationDialog.getClass(), Identifier.class);
+        if (!applicationDialogs.containsKey(identifier)) {
+            throw new IllegalStateException("Dialog has not been registered.");
+        }
+
+        applicationDialog.setVisible(false);
+        applicationDialog.onHide();
     }
 
     /**

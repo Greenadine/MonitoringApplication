@@ -29,4 +29,7 @@ public final class Fonts {
 
     public static final Font MONITOR_TABLE_HEADER = DEFAULT.deriveFont(Font.BOLD, 14f);
     public static final Font MONITOR_TABLE_CONTENT = DEFAULT.deriveFont(14f);
+
+    /* Dialog fonts */
+    public static final Font DIALOG_TABLE_PARAGRAPH = DEFAULT.deriveFont(14f);
 }

@@ -75,6 +75,9 @@ public class AddComponentDialog extends JDialog implements ActionListener {
         addButton.addActionListener(this);
 
         setVisible(true);
+
+        this.pack();
+        this.setLocationRelativeTo(null);
     }
 
     public boolean checks() {
@@ -137,13 +140,13 @@ public class AddComponentDialog extends JDialog implements ActionListener {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public NetworkComponent getComponent() throws IOException {
+    public NetworkComponent getComponent() {
         if (checks()) {
             final String name = nameTextField.getText();
-            ComponentType type = switch ((String) componentList.getSelectedItem()) {
-                case "database" -> ComponentType.DATABASE;
-                case "webserver" -> ComponentType.WEBSERVER;
-                case "firewall" -> ComponentType.FIREWALL;
+            ComponentType type = switch (componentList.getSelectedIndex()) {
+                case 0 -> ComponentType.WEBSERVER;
+                case 1 -> ComponentType.DATABASE;
+                case 2 -> ComponentType.FIREWALL;
                 default -> null;
             };
             final double availability = Double.parseDouble(availTextField.getText());

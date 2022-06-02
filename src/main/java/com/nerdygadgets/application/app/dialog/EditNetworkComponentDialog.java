@@ -24,8 +24,12 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
 
     public JComboBox<NetworkComponent> componentList;
 
+    private final NetworkComponent component;
+
     @SuppressWarnings("rawtypes,unchecked")
-    public EditNetworkComponentDialog(boolean modal, String name1, double price1, double availability1, String ip1, String subnetmask1) {
+    public EditNetworkComponentDialog(boolean modal, final NetworkComponent component) {
+        this.component = component;
+
         setModal(modal);
         setLayout(new GridLayout(9, 1));
         setSize(300, 350);
@@ -34,7 +38,7 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
         JLabel name = new JLabel("Name");
         add(name);
         nameTextField = new JTextField(20);
-        nameTextField.setText(name1);
+        nameTextField.setText(component.getName());
         add(nameTextField);
 
         JLabel type = new JLabel("Type");
@@ -48,25 +52,25 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
         JLabel ipAdres = new JLabel("IP address");
         add(ipAdres);
         ipTextField = new JTextField(20);
-        ipTextField.setText(ip1);
+        ipTextField.setText(component.getIp());
         add(ipTextField);
 
         JLabel subnetmask = new JLabel("Subnet mask");
         add(subnetmask);
         subnetTextField = new JTextField(20);
-        subnetTextField.setText(subnetmask1);
+        subnetTextField.setText(component.getSubnetMask());
         add(subnetTextField);
 
         JLabel availability = new JLabel("Availability");
         add(availability);
         availTextField = new JTextField(20);
-        availTextField.setText(String.valueOf(availability1));
+        availTextField.setText(String.valueOf(component.getAvailability()));
         add(availTextField);
 
         JLabel price = new JLabel("Price");
         add(price);
         priceTextField = new JTextField(20);
-        priceTextField.setText(String.valueOf(price1));
+        priceTextField.setText(String.valueOf(component.getPrice()));
         add(priceTextField);
 
         cancel = new JButton("Cancel");
@@ -129,30 +133,15 @@ public class EditNetworkComponentDialog extends JDialog implements ActionListene
         return check;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public NetworkComponent getComponent() {
-        if (checks()) {
-            final String name = nameTextField.getText();
-            ComponentType type = switch ((String) componentList.getSelectedItem()) {
-                case "database" -> ComponentType.DATABASE;
-                case "webserver" -> ComponentType.WEBSERVER;
-                case "firewall" -> ComponentType.FIREWALL;
-                default -> null;
-            };
-            final double availability = Double.parseDouble(availTextField.getText());
-            final double price = Double.parseDouble(priceTextField.getText());
-            final String ip = ipTextField.getText();
-            final String subnetMask = subnetTextField.getText();
-
-            return new NetworkComponent(type, name, availability, price, ip, subnetMask);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == editButton && checks()) {
+            component.setName(nameTextField.getText());
+            component.setAvailability(Double.parseDouble(availTextField.getText()));
+            component.setPrice(Double.parseDouble(priceTextField.getText()));
+            component.setIp(ipTextField.getText());
+            component.setSubnetMask(subnetTextField.getText());
+
             setVisible(false);
         } else if (e.getSource() == cancel) {
             setVisible(false);

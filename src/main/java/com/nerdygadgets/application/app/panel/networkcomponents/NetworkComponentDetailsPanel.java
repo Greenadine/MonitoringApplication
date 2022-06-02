@@ -15,7 +15,6 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Locale;
 
 public class NetworkComponentDetailsPanel extends ApplicationPanel implements ActionListener {
@@ -162,21 +161,26 @@ public class NetworkComponentDetailsPanel extends ApplicationPanel implements Ac
     /* Button actions */
 
     private void actionDeleteComponent(ActionEvent event) {
-        DatabaseUtils.deleteComponent(component);
-        parentScreen.onClose();
-        parentScreen.onOpen();
+        int result = ApplicationUtils.showConfirmationDialog("Are you sure?", "Are you sure you want to delete this component? This cannot be undone.");
+
+        if (result == 0) {
+            DatabaseUtils.deleteComponent(component);
+
+            parentScreen.onClose();
+            parentScreen.revalidate();
+            parentScreen.repaint();
+            parentScreen.onOpen();
+        }
     }
 
     private void actionEditComponent(ActionEvent event) {
-        EditNetworkComponentDialog editNetworkComponentDialog = new EditNetworkComponentDialog(true, component.getName(), component.getPrice(), component.getAvailability(), component.getIp(), component.getSubnetMask());
-        NetworkComponent dialogComponent = editNetworkComponentDialog.getComponent();
+        new EditNetworkComponentDialog(true, component);
+        DatabaseUtils.updateComponent(component);
 
-        if (dialogComponent != null) {
-            DatabaseUtils.updateComponent(dialogComponent);
-
-            parentScreen.onClose();
-            parentScreen.onOpen();
-        }
+        parentScreen.onClose();
+        parentScreen.revalidate();
+        parentScreen.repaint();
+        parentScreen.onOpen();
     }
 
     @Override
