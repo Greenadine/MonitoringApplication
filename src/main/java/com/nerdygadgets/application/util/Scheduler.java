@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class Scheduler {
 
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(20); // Create new thread pool
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(100); // Create new thread pool
 
     /**
      * Schedules a {@link Runnable} at the given interval after the provided delay.

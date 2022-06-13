@@ -27,11 +27,11 @@ public final class DatabaseUtils {
 //            Logger.error(ex, "Failed to load database properties.");
 //        }
 
-        HOST = databaseProperties.getProperty("host", "localhost");
+        HOST = databaseProperties.getProperty("host", "192.168.1.1");
         PORT = databaseProperties.getProperty("port", "3306");
-        DATABASE = databaseProperties.getProperty("database", "nerdygadgets");
-        USER = databaseProperties.getProperty("user", "root");
-        PASSWORD = databaseProperties.getProperty("password", "");
+        DATABASE = databaseProperties.getProperty("database", "nerdygadgets_application");
+        USER = databaseProperties.getProperty("user", "myuser");
+        PASSWORD = databaseProperties.getProperty("password", "mypass");
     }
 
     /**

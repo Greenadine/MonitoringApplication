@@ -1,22 +1,17 @@
 package com.nerdygadgets.application.app.screen;
 
 import com.nerdygadgets.application.app.model.ApplicationScreen;
-import com.nerdygadgets.application.app.panel.NewSystemMonitorPanel;
-import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.app.panel.SystemMonitorPanel;
+import com.nerdygadgets.application.app.panel.ScreenHeaderPanel;
 import com.nerdygadgets.application.app.window.MainWindow;
 import com.nerdygadgets.application.util.ApplicationActions;
-import com.nerdygadgets.application.util.NewSystemMonitor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class NetworkMonitorScreen extends ApplicationScreen {
-    JPanel monitorPanels = new JPanel();
-    JPanel monitorPanels1 = new JPanel();
-    JPanel monitorPanels2 = new JPanel();
-
+    private final JPanel monitorPanels = new JPanel();
 
     public NetworkMonitorScreen(@NotNull final MainWindow window) {
         super(window);
@@ -34,95 +29,41 @@ public class NetworkMonitorScreen extends ApplicationScreen {
     }
 
     private void addMonitorPanels() {
-        // Create content panel
-        NewSystemMonitorPanel localHost = new NewSystemMonitorPanel(this, "This system");
-        NewSystemMonitor.monitorLocalhostUptime(localHost);
-        NewSystemMonitor.monitorLocalhostCpuUsage(localHost);
-        NewSystemMonitor.monitorLocalhostDisks(localHost);
+        // Add localhost monitoring panel
+        SystemMonitorPanel localhostPanel = new SystemMonitorPanel(this, "This System");
+        localhostPanel.createSchedulers(null, null, null, 3);
+        monitorPanels.add(localhostPanel);
 
-        final String webserver1Address = "192.168.2.6";
-        final String webserver1User = "administrator";
-        final String webserver1Password = "WS21m1s2";
-
-        final String webserver2Address = "192.168.2.5";
-        final String webserver2User = "administrator";
-        final String webserver2Password = "WS21m1s1";
-
-        NewSystemMonitorPanel webserver1Panel = new NewSystemMonitorPanel(this, "Webserver 1");
-        NewSystemMonitor.monitorWebserverUptime(webserver1Panel, webserver1Address, webserver1User, webserver1Password);
-        NewSystemMonitor.monitorWebserverCpuUsage(webserver1Panel, webserver1Address, webserver1User, webserver1Password);
-        NewSystemMonitor.monitorWebserverDisks(webserver1Panel, webserver1Address, webserver1User, webserver1Password);
-
-        NewSystemMonitorPanel webserver2Panel = new NewSystemMonitorPanel(this, "Webserver 2");
-        NewSystemMonitor.monitorWebserverUptime(webserver2Panel, webserver2Address, webserver2User, webserver2Password);
-        NewSystemMonitor.monitorWebserverCpuUsage(webserver2Panel, webserver2Address, webserver2User, webserver2Password);
-        NewSystemMonitor.monitorWebserverDisks(webserver2Panel, webserver2Address, webserver2User, webserver2Password);
-
-        NewSystemMonitorPanel Database1 = new NewSystemMonitorPanel(this, "Database 1");
-        NewSystemMonitor.monitorDatabaseUptime(Database1, "192.168.1.2", "", "");
-        NewSystemMonitor.monitorDatabaseCpuUsage(Database1,"192.168.1.2", "", "");
-        NewSystemMonitor.monitorDatabaseDisks(Database1, "192.168.1.2","","");
-
-        NewSystemMonitorPanel Database2 = new NewSystemMonitorPanel(this, "Database 2");
-        NewSystemMonitor.monitorDatabaseUptime(Database2, "192.168.1.3", "", "");
-        NewSystemMonitor.monitorDatabaseCpuUsage(Database2,"192.168.1.3", "", "");
-        NewSystemMonitor.monitorDatabaseDisks(Database2, "192.168.1.3","","");
-
-        NewSystemMonitorPanel pfsense = new NewSystemMonitorPanel(this, "Pfsense");
-        NewSystemMonitor.monitorPfsenseUptime(pfsense, "", "", "");
-        NewSystemMonitor.monitorPfsenseCpuUsage(pfsense,"", "", "");
-        NewSystemMonitor.monitorPfsenseDisks(pfsense, "","","");
-
-        monitorPanels.add(localHost);
+        // Add webservers monitoring panels
+        SystemMonitorPanel webserver1Panel = new SystemMonitorPanel(this, "Webserver 1");
+        webserver1Panel.createSchedulers("192.168.2.6", "administrator", "WS21m1s2", 1);
         monitorPanels.add(webserver1Panel);
+
+        SystemMonitorPanel webserver2Panel = new SystemMonitorPanel(this, "Webserver 2");
+        webserver2Panel.createSchedulers("192.168.2.5", "administrator", "WS21m1s1", 1);
         monitorPanels.add(webserver2Panel);
-        monitorPanels.add(Database1);
-        monitorPanels.add(Database2);
-        monitorPanels.add(pfsense);
 
+        // Add database monitoring panels
+        SystemMonitorPanel database1Panel = new SystemMonitorPanel(this, "Database 1");
+        database1Panel.createSchedulers("192.168.1.2", null, null, 2);
+        monitorPanels.add(database1Panel);
+
+        SystemMonitorPanel database2Panel = new SystemMonitorPanel(this, "Database 2");
+        database2Panel.createSchedulers("192.168.1.3", null, null, 2);
+        monitorPanels.add(database2Panel);
+
+        SystemMonitorPanel pfSensePanel = new SystemMonitorPanel(this, "pfSense");
+        pfSensePanel.createSchedulers(null, null, null, 0);
+        monitorPanels.add(pfSensePanel);
     }
-
-
-/*
-    public void startMonitoringSystems() {
-        System.out.println("praarararara");
-        for (ApplicationPanel panel : panels) {
-            if (panel instanceof NewSystemMonitorPanel) {
-                if(((NewSystemMonitorPanel) panel).getSystemName().contains("database")){
-                    System.out.println("praarararara");
-                }else{
-
-                }
-            }
-
-
-        }
-    }
-
-    public void stopMonitoringSystems() {
-        for (ApplicationPanel panel : panels) {
-            if (panel instanceof SystemMonitorPanel) {
-                ((SystemMonitorPanel) panel).stopMonitoringSystemStatus();
-            }
-        }
-    }
-*/
 
     @Override
     protected void onOpenImpl() {
         // Do nothing
     }
 
-
     @Override
     protected void onCloseImpl() {
         // Do nothing
     }
-    /*private class DiskUpdater implements Runnable{
-
-        @Override
-        public void run() {
-            final ArrayList<SystemMonitor.DiskResult> sshDisks = getLocalDisks();
-        }
-    }*/
 }
