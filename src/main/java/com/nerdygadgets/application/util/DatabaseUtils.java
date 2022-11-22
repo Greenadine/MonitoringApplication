@@ -30,10 +30,10 @@ public final class DatabaseUtils {
             ex.printStackTrace();
         }
 
-        HOST = databaseProperties.getProperty("host", "145.44.235.121");
+        HOST = databaseProperties.getProperty("host", "localhost");
         DATABASE = databaseProperties.getProperty("database", "nerdygadgets");
-        USER = databaseProperties.getProperty("user", "myuser");
-        PASSWORD = databaseProperties.getProperty("password", "mypass");
+        USER = databaseProperties.getProperty("user", "admin");
+        PASSWORD = databaseProperties.getProperty("password", "");
     }
 
     /**
