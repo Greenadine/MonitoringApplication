@@ -22,7 +22,6 @@ public final class DatabaseUtils {
         Properties databaseProperties = new Properties();
 
         try (InputStream is = Main.class.getResourceAsStream("database.properties")) {
-
             databaseProperties.load(is);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
