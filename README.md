@@ -5,4 +5,4 @@ All code in this repository is open for use. Application is not originally desig
 
 ## Built with
 * Java 17 (+ Java Swing)
-* Custom-made framework (present in `com.nerdygadgets.application.model`)
+* Custom-made framework (present in `com.nerdygadgets.application.app.model`)
