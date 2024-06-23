@@ -1,7 +1,7 @@
-# Network Monitoring Application
+# MonitoringApplication
 A Java-based application for monitoring the infrastructure of a website (firewall, database(s) and webserver(s)). Built for the NerdyGadgets project at Windesheim University of Applied Sciences in the "Exploring IT: IDS & SE" semester during the academic year of 2021/2022.
 
-All code in this repository is open for use. Application is not originally designed for use in other contexts, however can be modified to make this happen.
+A Java-based application for monitoring the infrastructure of a website for the "NerdyGadgets" project at Windesheim University of Applied Sciences during the academic year of 2022/2023.
 
 ## Built with
 * Java 17 (+ Java Swing)
