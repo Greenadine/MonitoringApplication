@@ -1,5 +1,5 @@
 # MonitoringApplication
-A Java-based application for monitoring the infrastructure of a website for the "NerdyGadgets" project during the "Exploring IT: IDS & SE" semester at Windesheim University of Applied Sciences during the academic year of 2022/2023.
+A Java-based application for monitoring the infrastructure of a website for the "NerdyGadgets" project during the Exploring IT: IDS & SE semester at Windesheim University of Applied Sciences during the academic year of 2022/2023.
 
 ## Built with
 * Java 17 (+ Java Swing)
